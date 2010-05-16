@@ -1,0 +1,35 @@
+.shoppingItems {
+	width: 100%
+}
+.shoppingItems .action {
+	display: none;
+}
+.item .price {
+	text-align: right;
+}
+.cartAmount {
+	text-align: right;
+}
+.checkoutNavigation {
+	display:block;
+}
+.cartPosition {
+	position: relative;
+}
+.cartPosition .description {
+	position: absolute;
+	right: 150px;
+	text-align: left;
+	
+}
+.cartPosition.amount {
+	border-top: 2px solid #999;
+	padding-top: 1em;
+	margin-top: 0.5em;
+}
+.cartPosition .description:after {
+	content: ':';
+}
+.goCheckout {
+	display: none;
+}
