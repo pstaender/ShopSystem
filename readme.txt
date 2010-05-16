@@ -19,11 +19,12 @@ Improvements
 ============
 
 * Different paymentsystems (like creditcards, paypal...)
+* Multilanguage (currently in german, but build for international use - but no translation, yet)
 
 Install
 =======
 
-Copy folder into your SilverStripe folder and run as admin a /dev/buil?flush
+Copy folder into your SilverStripe folder and run as usual a /dev/build?flush (admin login required)
 
 Requirements
 ============
