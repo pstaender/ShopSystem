@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * ShopOrder
+ *
+ * @package shopsystem
+ * @author Philipp Staender <philipp.staender@gmail.com>
+ * @description ShopOrder handles the shoppingsession...
+ */
+
 class ShopOrder extends DataObject {
 	
 	static $db = array(
@@ -14,8 +22,8 @@ class ShopOrder extends DataObject {
 		"Total"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
 		"IP"=>"Varchar(200)",
-		"Payment"=>"Enum('Bill','Bill')",
-		"Shipping"=>"Enum('Standard','Standard')",
+		"Payment"=>"Enum('Invoice','Invoice')",
+		"Shipping"=>"Enum('Standard,Express','Standard')",
 		);
 	
 	static $has_one = array(
@@ -49,8 +57,9 @@ class ShopOrder extends DataObject {
 	function calculate($round = 2) {
 		$amount = $this->amount();
 		$tax = 1+($this->Tax/100);
-		$this->ShippingCosts = $this->shippingCosts();
-		$this->Discount = $this->discount();
+		$this->ShippingCosts = $this->calcShippingCosts($this->Shipping);
+		
+		$this->Discount = $this->calcDiscount();
 		$this->SubTotal = $this->Total = $amount - $this->Discount + $this->ShippingCosts;
 		if ($this->VAT=="INCL") {
 			$this->VATAmount = round($amount - ($this->Total / $tax),$round);
@@ -74,14 +83,25 @@ class ShopOrder extends DataObject {
 		// return round(abs($this->SubTotal - $this->Total),2);
 	// }
 	
-	function shippingCosts() {
+	function calcShippingCosts($shippingMethod = null) {
 		//define your own shipping rules with MyShopOrder.php
-		return parent::shippingCosts() ? parent::shippingCosts() : $this->ShippigCosts;
+		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->ShippigCosts;
 	}
 	
-	function discount() {
+	function calcDiscount() {
 		//define your own discount rules with MyShopOrder.php
-		return parent::discount() ? parent::discount() : abs($this->Discount);
+		return parent::calcDiscount() ? parent::calcDiscount() : abs($this->Discount);
+	}
+	
+	function isComplete() {
+		//define your own isComplete rules with MyShopOrder.php
+		if (parent::isComplete()) {
+			$this->Status = "Ordered";
+			$this->write();
+			return true;
+		} else {
+			return false;
+		}
 	}
 		
 	static function checkForSessionOrCreate() {

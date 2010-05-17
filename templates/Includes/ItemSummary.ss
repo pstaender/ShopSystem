@@ -11,10 +11,9 @@
 	<% end_if %>
 	<% end_control %>
 	</table>
-<!-- just recalculates the SubTotal / Total values
-	{$Calculate}
-eof -->
-<!-- <% _t('Shop.Amount','%Amount%') %>: $Amount $Currency -->
+<!--
+	$Calculate
+-->
 <div class="cartAmount">
 		<div class="cartPosition amount">
 			<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $Amount $Currency

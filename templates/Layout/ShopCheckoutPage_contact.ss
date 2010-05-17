@@ -1,4 +1,5 @@
+<% include CheckoutNavigation %>
+
 $ContentContact
 $ContactForm
 
-<% include CheckoutNavigation %>

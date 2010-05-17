@@ -40,7 +40,7 @@ class ShopAddress extends DataObject {
 			$fields->push(new HiddenField("ID", null, $this->ID));
 			$labels=singleton($this->ClassName)->stat("field_labels");
 			$fields->replaceField("Country",new DropdownField("Country",$labels["Country"],self::getCountryDropdown("DE","Deutschland")));
-			// $fields->removeByName('Metropolis');
+			// $fields->replaceField("Country",new DropdownField("Country",$labels["Country"],Geoip::getCountryDropDown(), Geoip::visitor_country()));
 			return $fields;
 		}
 		
@@ -55,9 +55,7 @@ class ShopAddress extends DataObject {
 			}
 			return $countries;
 		}
-	
-	// 
-	
+		
 }
 
 ?>
