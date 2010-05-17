@@ -182,6 +182,10 @@ class ShopOrder extends DataObject {
 			}
 		}
 	}
+	
+	function orderKey() {
+		return parent::orderKey();
+	}
 }
 
 class ShopOrder_Controller extends Page_Controller {

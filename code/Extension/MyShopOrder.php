@@ -36,6 +36,16 @@ class MyShopOrder extends Extension {
 		}
 		return $check;
 	}
+	
+	function orderKey() {
+		//place your own rule to generate an order key
+		$name = preg_replace(array("/Ä|ä/","/Ö|ö/","/Ü|ü/","/ß/"),array("ae","oe","ue","ss"), $this->owner->InvoiceAddress()->Surname
+		);
+		return "FW-".strtoupper(
+			preg_replace("/[^A-Za-z0-9]/","",$name) . "-" . preg_replace("/[^A-Za-z0-9]/","",$this->owner->InvoiceAddress()->ZipCode) . "-" . $this->owner->ID
+			);
+		
+	}
 		
 }
 

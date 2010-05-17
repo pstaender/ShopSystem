@@ -1,0 +1,82 @@
+html * {
+	margin:0px;
+	padding:0px;
+}
+body {
+	font-family: 'Lucida Grande','Lucida Console',Arial;
+	font-size: 12px;
+	padding: 1em;
+	position: relative;
+}
+a {
+	color: #000;
+	text-decoration: none;
+}
+.invoiceHeader {
+	width: 95%;
+	margin-top: 15em;
+}
+.companyAddress, .invoiceAddress {
+	position: absolute;
+	top: 1em;
+}
+.companyAddress {
+	right: 7%;
+}
+.invoiceHeader .invoiceData {
+	float: left;
+	padding-right: 4em;
+}
+.invoiceAddress .title {
+	margin-bottom: 1em;
+}
+.invoiceAddress .title, .invoiceHeader .invoiceData .title {
+	font-weight: bold;
+}
+.invoiceAddress .title:after, .invoiceHeader .invoiceData .title:after {
+	content: ':';
+}
+
+.shoppingItems {
+	position: relative;
+	margin-top: 2.5em;
+	width: 95%;
+}
+.shoppingItems td {
+	padding: 0.5em;
+}
+.shoppingItems .item.odd {
+	background: #ddd;
+}
+.shoppingItems .item.even {
+	background: #eee;
+}
+.shoppingItems .fieldNames {
+	font-weight: bold;
+}
+.shoppingItems .price {
+	font-weight: bold;
+	text-align: right;
+}
+.cartAmount {
+	text-align: right;
+	margin-right: 5%;
+	padding: 8px;
+}
+.cartAmount .cartPosition {
+	position: relative
+}
+.cartAmount .cartPosition .description {
+	font-weight: bold;
+	position: absolute;
+	text-align: left;
+	right: 150px;
+}
+.cartAmount .cartPosition .description:after {
+	content: ':';
+}
+.cartAmount .cartPosition.total {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-top: 1em;
+}

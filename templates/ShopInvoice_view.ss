@@ -42,9 +42,11 @@
 	</div>
 	
 	<div class="companyAddress">
-		<div><strong>Company</strong></div>
-		<div>Street</div>
-		<div>ZipCode City</div>
+		<div><strong><% _t("Shop.Company.Name","%Name%") %></strong></div>
+		<div><% _t("Shop.Company.Street","%Street%") %></div>
+		<div><% _t("Shop.Company.ZipCode","%ZipCode%") %> <% _t("Shop.Company.City","%City%") %><br/><br/></div>
+		<div><% _t("Shop.Company.Phone","%Phone%") %></div>
+		<div><% _t("Shop.Company.Email","%Email%") %></div>
 	</div>
 
 
@@ -113,11 +115,15 @@
 		</div>
 		<% end_control %>
 
+		<div>Bitte überweisen Sie den fälligen Betrag von <strong>$Order.Total $Order.Currency</strong> mit den Betreff <strong>FW-{$Order.OrderKey}</strong></div>
 
 
 <% end_control %>
 
+
+
 <% end_control %>
+
 
 </body>
 </html>

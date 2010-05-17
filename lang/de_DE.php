@@ -63,4 +63,13 @@ $lang['de_DE']['Shop.Invoice']['InvoiceAddress'] = "Rechnungsaddresse";
 $lang['de_DE']['Shop.Invoice']['Quantity'] = "Menge";
 $lang['de_DE']['Shop.Invoice']['Product'] = "Produkt";
 $lang['de_DE']['Shop.Invoice']['Price'] = "Preis";
+$lang['de_DE']['Shop.Invoice']['OrderKey'] = "Bestellnummer";
+$lang['de_DE']['Shop.Invoice']['PDFLink'] = "Link zur PDF Datei";
+
+$lang['de_DE']['Shop.Company']['Name'] = "Mein Firmenname";
+$lang['de_DE']['Shop.Company']['Street'] = "Straße";
+$lang['de_DE']['Shop.Company']['ZipCode'] = "50733";
+$lang['de_DE']['Shop.Company']['City'] = "Köln";
+$lang['de_DE']['Shop.Company']['Phone'] = "0163 1649827";
+$lang['de_DE']['Shop.Company']['Email'] = "philipp.staender@gmail.com";
 ?>
