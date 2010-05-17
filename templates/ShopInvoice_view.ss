@@ -2,35 +2,63 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
 		<% base_tag %>
-		<title>Invoice</title>
-		$MetaTags(false)
+		<title><% _t('Shop.Invoice.Invoice','%Invoice%') %></title>
+		<meta name="robots" content="NOINDEX,NOFOLLOW" />
+		<meta name="googlebot" content="NOARCHIVE, NOODP, NOSNIPPET" />
+		
 		<% require themedCSS(invoice) %>
 	</head>
 
 <body>
 
 <% control Invoice %>
+<div class="invoiceHeader">
+	<div class="dateOfInvoice invoiceData">
+		<div class="title"><% _t('Shop.Invoice.DateOfInvoice','%DateOfInvoice%') %></div>
+		$InvoiceKey
+	</div>
+	<div class="dateOfDelivery invoiceData">
+		<div class="title"><% _t('Shop.Invoice.DateOfDelivery','%DateOfDelivery%') %></div>
+		$DateOfDelivery.Nice</div>
+	<div class="invoiceKey invoiceData">
+		<div class="title"><% _t('Shop.Invoice.InvoiceKey','%InvoiceKey%') %></div>
+		$InvoiceKey
+	</div>
+</div>
 
-<div class="dateOfDelivery">$DateOfDelivery.Nice</div>
-<div class="invoiceKey">$InvoiceKey</div>
+<div style="clear:both;"></div>
 
 <% control Order %>
 
-	<div class="deliveryAddress">
-	<% control DeliveryAddress %>
-		<p>$Company</p>
-		<p>$FirstName $Surname</p>
-		<p>$Street</p>
-		<p>$ZipCode $City</p>
+	<div class="invoiceAddress">
+		<div class="title"><% _t('Shop.Invoice.InvoiceAddress','%InvoiceAddress%') %></div>
+	<% control InvoiceAddress %>
+		<div><strong>$Company</strong></div>
+		<div>$FirstName $Surname</div>
+		<div>$AdditionalAddress</div>
+		<div>$Street</div>
+		<div>$Country - $ZipCode $City</div>
 	<% end_control %>
-	<div>
+	</div>
+	
+	<div class="companyAddress">
+		<div><strong>Company</strong></div>
+		<div>Street</div>
+		<div>ZipCode City</div>
+	</div>
 
 
 
 			<table class="shoppingItems">
 			<% control Items %>
+				<tr class="item even">
+					<td class="fieldNames quantity"><% _t("Shop.Invoice.Quantity","%Quantity%") %></td>
+					<td class="fieldNames title"><% _t("Shop.Invoice.Product","%Product%") %></td>
+					<td class="fieldNames price"><% _t("Shop.Invoice.Price","%Price%") %></td>
+				</tr>
+			
 			<% if Quantity==0 %><% else %>
-				<tr class="item" id="ShopItem{$ID}" key="$ID">
+				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID">
 					<td class="quantity">$Quantity</td>
 					<td class="title"><a href="$OriginalItem.Link">$Title</a></td>
 					<td class="price">$Total $Currency</td>

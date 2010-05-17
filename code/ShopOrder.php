@@ -24,6 +24,9 @@ class ShopOrder extends DataObject {
 		"IP"=>"Varchar(200)",
 		"Payment"=>"Enum('Invoice','Invoice')",
 		"Shipping"=>"Enum('Standard,Express','Standard')",
+		"Note"=>"Text",
+		"InternalNote"=>"Text",
+		// "OrderKey"="Varchar(32)",
 		);
 	
 	static $has_one = array(

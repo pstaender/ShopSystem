@@ -4,5 +4,7 @@
 
 $ContentSummary
 
+$SummaryForm
+
 <% include ItemSummary %>
 

@@ -65,7 +65,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	
 	static $allowed_actions = array(
 		"contact","shippingaddress","shipping","payment","summary","complete",
-		"ContactForm","ShippingAddressForm","ShippingMethodForm","PaymentMethodForm"
+		"ContactForm","ShippingAddressForm","ShippingMethodForm","PaymentMethodForm","SummaryForm"
 		);
 		
 		
@@ -74,9 +74,12 @@ class ShopCheckoutPage_Controller extends ShopController {
 		if ($session->isComplete()) {
 			//create invoice
 			$invoice = new ShopInvoice();
-			$invoice->PublicURL = substr(md5(rand(0,99999)/time()),0,6);
+			$invoice->PublicURL = ShopInvoice::generatePublicURL();
 			$invoice->OrderID = $session->ID;
 			$invoice->DateOfDelivery = time();
+			$invoice->DateOfInvoice = time();
+			$invoice->write();
+			$invoice->InvoiceKey = $invoice->ID;
 			$invoice->write();
 			//send email with invoice link
 			return array();
@@ -183,7 +186,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function doSubmitShippingMethodForm($data, $form) {
 		$session = ShopOrder::orderSession();
 		$action = "shipping";
-		$session->Shipping = $data['ShippingMethod'];
+		$session->Shipping = Convert::Raw2SQL($data['ShippingMethod']);
 		$session->calculate();
 		$session->write();
 		Director::redirect($this->Link().$this->step($action)->Next);
@@ -214,7 +217,27 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function doSubmitPaymentMethodForm($data, $form) {
 		$session = ShopOrder::orderSession();
 		$action = "payment";
-		$session->Payment = $data['PaymentMethod'];
+		$session->Payment = Convert::Raw2SQL($data['PaymentMethod']);
+		$session->write();
+		Director::redirect($this->Link().$this->step($action)->Next);
+	}
+	
+	function SummaryForm() {
+		$form = new Form(
+			$this,
+			"SummaryForm",
+			new FieldSet(
+				new TextareaField('Note',_t("Shop.Checkout.Note","%Note%"))
+				),
+			new FormAction("doSubmitSummaryForm",_t("Shop.Checkout.PlaceOrder","%PlaceOrder%"))
+			);
+			return $form;
+	}
+	
+	function doSubmitSummaryForm($data, $form) {
+		$session = ShopOrder::orderSession();
+		$action = "summary";
+		$session->Note = Convert::Raw2SQL($data['Note']);
 		$session->write();
 		Director::redirect($this->Link().$this->step($action)->Next);
 	}

@@ -44,10 +44,23 @@ $lang['de_DE']['Shop.Checkout']['Shipping'] = "Versandart";
 $lang['de_DE']['Shop.Checkout']['Payment'] = "Zahlungsart";
 $lang['de_DE']['Shop.Checkout']['Summary'] = "Zusammenfassung Ihrer Bestellung";
 $lang['de_DE']['Shop.Checkout']['Complete'] = "Bestellung abschließen";
-$lang['de_DE']['Shop.Checkout'][''] = "Warenkorb";
+$lang['de_DE']['Shop.Checkout']['PlaceOrder'] = "Bestellung abschließen";
+$lang['de_DE']['Shop.Checkout']['Note'] = "Anmerkung / Nachricht zur Bestellung";
 
+
+$lang['de_DE']['Shop.Checkout'][''] = "Warenkorb";
 $lang['de_DE']['Shop.Form']['Save'] = "Speichern";
 $lang['de_DE']['Shop.Form']['Apply'] = "Übernehmen";
 $lang['de_DE']['Shop.Form']['Next'] = "Weiter";
 $lang['de_DE']['Shop.Form']['Submit'] = "Absenden";
+$lang['de_DE']['Shop.Invoice']['Invoice'] = "Rechnung";
+$lang['de_DE']['Shop.Admin']['DateOfDelivery']
+=
+$lang['de_DE']['Shop.Invoice']['DateOfDelivery'] = "Lieferdatum";
+$lang['de_DE']['Shop.Invoice']['InvoiceKey'] = "Rechnungsnummer";
+$lang['de_DE']['Shop.Invoice']['DateOfInvoice'] = "Rechnungsdatum";
+$lang['de_DE']['Shop.Invoice']['InvoiceAddress'] = "Rechnungsaddresse";
+$lang['de_DE']['Shop.Invoice']['Quantity'] = "Menge";
+$lang['de_DE']['Shop.Invoice']['Product'] = "Produkt";
+$lang['de_DE']['Shop.Invoice']['Price'] = "Preis";
 ?>

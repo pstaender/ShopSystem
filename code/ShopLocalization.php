@@ -38,6 +38,22 @@ class ShopLocalization extends Object {
       'United Kingdom'  => 'GB',
       'United States'   => 'US',
   );
+
+	static function generateTranslationFieldsForBackend($segment, array $db, array $has_one = null, FieldSet $fieldset) {
+		return $fieldset;
+		if (isset($has_one)) {
+			$hasOne = array();
+			foreach ($has_one as $field => $type) {
+				$fieldName = $field."ID";
+				$hasOne[$fieldName] = $type;
+				$fieldset->renameField($fieldName, _t($segment,"%{$field}%"));
+			}
+		}
+		foreach ($db as $field => $type) {
+			$fieldset->renameField($field, _t($segment,"%{$field}%"));
+		}
+		return $fieldset;
+	}
 	
 }
 
