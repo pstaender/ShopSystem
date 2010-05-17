@@ -28,7 +28,7 @@ class MyShopOrder extends Extension {
 	
 	function isComplete() {
 		$required = array(
-			"Total","Payment","Shipping","BillingContact","ShippingContact"
+			"Total","Payment","Shipping","InvoiceAddress","DeliveryAddress"
 			);
 		$check = true;
 		foreach ($required as $r) {

@@ -70,11 +70,17 @@ class ShopCheckoutPage_Controller extends ShopController {
 		
 		
 	function complete() {
-		if (ShopOrder::orderSession()->isComplete()) {
-			//send email
+		$session = ShopOrder::orderSession();
+		if ($session->isComplete()) {
+			//create invoice
+			$invoice = new ShopInvoice();
+			$invoice->PublicURL = substr(md5(rand(0,99999)/time()),0,6);
+			$invoice->OrderID = $session->ID;
+			$invoice->DateOfDelivery = time();
+			$invoice->write();
+			//send email with invoice link
 			return array();
 		} else {
-			// $this->renderWith("ShopCheckoutPage_error");
 			$this->ContentError = "Error";
 			return array();
 		}
@@ -83,7 +89,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function ContactForm() {
 		$form = $this->createContactForm(new FormAction('doSubmitContact', _t("Shop.Form.Next","%Next%")), "ContactForm", new CheckboxField('UseContactForShipping', _t("Shop.Contact.UseContactForShipping","%UseContactForShipping%")));
 		
-		if ($address = DataObject::get_by_id("ShopAddress",ShopOrder::orderSession()->BillingContactID)) $form->loadDataFrom($address);
+		if ($address = DataObject::get_by_id("ShopAddress",ShopOrder::orderSession()->InvoiceAddressID)) $form->loadDataFrom($address);
 		
 		return $form;
 	}
@@ -91,7 +97,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function ShippingAddressForm() {
 		$form = $this->createContactForm(new FormAction('doSubmitContact', _t("Shop.Form.Next","%Next%")), "ShippingAddressForm", new HiddenField('ThisIsShippingAddress',"ThisIsShippingAddress","true"));
 		
-		if ($address = DataObject::get_by_id("ShopAddress",ShopOrder::orderSession()->ShippingContactID)) $form->loadDataFrom($address);
+		if ($address = DataObject::get_by_id("ShopAddress",ShopOrder::orderSession()->DeliveryAddressID)) $form->loadDataFrom($address);
 		
 		return $form;
 	}
@@ -119,30 +125,30 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function doSubmitContact($data, $form) {
 		$session = ShopOrder::orderSession();
 		if (!($contact = DataObject::get_by_id("ShopAddress",
-		$session->BillingContactID))) $contact = new ShopAddress();
+		$session->InvoiceAddressID))) $contact = new ShopAddress();
 		$action = "contact";
 		if ($data['ThisIsShippingAddress']=="true") {
 			$action = "shippingaddress";
-			if (!($shipping = DataObject::get_by_id("ShopAddress",$session->ShippingContactID))) $shipping = new ShopAddress();
+			if (!($shipping = DataObject::get_by_id("ShopAddress",$session->DeliveryAddressID))) $shipping = new ShopAddress();
 			$form->saveInto($shipping);
 			$shipping->OrderID = $session->ID;
 			$shipping->write();
-			$session->ShippingContactID = $shipping->ID;
+			$session->DeliveryAddressID = $shipping->ID;
 			$session->write();
 			$link = $this->step($this->step($action)->Next)->Next;
 		} else {
 			$form->saveInto($contact);
 			$contact->OrderID = $session->ID;
 			$contact->write();
-			$session->BillingContactID = $contact->ID;
+			$session->InvoiceAddressID = $contact->ID;
 			$session->write();
 		}
 		if ($data['UseContactForShipping'])  {
-			if (!($shipping = DataObject::get_by_id("ShopAddress",$session->ShippingContactID))) $shipping = new ShopAddress();
+			if (!($shipping = DataObject::get_by_id("ShopAddress",$session->DeliveryAddressID))) $shipping = new ShopAddress();
 			$form->saveInto($shipping);
 			$shipping->OrderID = $session->ID;
 			$shipping->write();
-			$session->ShippingContactID = $shipping->ID;
+			$session->DeliveryAddressID = $shipping->ID;
 			$session->write();
 			$link = $this->step($this->step($action)->Next)->Next;			
 		} else {

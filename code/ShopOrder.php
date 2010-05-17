@@ -28,8 +28,8 @@ class ShopOrder extends DataObject {
 	
 	static $has_one = array(
 		"Client"=>"ShopCustomer",
-		"BillingContact"=>"ShopAddress",
-		"ShippingContact"=>"ShopAddress",
+		"InvoiceAddress"=>"ShopAddress",
+		"DeliveryAddress"=>"ShopAddress",
 		"Member"=>"Member",
 		);
 		
@@ -119,7 +119,7 @@ class ShopOrder extends DataObject {
 			$s->write();
 			// else user_error("Couldn't create ShoppingSession...");
 		} else {
-			if (!($s= DataObject::get_one("ShopOrder","Hash = '".Convert::Raw2SQL($session)."'"))) {
+			if (!($s= DataObject::get_one("ShopOrder","Hash = '".Convert::Raw2SQL($session)."' AND Status = 'Unsubmitted'"))) {
 				$hash = substr(md5(rand(0,1000).time()),0,10);
 				$s = new ShopOrder();
 				if ($m=Member::currentUser()) $s->Member = $m;
