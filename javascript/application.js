@@ -7,7 +7,11 @@ $(document).ready(function() {
 	var cartHolder = $(".shoppingCartHolder");
 	
 	//load cart information
-	cartHolder.load('cart/get');
+	cartHolder.load('cart/get', function() {
+		//do something, after first load
+		//eg. hide shopping cart
+		// $('.shoppingCart').hide();
+	});
 	
 	$(".buttonOrder").bind('click', function() {
 		var id = $(this).attr('key');

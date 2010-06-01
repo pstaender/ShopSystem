@@ -59,4 +59,4 @@
 
 </div>
 <% end_control %>
-<div class="goCheckout"><a href="$CheckoutPage.Link"><% _t('Shop.GoCheckout','%Go Checkout%') %></a></div>
+<div class="goCheckout"><a href="<% control Top %>$CheckoutPage.Link<% end_control %>"><% _t('Shop.GoCheckout','%Go Checkout%') %></a></div>
