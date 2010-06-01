@@ -13,11 +13,7 @@ class ShopInvoice extends DataObject {
 	static $has_one = array(
 		"Order"=>"ShopOrder",
 		);
-		
-	static $field_labels = array(
-		"InvoiceKey"=>"Test",
-		);
-		
+				
 	static $summary_fields = array(
 				"ID", "InvoiceKey", //"Order.Company","Order.Surname","Order.Total","DateOfInvoice"
 				);
@@ -37,13 +33,13 @@ class ShopInvoice extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 	// return ShopLocalization::generateTranslationFieldsForBackend("Shop.Admin",self::$db,self::$has_one,$fields);
-		$fields->insertBefore(
+		$fields->insertAfter(
 				new LiteralField(_t("Shop.Invoice.PDFLink","PDF Link"),'<h5><a href="'.Director::absoluteURL($this->pdfLink()).'" target="_blank">'._t("Shop.Invoice.PDFLink","PDF Link").'</a></h5>'),
-			"DateOfDelivery"
+			"OrderID"
 			);
-		$fields->insertBefore(
+		$fields->insertAfter(
 			new LiteralField(_t("Shop.Invoice.InvoiceLink","InvoiceLink"),'<h5><a href="'.Director::absoluteURL($this->link()).'" target="_blank">'._t("Shop.Invoice.InvoiceLink","Invoice Link").'</a></h5>'),
-			"DateOfDelivery"
+			"OrderID"
 			);
 		return $fields;
 	}

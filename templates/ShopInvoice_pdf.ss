@@ -101,22 +101,22 @@
 <% control Order %>
 
 			<table class="shoppingItems" width="90%">
-			<% control Items %>
 				<tr class="item even">
 					<td class="fieldNames quantity" bgColor="#dddddd"><strong><% _t("Shop.Invoice.Quantity","%Quantity%") %></strong></td>
 					<td class="fieldNames title" bgColor="#dddddd"><strong><% _t("Shop.Invoice.Product","%Product%") %></strong></td>
 					<td class="fieldNames price" bgColor="#dddddd" align="right"><strong><% _t("Shop.Invoice.Price","%Price%") %></strong></td>
 				</tr>
-			
+			<% control Items %>
 			<% if Quantity==0 %><% else %>
-				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID" bgColor="<% if Even %>#dddddd<% end_if %>">
+				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID" bgColor="<% if Even %>#eeeeee<% else %>#ffffff<% end_if %>">
 					<td class="quantity">$Quantity</td>
 					<td class="title"><strong>$Title</strong></td>
 					<td class="price" align="right">$Total $Currency</td>
 				</tr>
 			<% end_if %>
-			<tr><td>&nbsp;</td><td>&nbsp;</td><td align="right">________________</td></tr>
 			<% end_control %>
+			<tr><td>&nbsp;</td><td>&nbsp;</td><td align="right">________________</td></tr>
+			
 			<!--
 				$Calculate
 			-->

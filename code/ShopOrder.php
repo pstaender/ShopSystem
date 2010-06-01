@@ -26,14 +26,13 @@ class ShopOrder extends DataObject {
 		"Shipping"=>"Enum('Standard,Express','Standard')",
 		"Note"=>"Text",
 		"InternalNote"=>"Text",
-		// "OrderKey"="Varchar(32)",
+		"TrackingID"=>"Varchar(250)",
 		);
 	
 	static $has_one = array(
-		"Client"=>"ShopCustomer",
+		"Client"=>"ShopClient",
 		"InvoiceAddress"=>"ShopAddress",
 		"DeliveryAddress"=>"ShopAddress",
-		"Member"=>"Member",
 		);
 		
 	static $has_many = array(
@@ -48,6 +47,11 @@ class ShopOrder extends DataObject {
 		);
 	static $currency = "EUR";
 	static $vatType = "EXCL";
+	static $minAmount = "10";
+	
+	static $emailOrderConfirmation = null;
+	static $emailOrderShipped = null;
+	static $emailInvoice = null;
 	
 	function amount($round = 2) {
 		$sum = 0;
@@ -55,6 +59,10 @@ class ShopOrder extends DataObject {
 			$sum = $sum + ($item->Price*$item->Quantity);
 		}
 		return $round ? round($sum, $round) : $sum;
+	}
+	
+	function amountBelowMin() {
+		return ($this->amount()<=self::$minAmount) ? true : false;
 	}
 	
 	function calculate($round = 2) {
@@ -74,6 +82,10 @@ class ShopOrder extends DataObject {
 		return $this->write();
 	}
 	
+	function minAmount() {
+		return self::$minAmount;
+	}
+	
 	function switchVAT() {
 		if (!$inclOrExcl) {
 			if ($this->VAT=="INCL") $this->VAT = "EXCL";
@@ -81,11 +93,7 @@ class ShopOrder extends DataObject {
 		}
 		return $this->calculate();
 	}
-	
-	// function VATAmount() {
-		// return round(abs($this->SubTotal - $this->Total),2);
-	// }
-	
+		
 	function calcShippingCosts($shippingMethod = null) {
 		//define your own shipping rules with MyShopOrder.php
 		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->ShippigCosts;
@@ -99,14 +107,12 @@ class ShopOrder extends DataObject {
 	function isComplete() {
 		//define your own isComplete rules with MyShopOrder.php
 		if (parent::isComplete()) {
-			$this->Status = "Ordered";
-			$this->write();
 			return true;
 		} else {
 			return false;
 		}
 	}
-		
+			
 	static function checkForSessionOrCreate() {
 		if (!($session=Session::get(self::$hashField))) {
 			//create session
@@ -186,6 +192,45 @@ class ShopOrder extends DataObject {
 	function orderKey() {
 		return parent::orderKey();
 	}
+	
+	function sendOrderConfirmationTo($email) {
+		if ($from = self::$emailOrderConformation) {
+			$email = New Email_Template();
+			$email->from = $form;
+			$email->to = $email;
+			$email->subject = _t("Shop.Order.EmailSubject","%Thanks for your order%");
+			$email->ss_template = 'EmailOrderConfirmation';
+			$email->populateTemplate($this);
+			$email->send();
+		}
+	}
+	
+	function sendOrderConfirmation() {
+		 $this->sendOrderConfirmationTo($this->emailFromClient());
+	}
+
+	function sendInvoiceTo($email) {
+		if ($from = self::$emailInvoice) {
+			$email = New Email_Template();
+			$email->from = $form;
+			$email->to = $email;
+			$email->subject = _t("Shop.Invoice.EmailSubject","%Your invoice for your order%");
+			$email->ss_template = 'EmailInvoice';
+			$email->populateTemplate($this);
+			$email->send();
+		}
+	}
+	
+	function emailFromClient() {
+		if ($client = $this->Client()) return $client->Email;
+		if ($addr = $this->InvoiceAddress()) return $addr->Email;
+		if ($addr = $this->DeliveryAddress()) return $addr->Email;
+	}
+	
+	function sendInvoice() {
+		 $this->sendInvoiceTo($this->emailFromClient());
+	}
+
 }
 
 class ShopOrder_Controller extends Page_Controller {

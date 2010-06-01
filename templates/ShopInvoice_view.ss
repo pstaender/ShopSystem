@@ -52,12 +52,13 @@
 
 
 			<table class="shoppingItems">
-			<% control Items %>
 				<tr class="item even">
 					<td class="fieldNames quantity"><% _t("Shop.Invoice.Quantity","%Quantity%") %></td>
 					<td class="fieldNames title"><% _t("Shop.Invoice.Product","%Product%") %></td>
 					<td class="fieldNames price"><% _t("Shop.Invoice.Price","%Price%") %></td>
 				</tr>
+				
+			<% control Items %>
 			
 			<% if Quantity==0 %><% else %>
 				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID">

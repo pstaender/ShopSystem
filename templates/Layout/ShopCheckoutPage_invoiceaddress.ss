@@ -1,5 +1,5 @@
 <% include CheckoutNavigation %>
 
 $ContentContact
-$ContactForm
+$InvoiceAddressForm
 

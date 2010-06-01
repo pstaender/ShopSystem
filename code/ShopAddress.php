@@ -3,6 +3,7 @@
 class ShopAddress extends DataObject {
 	
 	static $db = array(
+		"Email"=>"Varchar(200)",
 		"Company"=>"Varchar(200)",
 		"FirstName"=>"Varchar(200)",
 		"Surname"=>"Varchar(200)",
@@ -14,16 +15,16 @@ class ShopAddress extends DataObject {
 		);
 	
 	static $required_fields = array(
-		"Firstname","Surname","Street","ZipCode","City"
+		"Email","Firstname","Surname","Street","ZipCode","City"
 		);
 	
 	static $belongs_to = array(
-		"Person"=>"ShopCustomer",
+		"Client"=>"ShopClient",
 		"Order"=>"ShopOrder",
 		);
 
 	static $has_one = array(
-		"Person"=>"ShopCustomer",
+		"Client"=>"ShopClient",
 		"Order"=>"ShopOrder",
 		);
 	

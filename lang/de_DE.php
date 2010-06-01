@@ -14,6 +14,10 @@ if(array_key_exists('de_DE', $lang) && is_array($lang['de_DE'])) {
 	$lang['de_DE'] = $lang['en_US'];
 }
 
+// Shop.Order.EmailSubject
+
+$lang['de_DE']['SHOP.CheckoutPage']['ContentContact'] = "Rechnungsanschrift (Inhalt)";
+
 $lang['de_DE']['Shop']['AddToCart'] = 'Bestellen';
 $lang['de_DE']['Shop.Cart']['Amount'] = 'Betrag';
 $lang['de_DE']['Shop.Cart']['TaxVAT'] = 'MwSt.';
@@ -27,6 +31,7 @@ $lang['de_DE']['Shop.Shipping']['Standard'] = 'Standardversand';
 $lang['de_DE']['Shop.Shipping']['Express'] = 'Expressversand';
 $lang['de_DE']['Shop.Payment']['Invoice'] = 'per Rechnung';
 $lang['de_DE']['Shop']['GoCheckout'] = 'Zur Kasse gehen';
+$lang['de_DE']['Shop.Contact']['Email'] = 'eMail';
 $lang['de_DE']['Shop.Contact']['Company'] = 'Firmenname';
 $lang['de_DE']['Shop.Contact']['FirstName'] = 'Vorname';
 $lang['de_DE']['Shop.Contact']['Surname'] = 'Nachname';
@@ -65,6 +70,7 @@ $lang['de_DE']['Shop.Invoice']['Product'] = "Produkt";
 $lang['de_DE']['Shop.Invoice']['Price'] = "Preis";
 $lang['de_DE']['Shop.Invoice']['OrderKey'] = "Bestellnummer";
 $lang['de_DE']['Shop.Invoice']['PDFLink'] = "Link zur PDF Datei";
+$lang['de_DE']['Shop.Invoice']['EmailSubject'] = "Ihr Rechnung für Ihre Bestellung";
 
 $lang['de_DE']['Shop.Company']['Name'] = "Mein Firmenname";
 $lang['de_DE']['Shop.Company']['Street'] = "Straße";
@@ -72,4 +78,12 @@ $lang['de_DE']['Shop.Company']['ZipCode'] = "50733";
 $lang['de_DE']['Shop.Company']['City'] = "Köln";
 $lang['de_DE']['Shop.Company']['Phone'] = "0163 1649827";
 $lang['de_DE']['Shop.Company']['Email'] = "philipp.staender@gmail.com";
+
+$lang['de_DE']['Shop.Checkout']['Email'] = "eMail-Addresse";
+$lang['de_DE']['Shop.Checkout']['Invoiceaddress'] = "Rechnungsanschrift";
+$lang['de_DE']['Shop.Checkout']['Shippingaddress'] = "Lieferanschrift";
+$lang['de_DE']['Shop.Checkout']['Index'] = "Ihre Bestellung";
+
+$lang['de_DE']['Shop.Checkout']['ClientKey'] = "Kundennummer (falls vorhanden):";
+
 ?>
