@@ -28,7 +28,7 @@ class ShopItem extends SiteTree {
 		$fields->addFieldsToTab("Root.Content.Shop", array(
 			new NumericField('Price', _t("Shop.Item.Price","%Price%")),
 			new CheckboxField('Featured', _t("Shop.Item.Featured","%Featured%")),
-			new TextField('Summary', _t("Shop.Item.Summary","%Summary%"),5),
+			new TextareaField('Summary', _t("Shop.Item.Summary","%Summary%"),5),
 			new TextField('StockQuantity', _t("Shop.Item.StockQuantity","%StockQuantity%")),
 			new DateField('StockDate', _t("Shop.Item.StockDate","%StockDate%")),
 			// new DropdownField('VAT', _t("SHOP.ITEM.VAT","%Mehrwertsteuer%"), singleton($this->ClassName)->dbObject('VAT')->enumValues()),

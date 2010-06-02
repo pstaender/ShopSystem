@@ -35,12 +35,16 @@ $lang['de_DE']['Shop.Contact']['Email'] = 'eMail';
 $lang['de_DE']['Shop.Contact']['Company'] = 'Firmenname';
 $lang['de_DE']['Shop.Contact']['FirstName'] = 'Vorname';
 $lang['de_DE']['Shop.Contact']['Surname'] = 'Nachname';
+$lang['de_DE']['Shop.Contact']['Phone'] = 'Telefonnummer';
 $lang['de_DE']['Shop.Contact']['AdditionalAddress'] = 'Zusatzadresse';
 $lang['de_DE']['Shop.Contact']['Street'] = 'Straße';
 $lang['de_DE']['Shop.Contact']['ZipCode'] = 'PLZ';
 $lang['de_DE']['Shop.Contact']['City'] = 'Stadt';
 $lang['de_DE']['Shop.Contact']['Country'] = 'Land';
 $lang['de_DE']['Shop.Contact']['UseContactForShipping'] = 'Versand geht an Rechnungsaddresse';
+
+$lang['de_DE']['Shop.Checkout']['TaxIDNumber'] = 'Umsatzsteuer-Identifikationsnummer';
+$lang['de_DE']['Shop.Checkout']['CouponCode'] = 'Gutscheincode';
 $lang['de_DE']['Shop.Checkout']['ShippingMethod'] = "Versandart";
 $lang['de_DE']['Shop.Checkout']['Contact'] = "Rechnungsanschrift";
 $lang['de_DE']['Shop.Checkout']['Shippingaddress'] = "Versandanschrift";
@@ -51,9 +55,8 @@ $lang['de_DE']['Shop.Checkout']['Summary'] = "Zusammenfassung";
 $lang['de_DE']['Shop.Checkout']['Complete'] = "Bestellung abschließen";
 $lang['de_DE']['Shop.Checkout']['PlaceOrder'] = "Bestellung abschließen";
 $lang['de_DE']['Shop.Checkout']['Note'] = "Anmerkung / Nachricht zur Bestellung";
-
-
 $lang['de_DE']['Shop.Checkout'][''] = "Warenkorb";
+
 $lang['de_DE']['Shop.Form']['Save'] = "Speichern";
 $lang['de_DE']['Shop.Form']['Apply'] = "Übernehmen";
 $lang['de_DE']['Shop.Form']['Next'] = "Weiter";
@@ -83,7 +86,11 @@ $lang['de_DE']['Shop.Checkout']['Email'] = "eMail-Addresse";
 $lang['de_DE']['Shop.Checkout']['Invoiceaddress'] = "Rechnungsanschrift";
 $lang['de_DE']['Shop.Checkout']['Shippingaddress'] = "Lieferanschrift";
 $lang['de_DE']['Shop.Checkout']['Index'] = "Ihre Bestellung";
+$lang['de_DE']['Shop.Checkout']['IncompleteOrder'] = "Ihre Bestellung ist unvollständig";
+$lang['de_DE']['Shop.Checkout']['YourInvoiceAddress'] = "Ihre Rechnungsanschrift";
+$lang['de_DE']['Shop.Checkout']['YourDeliveryAddress'] = "Ihre Lieferanschrift";
 
-$lang['de_DE']['Shop.Checkout']['ClientKey'] = "Kundennummer (falls vorhanden):";
+$lang['de_DE']['Shop.Checkout']['ClientKey'] = "Kundennummer (falls vorhanden)";
+$lang['de_DE']['Shop.Checkout']['AgreeToTermsAndConditions'] = "Hiermit stimme ich den AGBs zu";
 
 ?>

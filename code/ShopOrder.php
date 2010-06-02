@@ -11,6 +11,7 @@
 class ShopOrder extends DataObject {
 	
 	static $db = array(
+		"Email"=>"Varchar(250)",
 		"Hash"=>"Varchar(32)",
 		"Status"=>"Enum('Unsubmitted,Ordered,Payed,Sended,Declared','Unsubmitted')",
 		"Tax"=>"Int",
@@ -27,6 +28,8 @@ class ShopOrder extends DataObject {
 		"Note"=>"Text",
 		"InternalNote"=>"Text",
 		"TrackingID"=>"Varchar(250)",
+		"TaxIDNumber"=>"Varchar(250)",
+		"CouponCode"=>"Varchar(60)",
 		"OrderKey"=>"Varchar(200)",
 		);
 	

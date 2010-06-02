@@ -3,11 +3,11 @@
 class ShopAddress extends DataObject {
 	
 	static $db = array(
-		"Email"=>"Varchar(200)",
 		"Company"=>"Varchar(200)",
 		"FirstName"=>"Varchar(200)",
 		"Surname"=>"Varchar(200)",
 		"AdditionalAddress"=>"Varchar(200)",
+		"Phone"=>"Varchar(200)",
 		"Street"=>"Varchar(200)",
 		"ZipCode"=>"Int",
 		"City"=>"Varchar(100)",
@@ -15,7 +15,7 @@ class ShopAddress extends DataObject {
 		);
 	
 	static $required_fields = array(
-		"Email","Firstname","Surname","Street","ZipCode","City"
+		"Firstname","Surname","Phone","Street","ZipCode","City"
 		);
 	
 	static $belongs_to = array(

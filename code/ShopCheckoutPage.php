@@ -100,8 +100,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 		);
 		
 	function init() {
-		parent::init();
-		//optional, remove if you don't like
+		parent::init();		
+		//optional, remove if you don't like a minimal amount check
 		if ($this->Cart()->Amount()<ShopOrder::$minAmount) {
 			if (!Director::urlParam("Action")=="minamount") Director::redirect($this->Link()."minamount");
 			return;
@@ -109,33 +109,35 @@ class ShopCheckoutPage_Controller extends ShopController {
 	}
 		
 	function index() {
-		//todo, make it safe for all users
-		// if ($step = self::getCheckoutStep()) {
-		// 	$this->redirectToNextStep(self::$steps[$step]);	
-		// } else {
+		// todo, make it safe for all users
+		if (ShopOrder::orderSession()->isComplete()) {
+			if ($step = self::getCheckoutStep()) $this->redirectToNextStep(self::$steps[$step]);	
+		} else {
 			//optional, deactive if you don't wanna skip the 1st step 'index'
 			$this->redirectToNextStep("index");
-		// }
+		}
 		return array();
 	}
 		
 	function EmailForm() {
 		self::setCheckoutStep(0);
 		$clientKey = $email = null;
-		if ($addr = ShopOrder::orderSession()->InvoiceAddress()) {
-			$email = $addr->Email;
-		}
+		$order = ShopOrder::orderSession();
 		if ($client = ShopOrder::orderSession()->Client()) {
 			$email = $client->Email;
 			$clientKey = $client->ClientKey;
+		} else {
+			$email = $order->Email;
 		}
 		return new Form(
 			$this,
 			"EmailForm",
 			new FieldSet(
 				new EmailField("Email",_t("Shop.Checkout.Email","%Email%"),$email),
-				new TextField("ClientKey",_t("Shop.Checkout.ClientKey","%ClientKey%"),$clientKey)
-				),
+				new TextField("ClientKey",_t("Shop.Checkout.ClientKey","%ClientKey%"),$clientKey),
+				new TextField("CouponCode",_t("Shop.Checkout.CouponCode","%CouponCode%"),$order->CouponCode),
+				new TextField("TaxIDNumber",_t("Shop.Checkout.TaxIDNumber","%TaxIDNumber%"),$order->TaxIDNumber)
+			),	
 			new FormAction('doSubmitEmailForm', _t("Shop.Form.Next","%Next%")),
 			new RequiredFields("Email")
 			);
@@ -149,13 +151,12 @@ class ShopCheckoutPage_Controller extends ShopController {
 		if ($client = DataObject::get_one("ShopClient","ClientKey LIKE '".$clientKey."'")) {
 			//existing client
 			$clientID = $client->ID;
-			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID")) {
-				
+			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID")) {				
 				if ($addr = $lastOrder->InvoiceAddress()) {
 					//use the last invoice adress, if empty
-					if ($order->InvoiceAddress()->ID==0) {						
+					if ($order->InvoiceAddress()->ID==0) {									
 						$newAddr = new ShopAddress();
-						$newAddr->merge($addr);
+						$newAddr->merge($addr,'right');
 						//restore the relations
 						$newAddr->OrderID = $order->ID;
 						$newAddr->ClientID = $clientID;
@@ -168,7 +169,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 					//use the last shipping adress, if empty
 					if ($order->DeliveryAddress()->ID==0) {
 						$newAddr = new ShopAddress();
-						$newAddr->merge($addr);
+						$newAddr->merge($addr,'right');
 						//restore the relations
 						$newAddr->OrderID = $order->ID;
 						$newAddr->ClientID = $clientID;
@@ -192,25 +193,28 @@ class ShopCheckoutPage_Controller extends ShopController {
 				$clientID = $client->ID;
 				//todo, send welcome email to client
 			}
+			//create aadress fields for invoice+shipping
+			if ($order->InvoiceAddress()->ID==0) {
+				$a = new ShopAddress();
+				$a->ClientID = $clientID;
+				$a->Email = $email;
+				$a->OrderID = $order->ID;
+				$a->write();
+				$order->InvoiceAddressID = $a->ID;
+			}
+			if ($order->DeliveryAddress()->ID==0) {
+				$a = new ShopAddress();
+				$a->ClientID = $clientID;
+				$a->Email = $email;
+				$a->OrderID = $order->ID;
+				$a->write();
+				$order->DeliveryAddressID = $a->ID;
+			}
 		}
-		//create aadress fields for invoice+shipping
-		if ($order->InvoiceAddress()->ID==0) {
-			$a = new ShopAddress();
-			$a->ClientID = $clientID;
-			$a->Email = $email;
-			$a->OrderID = $order->ID;
-			$a->write();
-			$order->InvoiceAddressID = $a->ID;
-		}
-		if ($order->DeliveryAddress()->ID==0) {
-			$a = new ShopAddress();
-			$a->ClientID = $clientID;
-			$a->Email = $email;
-			$a->OrderID = $order->ID;
-			$a->write();
-			$order->DeliveryAddressID = $a->ID;
-		}
+		$order->Email = $email;
 		$order->ClientID = $clientID;
+		$order->CouponCode = strtoupper(Convert::raw2SQL($data['CouponCode']));
+		$order->TaxIDNumber = Convert::raw2SQL($data['TaxIDNumber']);
 		$order->write();
 		$this->redirectToNextStep("email");
 		return array();
@@ -386,9 +390,11 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$this,
 			"SummaryForm",
 			new FieldSet(
-				new TextareaField('Note',_t("Shop.Checkout.Note","%Note%"))
+				new TextareaField('Note',_t("Shop.Checkout.Note","%Note%")),
+				new CheckboxField('TermsAndConditions', _t("Shop.Checkout.AgreeToTermsAndConditions","%AgreeToTermsAndConditions%"))
 				),
-			new FormAction("doSubmitSummaryForm",_t("Shop.Checkout.PlaceOrder","%PlaceOrder%"))
+			new FormAction("doSubmitSummaryForm",_t("Shop.Checkout.PlaceOrder","%PlaceOrder%")),
+			new RequiredFields(array("TermsAndConditions"))
 			);
 		if (ShopOrder::orderSession()->isComplete()) return $form;
 	}

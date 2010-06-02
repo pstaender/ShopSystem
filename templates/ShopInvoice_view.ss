@@ -116,7 +116,7 @@
 		</div>
 		<% end_control %>
 
-		<div>Bitte überweisen Sie den fälligen Betrag von <strong>$Order.Total $Order.Currency</strong> mit den Betreff <strong>FW-{$Order.OrderKey}</strong></div>
+		<div>Bitte überweisen Sie den fälligen Betrag von <strong>$Order.Total $Order.Currency</strong> mit den Betreff <strong>{$Order.OrderKey}</strong></div>
 
 
 <% end_control %>
