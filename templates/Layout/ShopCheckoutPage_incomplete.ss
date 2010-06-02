@@ -2,4 +2,4 @@
 
 <% include CheckoutNavigation %>
 
-$ContentMinimalAmount
+<h2>Sorry, your order is incomplete...</h2>

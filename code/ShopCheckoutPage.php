@@ -84,7 +84,7 @@ class ShopCheckoutPage extends SiteTree {
 class ShopCheckoutPage_Controller extends ShopController {
 	
 	static $allowed_actions = array(
-		"email","invoiceaddress","shippingaddress","shipping","payment","summary","complete","empty", "minamount",
+		"email","invoiceaddress","shippingaddress","shipping","payment","summary","complete","empty", "minamount", "incomplete",
 		"EmailForm","InvoiceAddressForm","ShippingAddressForm","ShippingMethodForm","PaymentMethodForm","SummaryForm"
 		);
 	
@@ -109,27 +109,32 @@ class ShopCheckoutPage_Controller extends ShopController {
 	}
 		
 	function index() {
-		if ($step = self::getCheckoutStep()) {
-			$this->redirectToNextStep(self::$steps[$step]);	
-		} else {
+		//todo, make it safe for all users
+		// if ($step = self::getCheckoutStep()) {
+		// 	$this->redirectToNextStep(self::$steps[$step]);	
+		// } else {
 			//optional, deactive if you don't wanna skip the 1st step 'index'
 			$this->redirectToNextStep("index");
-		}
+		// }
 		return array();
 	}
 		
 	function EmailForm() {
 		self::setCheckoutStep(0);
-		$email = null;
+		$clientKey = $email = null;
 		if ($addr = ShopOrder::orderSession()->InvoiceAddress()) {
 			$email = $addr->Email;
+		}
+		if ($client = ShopOrder::orderSession()->Client()) {
+			$email = $client->Email;
+			$clientKey = $client->ClientKey;
 		}
 		return new Form(
 			$this,
 			"EmailForm",
 			new FieldSet(
 				new EmailField("Email",_t("Shop.Checkout.Email","%Email%"),$email),
-				new TextField("ClientKey",_t("Shop.Checkout.ClientKey","%ClientKey%"))
+				new TextField("ClientKey",_t("Shop.Checkout.ClientKey","%ClientKey%"),$clientKey)
 				),
 			new FormAction('doSubmitEmailForm', _t("Shop.Form.Next","%Next%")),
 			new RequiredFields("Email")
@@ -144,6 +149,35 @@ class ShopCheckoutPage_Controller extends ShopController {
 		if ($client = DataObject::get_one("ShopClient","ClientKey LIKE '".$clientKey."'")) {
 			//existing client
 			$clientID = $client->ID;
+			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID")) {
+				
+				if ($addr = $lastOrder->InvoiceAddress()) {
+					//use the last invoice adress, if empty
+					if ($order->InvoiceAddress()->ID==0) {						
+						$newAddr = new ShopAddress();
+						$newAddr->merge($addr);
+						//restore the relations
+						$newAddr->OrderID = $order->ID;
+						$newAddr->ClientID = $clientID;
+						$newAddr->write();
+						$order->InvoiceAddressID = $newAddr->ID;					
+						$order->write();
+					}
+				}
+				if ($addr = $lastOrder->DeliveryAddress()) {
+					//use the last shipping adress, if empty
+					if ($order->DeliveryAddress()->ID==0) {
+						$newAddr = new ShopAddress();
+						$newAddr->merge($addr);
+						//restore the relations
+						$newAddr->OrderID = $order->ID;
+						$newAddr->ClientID = $clientID;
+						$newAddr->write();
+						$order->DeliveryAddressID = $newAddr->ID;					
+						$order->write();
+					} 
+				}
+			}
 		} else {
 			//create new client, if not exists
 			if (!(DataObject::get_one("ShopClient","Email LIKE '".$email."'"))) {
@@ -187,6 +221,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		if ($session->isComplete()) {
 			//create invoice
 			$session->Status = "Ordered";
+			$session->OrderKey = $session->generateOrderKey();
 			$session->write();
 			
 			$invoice = new ShopInvoice();
@@ -201,6 +236,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			//send email with invoice link
 			return array();
 		} else {
+			Director::redirect($this->dataRecord->Link()."incomplete");
 			return array();
 		}
 	}
@@ -288,7 +324,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$ship = array();
 		$order = ShopOrder::orderSession();
 		foreach ($shippingMethods as $name => $value) {
-			$ship[$name] = _t("Shop.Shipping.{$value}","%{$value}%")." (".$order->calcShippingCosts($name)." ".ShopOrder::getCurrency().")";
+			$ship[$name] = _t("Shop.Shipping.{$value}","%{$value}%")." (".$order->calcShippingCosts($name)." ".ShopOrder::getLocalCurrency().")";
 			// $value = $value ."()";
 		}
 		$form = new Form(
@@ -399,6 +435,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	
 	private function stepArrayData($number) {
 		$step = self::$steps[$number];
+		$linkingMode = ($step==Director::urlParam("Action")) ? "current" : null;
 		return new ArrayData(array(
 			"URLSegment" => $step,
 			"Link"=> $this->dataRecord->Link().$step,
@@ -412,7 +449,6 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$data = array();
 		$i=0;
 		foreach (self::$steps as $step) {
-			$linkingMode = ($this->currentStep()==$i) ? "current" : null;
 			$data[] = $this->stepArrayData($i);
 			$i++;
 		}

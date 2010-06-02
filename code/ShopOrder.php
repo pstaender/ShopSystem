@@ -13,12 +13,12 @@ class ShopOrder extends DataObject {
 	static $db = array(
 		"Hash"=>"Varchar(32)",
 		"Status"=>"Enum('Unsubmitted,Ordered,Payed,Sended,Declared','Unsubmitted')",
-		"SubTotal"=>"Float",
-		"Tax"=>"Float",
+		"Tax"=>"Int",
 		"VAT"=>"Enum('INCL,EXCL','INCL')",
 		"VATAmount"=>"Float",
 		"ShippingCosts"=>"Float",
 		"Discount"=>"Float",
+		"SubTotal"=>"Float",
 		"Total"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
 		"IP"=>"Varchar(200)",
@@ -27,6 +27,7 @@ class ShopOrder extends DataObject {
 		"Note"=>"Text",
 		"InternalNote"=>"Text",
 		"TrackingID"=>"Varchar(250)",
+		"OrderKey"=>"Varchar(200)",
 		);
 	
 	static $has_one = array(
@@ -37,6 +38,10 @@ class ShopOrder extends DataObject {
 		
 	static $has_many = array(
 		"Items"=>"ShopOrderItem",
+		);
+	
+	static $summary_fields = array(
+		"Status","Tax","VAT","ShippingCosts","Discount","SubTotal","Total","Client.FirstName","Client.Surname"
 		);
 		
 	static $hashField = "shoppinghash";
@@ -122,9 +127,9 @@ class ShopOrder extends DataObject {
 			$s->Hash = $hash;
 			Session::set(self::$hashField,$hash);
 			$s->IP = $_SERVER['REMOTE_ADDR'];
-			$s->Currency = self::getCurrency();
-			$s->VAT = self::getVAT();
-			$s->Tax = self::getTax();
+			$s->Currency = self::getLocalCurrency();
+			$s->VAT = self::getVATType();
+			$s->Tax = self::getLocalTax();
 			$s->write();
 			// else user_error("Couldn't create ShoppingSession...");
 		} else {
@@ -135,9 +140,9 @@ class ShopOrder extends DataObject {
 				$s->Hash = $hash;
 				Session::set(self::$hashField,$hash);
 				$s->IP = $_SERVER['REMOTE_ADDR'];
-				$s->Currency = self::getCurrency();
-				$s->VAT = self::getVAT();
-				$s->Tax = self::getTax();
+				$s->Currency = self::getLocalCurrency();
+				$s->VAT = self::getVATType();
+				$s->Tax = self::getLocalTax();
 				$s->write();
 			}
 		}
@@ -148,19 +153,19 @@ class ShopOrder extends DataObject {
 		return self::checkForSessionOrCreate();
 	}
 	
-	static function getTax() {
-		return self::$tax[self::getCountry()];
+	static function getLocalTax() {
+		return self::$tax[self::getLocalCountry()];
 	}
 	
-	static function getCountry() {
+	static function getLocalCountry() {
 		return self::$country ? self::$country : i18n::get_locale();
 	}
 	
-	static function getCurrency() {
+	static function getLocalCurrency() {
 		return self::$currency;
 	}
 	
-	static function getVAT() {
+	static function getVATType() {
 		return self::$vatType;
 	}
 
@@ -189,8 +194,16 @@ class ShopOrder extends DataObject {
 		}
 	}
 	
-	function orderKey() {
-		return parent::orderKey();
+	function itemsCount() {
+		$items = 0;
+		foreach ($this->Items() as $it) {
+			$items = $items+($it->Quantity);
+		}
+		return $items;
+	}
+	
+	function generateOrderKey() {
+		return parent::generateOrderKey();
 	}
 	
 	function sendOrderConfirmationTo($email) {

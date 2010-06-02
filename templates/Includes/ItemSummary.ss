@@ -1,7 +1,8 @@
-<% control Cart %>
+<% control Top.Cart %>
+	<input type="hidden" value="{$ItemsCount}" id="ShoppingCartItemsCount">
 	<table class="shoppingItems">
 	<% control Items %>
-	<% if Quantity==0 %><% else %>
+	<% if Quantity %>
 		<tr class="item" id="ShopItem{$ID}" key="$ID">
 			<td class="quantity">$Quantity</td>
 			<td class="action"><div class="inc" quantity="1" key="$OriginalItem.ID">+</div><div class="dec" quantity="-1" key="$OriginalItem.ID">-</div><div class="remove" quantity="-1000" key="$OriginalItem.ID">x</div><a href="$OriginalItem.Link"><div class="info" key="$OriginalItem.ID">i</div></a></td>

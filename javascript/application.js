@@ -10,13 +10,20 @@ $(document).ready(function() {
 	cartHolder.load('cart/get', function() {
 		//do something, after first load
 		//eg. hide shopping cart
-		// $('.shoppingCart').hide();
+		//fw
+		$('.shoppingCart').hide();
+		$('#ShoppingItemsCountIcon').html($('#ShoppingCartItemsCount').attr('value'));
+		
 	});
 	
 	$(".buttonOrder").bind('click', function() {
 		var id = $(this).attr('key');
 		var url = "cart/add/"+$(this).attr('key')+"/";
-		$(".shoppingCartHolder").load(url);
+		$(".shoppingCartHolder").load(url, function() {
+				//after loading url, do
+				//fw
+				$('#ShoppingItemsCountIcon').html($('#ShoppingCartItemsCount').attr('value'));
+		});
 	});
 	
 	//on cart buttons
@@ -24,7 +31,13 @@ $(document).ready(function() {
 		var id = $(this).parent().parent().attr('key');
 		var url = "cart/add/"+$(this).attr('key')+"/"+$(this).attr('quantity');
 		//$(this).parent().parent().parent().parent().parent().load(url);
-		cartHolder.load(url);
+		cartHolder.load(url, function() {
+			//after loading url, do
+			//fw
+			$('#ShoppingItemsCountIcon').html($('#ShoppingCartItemsCount').attr('value'));
+			
+		});
+		
 	});
 })
 })(jQuery);

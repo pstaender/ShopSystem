@@ -1,4 +1,4 @@
-$ContentContact
-$ShippingAddressForm
-
 <% include CheckoutNavigation %>
+
+$ContentDeliveryAddress
+$ShippingAddressForm

@@ -22,13 +22,17 @@ class ShopOrderItem extends DataObject {
 		"OriginalItem"=>"ShopItem",
 		);
 		
+	static $summary_fields = array(
+		"Quantity","Price","Title","SubTotal","Total"
+		);
+		
 	function total() {
 		return $this->Price*$this->Quantity;
 	}
 	
 	function onBeforeWrite() {
+		parent::onBeforeWrite();
 		$this->Total = $this->total();
-		return parent::onBeforeWrite();
 	}
 	
 }

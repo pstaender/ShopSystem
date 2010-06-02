@@ -9,6 +9,7 @@ class ShopItem extends SiteTree {
 		"StockDate"=>"Date",
 		"Price"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
+		"Summary"=>"Text",
 		// "VAT"=>"Enum('INCL,EXCL,INHERIT','INHERIT')",
 		);
 	
@@ -19,7 +20,7 @@ class ShopItem extends SiteTree {
 	
 	static $field_names = array(
 		);
-	
+			
 	static $default_sort =  "Featured, Sort DESC";
 	
 	function getCMSFields() {
@@ -27,6 +28,7 @@ class ShopItem extends SiteTree {
 		$fields->addFieldsToTab("Root.Content.Shop", array(
 			new NumericField('Price', _t("Shop.Item.Price","%Price%")),
 			new CheckboxField('Featured', _t("Shop.Item.Featured","%Featured%")),
+			new TextField('Summary', _t("Shop.Item.Summary","%Summary%"),5),
 			new TextField('StockQuantity', _t("Shop.Item.StockQuantity","%StockQuantity%")),
 			new DateField('StockDate', _t("Shop.Item.StockDate","%StockDate%")),
 			// new DropdownField('VAT', _t("SHOP.ITEM.VAT","%Mehrwertsteuer%"), singleton($this->ClassName)->dbObject('VAT')->enumValues()),
@@ -42,7 +44,7 @@ class ShopItem extends SiteTree {
 	
 	function VATType() {
 		//if items is set to INHERIT returns the (global) default value set in ShopOrder
-		return ($this->VAT=="INHERIT") ? ShopOrder::getVAT() : $this->VAT;
+		return ($this->VAT=="INHERIT") ? ShopOrder::getVATType() : $this->VAT;
 	}
 		
 }

@@ -1,6 +1,6 @@
-<div class="checkoutNavigation">
+<ol class="checkoutNavigation">
 	<% control CheckoutSteps %>
-		<a href="$Link">$Title</a>
+		<li class="$LinkingMode">$Title</li>
 	<% end_control %>
-</div>
+</ol>
 <div style="clear:both;"></div>

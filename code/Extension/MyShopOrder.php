@@ -38,7 +38,7 @@ class MyShopOrder extends Extension {
 		return 0;
 	}
 		
-	function orderKey() {
+	function generateOrderKey() {
 		//place your own rule to generate an order key
 		$name = preg_replace(array("/Ä|ä/","/Ö|ö/","/Ü|ü/","/ß/"),array("ae","oe","ue","ss"), $this->owner->InvoiceAddress()->Surname
 		);

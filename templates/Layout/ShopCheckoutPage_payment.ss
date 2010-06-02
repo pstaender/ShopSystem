@@ -1,6 +1,5 @@
 <% include CheckoutNavigation %>
 
 $ContentPayment
-
 $PaymentMethodForm
 

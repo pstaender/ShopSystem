@@ -17,7 +17,7 @@ class ShopController extends Page_Controller {
 	}
 	
 	function Tax() {
-		return ShopOrder::getTax();
+		return ShopOrder::getLocalTax();
 	}
 	
 	function Cart() {
@@ -25,7 +25,7 @@ class ShopController extends Page_Controller {
 	}
 	
 	function VAT() {
-		return ShopOrder::getVAT();
+		return ShopOrder::getVATType();
 	}
 	
 	function MostFeaturedItems() {
