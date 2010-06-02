@@ -23,7 +23,7 @@ class ShopOrder extends DataObject {
 		"Total"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
 		"IP"=>"Varchar(200)",
-		"Payment"=>"Enum('Invoice','Invoice')",
+		"Payment"=>"Enum('Invoice,Prepayment','Invoice')",
 		"Shipping"=>"Enum('Standard,Express','Standard')",
 		"Note"=>"Text",
 		"InternalNote"=>"Text",
@@ -87,6 +87,7 @@ class ShopOrder extends DataObject {
 			$this->VATAmount = round(($amount/100) * $this->Tax,$round);
 			$this->Total = $this->Total + $this->VATAmount;
 		}
+		parent::calculate();
 		return $this->write();
 	}
 	
@@ -130,8 +131,7 @@ class ShopOrder extends DataObject {
 		//define your own payment methods fields in MyShopOrder.php
 		return parent::paymentMethodFields();
 	}
-	
-			
+				
 	static function checkForSessionOrCreate() {
 		if (!($session=Session::get(self::$hashField))) {
 			//create session
