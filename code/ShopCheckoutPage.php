@@ -324,13 +324,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function ShippingMethodForm() {
 		self::setCheckoutStep(3);
 		//let visitor choose the shipping method
-		$shippingMethods = singleton('ShopOrder')->dbObject('Shipping')->enumValues();
-		$ship = array();
 		$order = ShopOrder::orderSession();
-		foreach ($shippingMethods as $name => $value) {
-			$ship[$name] = _t("Shop.Shipping.{$value}","%{$value}%")." (".$order->calcShippingCosts($name)." ".ShopOrder::getLocalCurrency().")";
-			// $value = $value ."()";
-		}
+		//get shipping method fields
+		$ship = $order->shippingMethodFields();
 		$form = new Form(
 			$this,
 			"ShippingMethodForm",
@@ -357,12 +353,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function PaymentMethodForm() {
 		self::setCheckoutStep(4);
 		//let visitor choose the payment method
-		$paymentMethods = singleton('ShopOrder')->dbObject('Payment')->enumValues();
-		$pay = array();
 		$order = ShopOrder::orderSession();
-		foreach ($paymentMethods as $name => $value) {
-			$pay[$name] = _t("Shop.Payment.{$value}","%{$value}%");
-		}
+		$pay = $order->paymentMethodFields();
 		$form = new Form(
 			$this,
 			"PaymentMethodForm",

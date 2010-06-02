@@ -109,7 +109,7 @@ class ShopOrder extends DataObject {
 	
 	function calcDiscount() {
 		//define your own discount rules with MyShopOrder.php
-		return parent::calcDiscount() ? parent::calcDiscount() : abs($this->Discount);
+		return parent::calcDiscount();// : abs($this->Discount);
 	}
 	
 	function isComplete() {
@@ -120,6 +120,17 @@ class ShopOrder extends DataObject {
 			return false;
 		}
 	}
+	
+	function shippingMethodFields() {
+		//define your own shipping cost fields in MyShopOrder.php
+		return parent::shippingMethodFields();
+	}
+	
+	function paymentMethodFields() {
+		//define your own payment methods fields in MyShopOrder.php
+		return parent::paymentMethodFields();
+	}
+	
 			
 	static function checkForSessionOrCreate() {
 		if (!($session=Session::get(self::$hashField))) {

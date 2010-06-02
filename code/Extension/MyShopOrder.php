@@ -11,6 +11,32 @@
 
 class MyShopOrder extends Extension {
 	
+	static $eu_states = array(
+		"BE","BG","DK","DE","EE","FI","FR","GR","IE","IT","LV","LT","LU","MT","NL","AT",
+		"PL","PT","RO","SE","SK","SI","ES","CZ","HU","GB","CY"
+		);
+		
+	function shippingMethodFields() {
+		//generate a select field from all enum values
+		$shippingMethods = singleton('ShopOrder')->dbObject('Shipping')->enumValues();
+		$order = ShopOrder::orderSession();
+		$ship = array();
+		foreach ($shippingMethods as $name => $value) {
+			$ship[$name] = _t("Shop.Shipping.{$value}","%{$value}%")." (".$order->calcShippingCosts($name)." ".ShopOrder::getLocalCurrency().")";
+		}
+		return $ship;
+	}
+	
+	function paymentMethodFields() {
+		//generate a select field from all enum values
+		$paymentMethods = singleton('ShopOrder')->dbObject('Payment')->enumValues();
+		$pay = array();
+		foreach ($paymentMethods as $name => $value) {
+			$pay[$name] = _t("Shop.Payment.{$value}","%{$value}%");
+		}
+		return $pay;
+	}
+	
 	function calcShippingCosts($shippingMethod = null) {
 		//write your own method for calculating the shipping costs
 		//shipping methods are defined in the model [enumValues]
@@ -35,6 +61,13 @@ class MyShopOrder extends Extension {
 	
 	function calcDiscount() {
 		//write your own method for calculating a discount, if needed
+		if (strtolower($this->owner->CouponCode)=="bpp") {
+			return $this->owner->amount()*0.15;
+		}
+		if (strtolower($this->owner->CouponCode)=="ringfoto") {
+			return $this->owner->amount()*0.1;
+		}
+
 		return 0;
 	}
 		
@@ -59,12 +92,7 @@ class MyShopOrder extends Extension {
 		if ($this->owner->amountBelowMin()) $check = false;
 		return $check;
 	}
-	
-	
-	function isNotCompleteMessage() {
-		return "Your order couldn't submitted because of the foloowing errors:";
-	}
-		
+			
 }
 
 ?>
