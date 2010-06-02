@@ -61,13 +61,6 @@ class MyShopOrder extends Extension {
 	
 	function calcDiscount() {
 		//write your own method for calculating a discount, if needed
-		if (strtolower($this->owner->CouponCode)=="bpp") {
-			return $this->owner->amount()*0.15;
-		}
-		if (strtolower($this->owner->CouponCode)=="ringfoto") {
-			return $this->owner->amount()*0.1;
-		}
-
 		return 0;
 	}
 		
