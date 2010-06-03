@@ -16,6 +16,23 @@ class MyShopOrder extends Extension {
 		"PL","PT","RO","SE","SK","SI","ES","CZ","HU","GB","CY"
 		);
 		
+	function extraStatics() {
+		//use it for define extra fields you need
+		return array(
+			'db' => array(
+				'Weight' => 'Float',
+				)
+			);
+	}
+	
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->addFieldsToTab('Root.Content.Shop', array(
+			new TextField('Weight')
+			));
+		return $fields;
+	}
+		
 	function shippingMethodFields() {
 		//generate a select field from all enum values
 		$shippingMethods = singleton('ShopOrder')->dbObject('Shipping')->enumValues();

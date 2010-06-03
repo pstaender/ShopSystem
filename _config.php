@@ -17,6 +17,7 @@ ShopOrder::$tax = array(
 	);
 
 Object::add_extension("ShopOrder", "MyShopOrder");
+Object::add_extension("ShopItem", "MyShopItem");
 
 
 ?>
