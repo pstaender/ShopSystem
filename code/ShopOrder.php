@@ -130,7 +130,8 @@ class ShopOrder extends DataObject {
 		if (parent::isComplete()) {
 			return true;
 		} else {
-			return false;
+			return true;
+			// return false;
 		}
 	}
 				
@@ -147,28 +148,6 @@ class ShopOrder extends DataObject {
 			$s->VAT = self::getVATType();
 			$s->Tax = self::getLocalTax();
 			$s->write();//generate ID
-			//create address fields for shipping+invoicing
-			$a = new ShopAddress();
-			$a->write();
-			$a->OrderID = $s->ID;
-			$s->InvoiceAddressID = $a->ID;
-			$a = new ShopAddress();
-			$a->OrderID = $s->ID;
-			$a->write();
-			$s->DeliveryAddressID = $a->ID;
-			//create payment+shipping methods
-			$p = new ShopPayment();
-			$p->Price = 0;
-			$p->OrderID = $s->ID;
-			$p->write();
-			$s->PaymentID = $p->ID;
-			$d = new ShopShipping();
-			$d->OrderID = $s->ID;
-			$d->Price = 0;
-			$d->write();
-			$s->ShippingID = $d->ID;
-			//save session
-			$s->write();
 			// else user_error("Couldn't create ShoppingSession...");
 		} else {
 			if (!($s= DataObject::get_one("ShopOrder","Hash = '".Convert::Raw2SQL($session)."' AND Status = 'Unsubmitted'"))) {
@@ -184,6 +163,37 @@ class ShopOrder extends DataObject {
 				$s->write();
 			}
 		}
+		
+		//create address fields for shipping+invoicing
+		if ($s->InvoiceAddressID==0) {
+			$a = new ShopAddress();
+			$a->write();
+			$a->OrderID = $s->ID;
+			$s->InvoiceAddressID = $a->ID;
+		}
+		if ($s->DeliveryAddressID==0) {
+			$a = new ShopAddress();
+			$a->OrderID = $s->ID;
+			$a->write();
+			$s->DeliveryAddressID = $a->ID;
+		}
+		//create payment+shipping methods
+		if ($s->PaymentID==0) {
+			$p = new ShopPayment();
+			$p->Price = 0;
+			$p->OrderID = $s->ID;
+			$p->write();
+			$s->PaymentID = $p->ID;
+		}
+		if ($s->ShippingID==0) {
+			$d = new ShopShipping();
+			$d->OrderID = $s->ID;
+			$d->Price = 0;
+			$d->write();
+			$s->ShippingID = $d->ID;
+		}
+		//save session
+		$s->write();
 		return $s;
 	}
 	

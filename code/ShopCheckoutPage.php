@@ -463,7 +463,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	
 	private static function setCheckoutStep($value) {
 		if ($value==0) $value="0";
-		Session::set('Shop.CheckoutStep', (int) $value);
+		Session::set('Shop.CheckoutStep.'.ShopOrder::orderSession()->Hash, (int) $value);
 		return (int) $value;
 	}
 
