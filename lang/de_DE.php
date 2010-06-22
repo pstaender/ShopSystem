@@ -16,9 +16,10 @@ if(array_key_exists('de_DE', $lang) && is_array($lang['de_DE'])) {
 
 // Shop.Order.EmailSubject
 
-$lang['de_DE']['SHOP.CheckoutPage']['ContentContact'] = "Rechnungsanschrift (Inhalt)";
+$lang['de_DE']['Shop.CheckoutPage']['ContentContact'] = "Rechnungsanschrift (Inhalt)";
 
 $lang['de_DE']['Shop']['AddToCart'] = 'Bestellen';
+
 $lang['de_DE']['Shop.Cart']['Amount'] = 'Betrag';
 $lang['de_DE']['Shop.Cart']['TaxVAT'] = 'MwSt.';
 $lang['de_DE']['Shop.Cart']['TaxIncl'] = 'inkl.';
@@ -27,10 +28,22 @@ $lang['de_DE']['Shop.Cart']['Total'] = 'Gesamtbetrag';
 $lang['de_DE']['Shop.Cart']['SubTotal'] = 'Zwischensumme';
 $lang['de_DE']['Shop.Cart']['Discount'] = 'Preisnachlass';
 $lang['de_DE']['Shop.Cart']['ShippingCosts'] = 'Versandkosten';
+
 $lang['de_DE']['Shop.Shipping']['Standard'] = 'Standardversand';
 $lang['de_DE']['Shop.Shipping']['Express'] = 'Expressversand';
+$lang['de_DE']['Shop.Shipping']['Title'] = 'Versandbschreibung';
+$lang['de_DE']['Shop.Shipping']['Method'] = 'Versandart';
+$lang['de_DE']['Shop.Shipping']['Note'] = 'Anmerkung zum Versand';
+$lang['de_DE']['Shop.Shipping']['DateOfSending'] = 'Versendedatum';
+$lang['de_DE']['Shop.Shipping']['TrackingID'] = 'Tracking ID';
+$lang['de_DE']['Shop.Shipping']['ServiceProvider'] = 'Versanddienstleister';
+
 $lang['de_DE']['Shop.Payment']['Invoice'] = 'per Rechnung';
+$lang['de_DE']['Shop.Payment']['Prepayment'] = 'Vorauszahlung';
+$lang['de_DE']['Shop.Payment']['Method'] = 'Zahlungsweise';
+
 $lang['de_DE']['Shop']['GoCheckout'] = 'Zur Kasse gehen';
+
 $lang['de_DE']['Shop.Contact']['Email'] = 'eMail';
 $lang['de_DE']['Shop.Contact']['Company'] = 'Firmenname';
 $lang['de_DE']['Shop.Contact']['FirstName'] = 'Vorname';
@@ -84,7 +97,7 @@ $lang['de_DE']['Shop.Company']['Email'] = "philipp.staender@gmail.com";
 
 $lang['de_DE']['Shop.Checkout']['Email'] = "eMail-Addresse";
 $lang['de_DE']['Shop.Checkout']['Invoiceaddress'] = "Rechnungsanschrift";
-$lang['de_DE']['Shop.Checkout']['Shippingaddress'] = "Lieferanschrift";
+$lang['de_DE']['Shop.Checkout']['Deliveryaddress'] = "Lieferanschrift";
 $lang['de_DE']['Shop.Checkout']['Index'] = "Ihre Bestellung";
 $lang['de_DE']['Shop.Checkout']['IncompleteOrder'] = "Ihre Bestellung ist unvollständig";
 $lang['de_DE']['Shop.Checkout']['YourInvoiceAddress'] = "Ihre Rechnungsanschrift";

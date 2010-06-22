@@ -32,35 +32,16 @@ class MyShopOrder extends Extension {
 			));
 		return $fields;
 	}
-		
-	function shippingMethodFields() {
-		//generate a select field from all enum values
-		$shippingMethods = singleton('ShopOrder')->dbObject('Shipping')->enumValues();
-		$order = ShopOrder::orderSession();
-		$ship = array();
-		foreach ($shippingMethods as $name => $value) {
-			$ship[$name] = _t("Shop.Shipping.{$value}","%{$value}%")." (".$order->calcShippingCosts($name)." ".ShopOrder::getLocalCurrency().")";
-		}
-		return $ship;
-	}
-	
-	function paymentMethodFields() {
-		//generate a select field from all enum values
-		$paymentMethods = singleton('ShopOrder')->dbObject('Payment')->enumValues();
-		$pay = array();
-		foreach ($paymentMethods as $name => $value) {
-			$pay[$name] = _t("Shop.Payment.{$value}","%{$value}%");
-		}
-		return $pay;
-	}
-	
+			
 	function calcShippingCosts($shippingMethod = null) {
 		//write your own method for calculating the shipping costs
 		//shipping methods are defined in the model [enumValues]
 		$amount = $this->owner->amount();
 		$shipping = 0;
 		$shipping = ($amount < 300) ? 20 : 50;
-		if ($shippingMethod=="Express") $shipping = $shipping*1.25;
+		if (!$shippingMethod) $shippingMethod=$this->owner->Shipping()->Method;
+		$shippingMethod = strtolower($shippingMethod);
+		if ($shippingMethod=="express") $shipping = $shipping*1.25;
 		return ($amount==0) ? 0 : $shipping;
 	}
 
@@ -68,7 +49,8 @@ class MyShopOrder extends Extension {
 		//write your own method for calculating the payment costs
 		//payment methods are defined in the model [enumValues]
 		$amount = $this->owner->amount();
-		if ($paymentMethod) $paymentMethod = strtolower($paymentMethod);
+		if (!$paymentMethod) $paymentMethod=strtolower($this->owner->Payment()->Method);
+		$paymentMethod = strtolower($paymentMethod);
 		$payment = 0;
 		if ($paymentMethod=="creditcard") {
 			$payment = $amount * 0.01;
@@ -78,13 +60,16 @@ class MyShopOrder extends Extension {
 	
 	function calcDiscount() {
 		//write your own method for calculating a discount, if needed
-		return 0;
+		$disc = 0;
+		//example, education discount of 20%
+		if (trim(strtoupper($this->owner->CouponCode))=="EDUCATION") $disc = $this->owner->Amount()*0.2;
+		return $disc;
 	}
-		
+	
 	function calculate() {
-		return true;
+		return;
 	}
-		
+				
 	function generateOrderKey() {
 		//place your own rule to generate an order key
 		$name = preg_replace(array("/Ä|ä/","/Ö|ö/","/Ü|ü/","/ß/"),array("ae","oe","ue","ss"), $this->owner->InvoiceAddress()->Surname
@@ -97,7 +82,7 @@ class MyShopOrder extends Extension {
 	
 	function isComplete() {
 		$required = array(
-			"Total","Payment","Shipping","InvoiceAddressID","DeliveryAddressID"
+			"Total","PaymentID","ShippingID","InvoiceAddressID","DeliveryAddressID"
 			);
 		$check = true;
 		foreach ($required as $r) {

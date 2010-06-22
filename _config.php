@@ -15,9 +15,10 @@ ShopOrder::$vatType = "EXCL";
 ShopOrder::$tax = array(
 	"de_DE"=>"19"
 	);
+	
+ShopPayment::$priceInMethods = false;
+ShopShipping::$priceInMethods = true;
 
 Object::add_extension("ShopOrder", "MyShopOrder");
-Object::add_extension("ShopItem", "MyShopItem");
-
 
 ?>

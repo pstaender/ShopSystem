@@ -29,10 +29,18 @@
 	<% end_control %>
 	</p>
 	
-	<br />
+	<h2><% _t('Shop.Checkout.Payment','%Payment%') %></h2>
+	<p>
+		$Payment.MethodTitle ($CalcPaymentCosts $Currency)
+	</p>
+
+	<h2><% _t('Shop.Checkout.Shipping','%Shipping%') %></h2>
+	<p>
+		$Shipping.MethodTitle ($CalcShippingCosts $Currency)
+	</p>
+
 	<h2><% _t('Shop.Checkout.Summary','%Summary%') %></h2>
-	<br />
-	<br />
+	<p>&nbsp;</p>
 	<div id="ItemSummary"><% include ItemSummary %></div>
 	<% else %>
 		<h2><% _t('Shop.Checkout.IncompleteOrder','%Incomplete Order%') %></h2>

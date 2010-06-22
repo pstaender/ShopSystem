@@ -13,30 +13,29 @@ class ShopOrder extends DataObject {
 	static $db = array(
 		"Email"=>"Varchar(250)",
 		"Hash"=>"Varchar(32)",
+		"OrderKey"=>"Varchar(200)",
 		"Status"=>"Enum('Unsubmitted,Ordered,Payed,Sended,Declared','Unsubmitted')",
 		"Tax"=>"Int",
 		"VAT"=>"Enum('INCL,EXCL','INCL')",
 		"VATAmount"=>"Float",
-		"ShippingCosts"=>"Float",
+		//"ShippingCosts"=>"Float",
 		"Discount"=>"Float",
 		"SubTotal"=>"Float",
 		"Total"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
 		"IP"=>"Varchar(200)",
-		"Payment"=>"Enum('Invoice,Prepayment','Invoice')",
-		"Shipping"=>"Enum('Standard,Express','Standard')",
 		"Note"=>"Text",
 		"InternalNote"=>"Text",
-		"TrackingID"=>"Varchar(250)",
 		"TaxIDNumber"=>"Varchar(250)",
 		"CouponCode"=>"Varchar(60)",
-		"OrderKey"=>"Varchar(200)",
 		);
 	
 	static $has_one = array(
 		"Client"=>"ShopClient",
 		"InvoiceAddress"=>"ShopAddress",
 		"DeliveryAddress"=>"ShopAddress",
+		"Payment"=>"ShopPayment",
+		"Shipping"=>"ShopShipping",
 		);
 		
 	static $has_many = array(
@@ -44,7 +43,7 @@ class ShopOrder extends DataObject {
 		);
 	
 	static $summary_fields = array(
-		"Status","Tax","VAT","ShippingCosts","Discount","SubTotal","Total","Client.FirstName","Client.Surname"
+		"Status","Tax","VAT","Shipping.Price","Discount","SubTotal","Total","Client.FirstName","Client.Surname"
 		);
 		
 	static $hashField = "shoppinghash";
@@ -76,10 +75,14 @@ class ShopOrder extends DataObject {
 	function calculate($round = 2) {
 		$amount = $this->amount();
 		$tax = 1+($this->Tax/100);
-		$this->ShippingCosts = $this->calcShippingCosts($this->Shipping);
+		
+		$this->Shipping()->Price = $this->calcShippingCosts($this->Shipping());
+		$this->Shipping()->write();
+		$this->Payment()->Price = $this->calcPaymentCosts($this->Payment());
+		$this->Payment()->write();
 		
 		$this->Discount = $this->calcDiscount();
-		$this->SubTotal = $this->Total = $amount - $this->Discount + $this->ShippingCosts;
+		$this->SubTotal = $this->Total = $amount - $this->Discount + $this->Shipping()->Price + $this->Payment()->Price;
 		if ($this->VAT=="INCL") {
 			$this->VATAmount = round($amount - ($this->Total / $tax),$round);
 		}
@@ -104,8 +107,17 @@ class ShopOrder extends DataObject {
 	}
 		
 	function calcShippingCosts($shippingMethod = null) {
+		//use selected shipping method of order, if not argumented
+		if (!$shippingMethod) $shippingMethod=$this->Shipping()->Method;
 		//define your own shipping rules with MyShopOrder.php
-		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->ShippigCosts;
+		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->Shipping()->Price;
+	}
+
+	function calcPaymentCosts($paymentMethod = null) {
+		//use selected payment method of order, if not argumented
+		if (!$paymentMethod) $paymentMethod=$this->Payment()->Method;
+		//define your own payment rules with MyShopOrder.php
+		return parent::calcPaymentCosts($paymentMethod) ? parent::calcPaymentCosts($paymentMethod) : $this->Payment()->Price;
 	}
 	
 	function calcDiscount() {
@@ -121,16 +133,6 @@ class ShopOrder extends DataObject {
 			return false;
 		}
 	}
-	
-	function shippingMethodFields() {
-		//define your own shipping cost fields in MyShopOrder.php
-		return parent::shippingMethodFields();
-	}
-	
-	function paymentMethodFields() {
-		//define your own payment methods fields in MyShopOrder.php
-		return parent::paymentMethodFields();
-	}
 				
 	static function checkForSessionOrCreate() {
 		if (!($session=Session::get(self::$hashField))) {
@@ -144,6 +146,28 @@ class ShopOrder extends DataObject {
 			$s->Currency = self::getLocalCurrency();
 			$s->VAT = self::getVATType();
 			$s->Tax = self::getLocalTax();
+			$s->write();//generate ID
+			//create address fields for shipping+invoicing
+			$a = new ShopAddress();
+			$a->write();
+			$a->OrderID = $s->ID;
+			$s->InvoiceAddressID = $a->ID;
+			$a = new ShopAddress();
+			$a->OrderID = $s->ID;
+			$a->write();
+			$s->DeliveryAddressID = $a->ID;
+			//create payment+shipping methods
+			$p = new ShopPayment();
+			$p->Price = 0;
+			$p->OrderID = $s->ID;
+			$p->write();
+			$s->PaymentID = $p->ID;
+			$d = new ShopShipping();
+			$d->OrderID = $s->ID;
+			$d->Price = 0;
+			$d->write();
+			$s->ShippingID = $d->ID;
+			//save session
 			$s->write();
 			// else user_error("Couldn't create ShoppingSession...");
 		} else {

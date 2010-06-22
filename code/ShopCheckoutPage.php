@@ -84,7 +84,7 @@ class ShopCheckoutPage extends SiteTree {
 class ShopCheckoutPage_Controller extends ShopController {
 	
 	static $allowed_actions = array(
-		"email","invoiceaddress","shippingaddress","shipping","payment","summary","complete","empty", "minamount", "incomplete",
+		"email","invoiceaddress","deliveryaddress","shipping","payment","summary","complete","empty", "minamount", "incomplete",
 		"EmailForm","InvoiceAddressForm","ShippingAddressForm","ShippingMethodForm","PaymentMethodForm","SummaryForm"
 		);
 	
@@ -92,7 +92,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		"index",
 		"email",
 		"invoiceaddress",
-		"shippingaddress",
+		"deliveryaddress",
 		"shipping",
 		"payment",
 		"summary",
@@ -109,7 +109,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	}
 		
 	function index() {
-		// todo, make it safe for all users
+		// todo, make it usabilitysafe for "all" users
 		if (ShopOrder::orderSession()->isComplete()) {
 			if ($step = self::getCheckoutStep()) $this->redirectToNextStep(self::$steps[$step]);	
 		} else {
@@ -123,7 +123,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 		self::setCheckoutStep(0);
 		$clientKey = $email = null;
 		$order = ShopOrder::orderSession();
-		if ($client = ShopOrder::orderSession()->Client()) {
+		if (ShopOrder::orderSession()->Client()->ID>0) {
+			$client = ShopOrder::orderSession()->Client();
 			$email = $client->Email;
 			$clientKey = $client->ClientKey;
 		} else {
@@ -248,8 +249,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function InvoiceAddressForm() {
 		self::setCheckoutStep(1);
 		$form = $this->createContactForm(new FormAction('doSubmitInvoiceAddress', _t("Shop.Form.Next","%Next%")), "InvoiceAddressForm", new CheckboxField('UseContactForShipping', _t("Shop.Contact.UseContactForShipping","%UseContactForShipping%")));
-		
-		if ($address = DataObject::get_by_id("ShopAddress",ShopOrder::orderSession()->InvoiceAddressID)) $form->loadDataFrom($address);
+		if ($data = ShopOrder::orderSession()->InvoiceAddress()) $form->loadDataFrom($data);
 		return $form;
 	}
 	
@@ -257,30 +257,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 		self::setCheckoutStep(2);
 		//todo, eigene methode fuer submit
 		$form = $this->createContactForm(new FormAction('doSubmitInvoiceAddress', _t("Shop.Form.Next","%Next%")), "ShippingAddressForm", new HiddenField('ThisIsShippingAddress',"ThisIsShippingAddress","true"));
-		
-		if ($address = DataObject::get_by_id("ShopAddress",ShopOrder::orderSession()->DeliveryAddressID)) $form->loadDataFrom($address);
-		
+		//load existing data into form
+		if ($data = ShopOrder::orderSession()->DeliveryAddress()) $form->loadDataFrom($data);
 		return $form;
-	}
-	
-	private function createContactForm(FormAction $formAction, $formName, $additionalField = null) {
-		//use all fields + translate them
-		$contact = singleton("ShopAddress");
-		$labels = array();
-		foreach (ShopAddress::$db as $field => $type) {
-			$restrictedFields[] = $field;
-			$labels = array_merge($labels,array(
-				$field => _t("Shop.Contact.$field","%{$field}%")
-				));
-		}
-		$contact->set_stat("field_labels",$labels);
-		$actions = new FieldSet(
-		   $formAction
-		);
-		$validator = new RequiredFields(ShopAddress::$required_fields);
-		$fields = $contact->getFrontendFields($restrictedFields);
-		if ($additionalField) $fields->push($additionalField);
-		return new Form($this, $formName, $fields, $actions, $validator);
 	}
 	
 	function doSubmitInvoiceAddress($data, $form) {
@@ -294,7 +273,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$shipping->write();
 			$session->DeliveryAddressID = $shipping->ID;
 			$session->write();
-			return $this->redirectToNextStep("shippingaddress");
+			return $this->redirectToNextStep("deliveryaddress");
 		} else {
 			$form->saveInto($contact);
 			$contact->OrderID = $session->ID;
@@ -315,7 +294,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$shipping->write();
 			$session->DeliveryAddressID = $shipping->ID;
 			$session->write();
-			return $this->redirectToNextStep("shippingaddress");			
+			return $this->redirectToNextStep("deliveryaddress");			
 		} else {
 			return $this->redirectToNextStep("invoiceaddress");
 		}
@@ -325,53 +304,73 @@ class ShopCheckoutPage_Controller extends ShopController {
 		self::setCheckoutStep(3);
 		//let visitor choose the shipping method
 		$order = ShopOrder::orderSession();
-		//get shipping method fields
-		$ship = $order->shippingMethodFields();
+		$shipping = singleton("ShopShipping");
+		$labels = array();
+		//translate labels
+		foreach (ShopShipping::$db as $field => $type) {
+			$labels = array_merge($labels,array(
+				$field => _t("Shop.Shipping.$field","%{$field}%")
+				));
+		}
+		$shipping->set_stat("field_labels",$labels);
+		$validator = new RequiredFields(ShopShipping::$required_fields);
+		$fields = $shipping->getFrontendFields($restrictedFields=array(
+			"restrictFields" => array("Method"),
+			));
 		$form = new Form(
 			$this,
 			"ShippingMethodForm",
-			new FieldSet(
-				new DropdownField("ShippingMethod",_t("Shop.Checkout.ShippingMethod","%ShippingMethod%"), $ship, ShopOrder::orderSession()->Shipping)
-				),
+			$fields,
 			new FormAction("doSubmitShippingMethodForm",_t("Shop.Form.Next","%Next%")),
-			new RequiredFields(
-				"ShippingMethod"
-				)
-			);
-			return $form;
+			$validator);
+		//load existing data into form
+		if ($data = ShopOrder::orderSession()->Shipping()) $form->loadDataFrom($data);
+		return $form;
 	}
 	
 	function doSubmitShippingMethodForm($data, $form) {
 		$session = ShopOrder::orderSession();
-		$action = "shipping";
-		$session->Shipping = Convert::Raw2SQL($data['ShippingMethod']);
+		$session->Shipping()->Method = Convert::Raw2SQL($data['Method']);
+		$session->Shipping()->write();
 		$session->calculate();
 		$session->write();
 		$this->redirectToNextStep("shipping");
 	}
 	
 	function PaymentMethodForm() {
-		self::setCheckoutStep(4);
-		//let visitor choose the payment method
-		$order = ShopOrder::orderSession();
-		$pay = $order->paymentMethodFields();
-		$form = new Form(
-			$this,
-			"PaymentMethodForm",
-			new FieldSet(
-				new DropdownField("PaymentMethod",_t("Shop.Checkout.PaymentMethod","%PaymentMethod%"), $pay, ShopOrder::orderSession()->Payment)
-				),
-			new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%")),
-			new RequiredFields(
-				"PaymentMethod"
-				)
-			);
+			self::setCheckoutStep(4);
+			//let visitor choose the payment method
+			$order = ShopOrder::orderSession();
+			//get shipping method fields
+			$payment = singleton("ShopPayment");
+			$labels = array();
+			//translate labels
+			foreach (ShopPayment::$db as $field => $type) {
+				$labels = array_merge($labels,array(
+					$field => _t("Shop.Payment.$field","%{$field}%")
+					));
+			}
+			$payment->set_stat("field_labels",$labels);
+			$validator = new RequiredFields(ShopPayment::$required_fields);
+			$fields = $payment->getFrontendFields($restrictedFields=array(
+				"restrictFields" => array("Method"),
+				));
+			$form = new Form(
+				$this,
+				"PaymentMethodForm",
+				$fields,
+				new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%")),
+				$validator);
+			//load existing data into form
+			if ($data = ShopOrder::orderSession()->Payment()) $form->loadDataFrom($data);
 			return $form;
-	}
+		}
 	
 	function doSubmitPaymentMethodForm($data, $form) {
 		$session = ShopOrder::orderSession();
-		$session->Payment = Convert::Raw2SQL($data['PaymentMethod']);
+		$session->Payment()->Method = Convert::Raw2SQL($data['Method']);
+		$session->Payment()->write();
+		$session->calculate();
 		$session->write();
 		$this->redirectToNextStep("payment");
 	}
@@ -400,14 +399,18 @@ class ShopCheckoutPage_Controller extends ShopController {
 		return array();
 	}
 	
-	private static function setCheckoutStep($value) {
-		if ($value==0) $value="0";
-		Session::set('Shop.CheckoutStep', (int) $value);
-		return (int) $value;
+	function currentStep() {
+		return self::getCheckoutStep();
 	}
-
-	private static function getCheckoutStep() {
-		return (int) Session::get('Shop.CheckoutStep');
+	
+	function checkoutSteps() {
+		$data = array();
+		$i=0;
+		foreach (self::$steps as $step) {
+			$data[] = $this->stepArrayData($i);
+			$i++;
+		}
+		return new DataObjectSet($data);
 	}
 	
 	private function redirectToNextStep($nameOfCurrentStep) {
@@ -426,11 +429,6 @@ class ShopCheckoutPage_Controller extends ShopController {
 		}
 	}
 	
-	
-	function currentStep() {
-		return self::getCheckoutStep();
-	}
-	
 	private function stepArrayData($number) {
 		$step = self::$steps[$number];
 		$linkingMode = ($step==Director::urlParam("Action")) ? "current" : null;
@@ -443,14 +441,51 @@ class ShopCheckoutPage_Controller extends ShopController {
 		
 	}
 	
-	function checkoutSteps() {
-		$data = array();
-		$i=0;
-		foreach (self::$steps as $step) {
-			$data[] = $this->stepArrayData($i);
-			$i++;
+	private function createContactForm(FormAction $formAction, $formName, $additionalField = null) {
+		//use all fields + translate them
+		$contact = singleton("ShopAddress");
+		$labels = array();
+		foreach (ShopAddress::$db as $field => $type) {
+			$restrictedFields[] = $field;
+			$labels = array_merge($labels,array(
+				$field => _t("Shop.Contact.$field","%{$field}%")
+				));
 		}
-		return new DataObjectSet($data);
+		$contact->set_stat("field_labels",$labels);
+		$actions = new FieldSet(
+		   $formAction
+		);
+		$validator = new RequiredFields(ShopAddress::$required_fields);
+		$fields = $contact->getFrontendFields($restrictedFields);
+		if ($additionalField) $fields->push($additionalField);
+		return new Form($this, $formName, $fields, $actions, $validator);
+	}
+	
+	private static function setCheckoutStep($value) {
+		if ($value==0) $value="0";
+		Session::set('Shop.CheckoutStep', (int) $value);
+		return (int) $value;
+	}
+
+	private static function getCheckoutStep() {
+		return (int) Session::get('Shop.CheckoutStep');
+	}
+	
+	private static function translateFieldLabels($className) {
+		if ($class = singleton($className)) {
+			//maybe working only with php 5.3+ ?! didn't test it with 5.2
+			$dbFields = $className::$db;
+			$labels = array();
+			//translate labels
+			foreach ($dbFields as $field => $type) {
+				$labels = array_merge($labels,array(
+					$field => _t("Shop.$className.$field","%{$field}%")
+					));
+			}
+			$class->set_stat("field_labels",$labels);
+			return $class;
+		}
+		
 	}
 	
 }
