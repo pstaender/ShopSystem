@@ -20,7 +20,8 @@ class ShopCheckoutPage extends SiteTree {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab("Root.Content.Shop", array(
-			new HTMLEditorField('ContentInvoiceAddress', _t('SHOP.CheckoutPage.ContentInvoiceAddress','%ContentInvoiceAddress%')),
+			new HTMLEditorField('ContentEmail', _t('SHOP.CheckoutPage.ContentEmail','%ContentEmail%')),
+			new HTMLEditorField('ContentEmail', _t('SHOP.CheckoutPage.ContentInvoiceAddress','%ContentInvoiceAddress%')),
 			new HTMLEditorField('ContentDeliveryAddress', _t('Shop.CheckoutPage.ContentDeliveryAddress','%ContentDeliveryAddress%')),
 			new HTMLEditorField('ContentShipping', _t('Shop.CheckoutPage.ContentShipping','%ContentShipping%')),
 			new HTMLEditorField('ContentPayment', _t('Shop.CheckoutPage.ContentPayment','%ContentPayment%')),
@@ -139,7 +140,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 				new TextField("CouponCode",_t("Shop.Checkout.CouponCode","%CouponCode%"),$order->CouponCode),
 				new TextField("TaxIDNumber",_t("Shop.Checkout.TaxIDNumber","%TaxIDNumber%"),$order->TaxIDNumber)
 			),	
-			new FormAction('doSubmitEmailForm', _t("Shop.Form.Next","%Next%")),
+			new FieldSet(
+				new FormAction('doSubmitEmailForm', _t("Shop.Form.Next","%Next%"))
+				),
 			new RequiredFields("Email")
 			);
 	}
@@ -321,7 +324,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$this,
 			"ShippingMethodForm",
 			$fields,
-			new FormAction("doSubmitShippingMethodForm",_t("Shop.Form.Next","%Next%")),
+			new FieldSet(
+				new FormAction("doSubmitShippingMethodForm",_t("Shop.Form.Next","%Next%"))
+				),
 			$validator);
 		//load existing data into form
 		if ($data = ShopOrder::orderSession()->Shipping()) $form->loadDataFrom($data);
@@ -359,7 +364,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 				$this,
 				"PaymentMethodForm",
 				$fields,
-				new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%")),
+				new FieldSet(
+					new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%"))
+					),
 				$validator);
 			//load existing data into form
 			if ($data = ShopOrder::orderSession()->Payment()) $form->loadDataFrom($data);
@@ -384,7 +391,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 				new TextareaField('Note',_t("Shop.Checkout.Note","%Note%")),
 				new CheckboxField('TermsAndConditions', _t("Shop.Checkout.AgreeToTermsAndConditions","%AgreeToTermsAndConditions%"))
 				),
-			new FormAction("doSubmitSummaryForm",_t("Shop.Checkout.PlaceOrder","%PlaceOrder%")),
+			new FieldSet(
+				new FormAction("doSubmitSummaryForm",_t("Shop.Checkout.PlaceOrder","%PlaceOrder%"))
+				),
 			new RequiredFields(array("TermsAndConditions"))
 			);
 		if (ShopOrder::orderSession()->isComplete()) return $form;

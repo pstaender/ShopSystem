@@ -108,7 +108,7 @@ class ShopOrder extends DataObject {
 		
 	function calcShippingCosts($shippingMethod = null) {
 		//use selected shipping method of order, if not argumented
-		if (!$shippingMethod) $shippingMethod=$this->Shipping()->Method;
+		if (!$shippingMethod) $shippingMethod=$this->Shipping()->Method;		
 		//define your own shipping rules with MyShopOrder.php
 		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->Shipping()->Price;
 	}
@@ -265,7 +265,7 @@ class ShopOrder extends DataObject {
 			$email->send();
 		}
 	}
-	
+		
 	function sendOrderConfirmation() {
 		 $this->sendOrderConfirmationTo($this->emailFromClient());
 	}
