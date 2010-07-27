@@ -34,15 +34,7 @@ class ShopPayment extends DataObject {
 	}
 	
 	static function methodFields() {
-		//generate a select field from all enum values
-		$shippingMethods = singleton("ShopPayment")->dbObject('Method')->enumValues();
-		$order = ShopOrder::orderSession();
-		$ship = array();
-		foreach ($shippingMethods as $name => $value) {
-			$price = self::$priceInMethods ? " (".$order->calcPaymentCosts($name)." ".ShopOrder::getLocalCurrency().")" : "";
-			$ship[$name] = _t("Shop.Payment.{$value}","%{$value}%").$price;
-		}
-		return $ship;
+		return MyShopPayment::methodFields();
 	}
 	
 	function methodTitle() {

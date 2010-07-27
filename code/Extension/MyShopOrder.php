@@ -11,7 +11,8 @@
 
 class MyShopOrder extends Extension {
 	
-	static $eu_states = array(
+	//just for custom use, not necessary for the shopsystem
+	static $euStates = array(
 		"BE","BG","DK","DE","EE","FI","FR","GR","IE","IT","LV","LT","LU","MT","NL","AT",
 		"PL","PT","RO","SE","SK","SI","ES","CZ","HU","GB","CY"
 		);
@@ -38,7 +39,17 @@ class MyShopOrder extends Extension {
 		//shipping methods are defined in the model [enumValues]
 		$amount = $this->owner->amount();
 		$shipping = 0;
-		$shipping = ($amount < 300) ? 20 : 50;
+		$country = strtoupper($this->owner->DeliveryAddress()->Country);
+		
+		//fw
+		//Alle Länder
+		$shipping = ($amount <= 199) ? 15.4 : 32.5;
+		//EU
+		if (in_array($country,self::$euStates)) $shipping = ($amount <= 199) ? 11.1 : 19.5;
+		//DE
+		if ($country=="DE") $shipping = ($amount <= 199) ? 3.6 : 9.5;
+		//fw
+		
 		if (!$shippingMethod) $shippingMethod=$this->owner->Shipping()->Method;
 		$shippingMethod = strtolower($shippingMethod);
 		if ($shippingMethod=="express") $shipping = $shipping*1.25;
@@ -60,6 +71,20 @@ class MyShopOrder extends Extension {
 	
 	function calcDiscount() {
 		//write your own method for calculating a discount, if needed
+		
+		//fw
+		//Preislachlass für bpp+ringfoto mitglieder
+		if (strtolower($this->owner->CouponCode)=="bpp") {
+			return $this->owner->amount()*0.15;
+		}
+		if (strtolower($this->owner->CouponCode)=="ringfoto") {
+			return $this->owner->amount()*0.1;
+		}
+		return 0;
+		//fw
+		
+		
+		
 		$disc = 0;
 		//example, education discount of 20%
 		if (trim(strtoupper($this->owner->CouponCode))=="EDUCATION") $disc = $this->owner->Amount()*0.2;
@@ -67,7 +92,25 @@ class MyShopOrder extends Extension {
 	}
 	
 	function calculate() {
-		return;
+		//define your own calculation
+		//set your value to these following fields
+		//the values will be written to record in ShopOrder::calculate()
+		// $this->owner->Discount
+		// $this->owner->SubTotal
+		// $this->owner->Total
+		// $this->owner->Discount
+		// $this->owner->VAT [INCL/EXCL]
+		// $this->owner->VATAmount
+		
+		//fw
+		//wenn eu-land + UST angegebn, keine MwSt!
+		$country = strtoupper($this->owner->InvoiceAddress()->Country);
+		if ( in_array($country,self::$euStates) && (strlen(trim($this->owner->TaxIDNumber))>0) ) {
+			$this->owner->VATAmount = 0.0;
+		}
+		//fw
+		
+		return true;
 	}
 				
 	function generateOrderKey() {

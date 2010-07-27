@@ -90,7 +90,7 @@ class ShopOrder extends DataObject {
 			$this->VATAmount = round(($amount/100) * $this->Tax,$round);
 			$this->Total = $this->Total + $this->VATAmount;
 		}
-		parent::calculate();
+		parent::calculate($round);
 		return $this->write();
 	}
 	
