@@ -37,6 +37,7 @@ class ShopOrder extends DataObject {
 		"DeliveryAddress"=>"ShopAddress",
 		"Payment"=>"ShopPayment",
 		"Shipping"=>"ShopShipping",
+		"Invoice"=>"ShopInvoice",
 		);
 		
 	static $has_many = array(
@@ -64,6 +65,17 @@ class ShopOrder extends DataObject {
 	static $emailOrderConfirmation = null;
 	static $emailOrderShipped = null;
 	static $emailInvoice = null;
+	
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$invoice = null;
+		if ($this->Invoice()) $invoice = new LiteralField("InvoiceLink",'<a href="'.$this->Invoice()->Link().'" target="_invoicewindow">View invoice</a>');
+		$fields->addFieldsToTab('Root.Main',array(
+			new HeaderField("InvoiceHeaderField","Invoice",3),
+			$invoice,
+			));
+		return $fields;
+	}
 	
 	function amount($round = 2) {
 		$sum = 0;
@@ -132,11 +144,17 @@ class ShopOrder extends DataObject {
 	
 	function isComplete() {
 		//define your own isComplete rules with MyShopOrder.php
-		if (parent::isComplete()) {
-			return true;
-		} else {
-			return false;
-		}
+		return parent::isComplete();
+	}
+	
+	function isIncompleteCause() {
+		//define your own isIncompleteCause rules with MyShopOrder.php
+		return parent::isIncompleteCause();
+	}
+	
+	function incompleteReasonsForTemplate() {
+		//define your own incompleteReasonsForTemplate rules with MyShopOrder.php
+		return parent::incompleteReasonsForTemplate();
 	}
 				
 	static function checkForSessionOrCreate() {

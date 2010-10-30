@@ -17,6 +17,10 @@ class MyShopOrder extends Extension {
 		"PL","PT","RO","SE","SK","SI","ES","CZ","HU","GB","CY"
 		);
 		
+	static $required_fields = array(
+		"Total","PaymentID","ShippingID","InvoiceAddressID","DeliveryAddressID"
+		);
+		
 	function extraStatics() {
 		//use it for define extra fields you need
 		return array(
@@ -124,15 +128,30 @@ class MyShopOrder extends Extension {
 	}
 	
 	function isComplete() {
-		$required = array(
-			"Total","PaymentID","ShippingID","InvoiceAddressID","DeliveryAddressID"
-			);
-		$check = true;
+		return (sizeof($this->isIncompleteCause())>0) ? false : true;
+	}
+	
+	function isIncompleteCause() {
+		$reasons = array();
+		$required = self::$required_fields;
+		$requiredFields = true;
 		foreach ($required as $r) {
-			if (!($this->owner->hasValue($r))) $check = false;
+			if (!($this->owner->hasValue($r))) $requiredFields=false;
 		}
-		if ($this->owner->amountBelowMin()) $check = false;
-		return $check;
+		if (!$requiredFields) $reasons["MissingFields"] = _t("Shop.OrderIncomplete.MissingFields","%You have not filled out all necessary fields, yet%");
+		if ($this->owner->amountBelowMin()) $reasons["AmountBelowMin"] = _t("Shop.OrderIncomplete.AmountBelowMin","%The amount is below minimum%");
+		if (!$this->owner->hasValue("Email")) $reasons["Email"] = _t("Shop.OrderIncomplete.EmailMissing","%You have not given an Email-address%");
+		if (!$this->owner->InvoiceAddress()->isComplete()) $reasons["InvoiceAddress"] = _t("Shop.OrderIncomplete.InvoiceAddressIncomplete","%Invoiceaddress is incomplete%");
+		if (!$this->owner->DeliveryAddress()->isComplete()) $reasons["DeliveryAddress"] = _t("Shop.OrderIncomplete.DeliveryAddressIncomplete","%Deliveryaddress is incomplete%"); 
+		return $reasons;
+	}
+	
+	function incompleteReasonsForTemplate() {
+		$string = "";
+		foreach($this->owner->isIncompleteCause() as $field => $reason) {
+			$string .= "<li class=\"incompleteReason\" id=\"{$field}Reason\">".$reason."</li>";
+		}
+		return "<ul class=\"missingFieldReasons\">".$string."</ul>";
 	}
 			
 }

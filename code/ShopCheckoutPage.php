@@ -199,7 +199,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 				$clientID = $client->ID;
 				//todo, send welcome email to client
 			}
-			//create aadress fields for invoice+shipping
+			//create adress fields for invoice+shipping
 			if ($order->InvoiceAddress()->ID==0) {
 				$a = new ShopAddress();
 				$a->ClientID = $clientID;
@@ -252,9 +252,12 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$invoice->write();
 			$invoice->InvoiceKey = $invoice->ID;
 			$invoice->write();
+			$session->InvoiceID = $invoice->ID;
+			$session->write();
+			
 			$this->OrderIsPlaced = true;
 			$this->Order = $session;
-			//send email with invoice link
+			//send email with invoice link?!
 			return array();
 		} else {
 			Director::redirect($this->dataRecord->Link()."incomplete");
@@ -369,22 +372,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 					$field => _t("Shop.Payment.$field","%{$field}%")
 					));
 			}
-			if (!$order->DeliveryAddress()->isComplete()) {
-				$button[] = new LiteralField(
-					"DeliveryAddressIncomplete","<div id=\"DeliveryAddressIncompleteField\">"._t("Shop.Checkout.DeliveryAddressIncomplete","%Delivery Addresse is incomplete%")."</div>");
-			}
-			if (!$order->InvoiceAddress()->isComplete()) {
-				$button[] = new LiteralField(
-					"InvoiceAddressIncomplete","<div id=\"DeliveryAddressIncompleteField\">"._t("Shop.Checkout.InvoiceAddressIncomplete","%Invoice Addresse is incomplete%")."</div>");
-			}
-			if (!$order->Email) {
-				$button[] = new LiteralField(
-					"EmailMissing","<div id=\"EmailMissingField\">"._t("Shop.Checkout.EmailMissing","%Email missing%")."</div>");
-			}
-			if (!$button) $button[] = new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%"));
-			else $button[] = new LiteralField(
-				"CompleteFieldsToProceeed","<div id=\"CompleteFieldsToProceeed\">"._t("Shop.Checkout.CompleteFieldsToProceeed","%Complete fields to proceed%")."</div>");
-
+			if ($order->isComplete()) $button = new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%"));
+			else $button = new LiteralField(
+					"CompleteFieldsToProceeed",$order->incompleteReasonsForTemplate());
 			
 			$payment->set_stat("field_labels",$labels);
 			$validator = new RequiredFields(ShopPayment::$required_fields);

@@ -6,11 +6,11 @@ class ShopAddress extends DataObject {
 		"Company"=>"Varchar(200)",
 		"FirstName"=>"Varchar(200)",
 		"Surname"=>"Varchar(200)",
-		"AdditionalAddress"=>"Varchar(200)",
-		"Phone"=>"Varchar(200)",
 		"Street"=>"Varchar(200)",
 		"ZipCode"=>"Int",
 		"City"=>"Varchar(100)",
+		"AdditionalAddress"=>"Varchar(200)",
+		"Phone"=>"Varchar(200)",
 		"Country"=>"Varchar(50)",
 		);
 	

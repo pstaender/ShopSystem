@@ -106,4 +106,9 @@ $lang['de_DE']['Shop.Checkout']['YourDeliveryAddress'] = "Ihre Lieferanschrift";
 $lang['de_DE']['Shop.Checkout']['ClientKey'] = "Kundennummer (falls vorhanden)";
 $lang['de_DE']['Shop.Checkout']['AgreeToTermsAndConditions'] = "Hiermit stimme ich den AGBs zu";
 
+$lang['de_DE']['Shop.OrderIncomplete']['MissingFields'] = "Sie haben nicht alle Pflichtfelder ausgefüllt.";
+$lang['de_DE']['Shop.OrderIncomplete']['AmountBelowMin'] = "Der Warenkorb erfüllt nicht den Mindestbetrag.";
+$lang['de_DE']['Shop.OrderIncomplete']['EmailMissing'] = "Es ist keine eMail-Adresse angegeben.";
+$lang['de_DE']['Shop.OrderIncomplete']['InvoiceAddressIncomplete'] = "Sie haben keine gültige Rechnungsanschrift angegeben.";
+$lang['de_DE']['Shop.OrderIncomplete']['DeliveryAddressIncomplete'] = "Sie haben keine gültige Lieferanschrift angegeben.";
 ?>

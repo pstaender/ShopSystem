@@ -56,7 +56,7 @@ class ShopInvoice extends DataObject {
 		// tempfolder
 		$tmpBaseFolder = TEMP_FOLDER . '/shopsystem';
 		$tmpFolder = (project()) ? "$tmpBaseFolder/" . project() : "$tmpBaseFolder/site";
-		Filesystem::removeFolder($tmpFolder);
+		if (is_dir($tmpFolder)) Filesystem::removeFolder($tmpFolder);
 		if(!file_exists($tmpFolder)) Filesystem::makeFolder($tmpFolder);
 		$baseFolderName = basename($tmpFolder);
 		//Get site
@@ -76,8 +76,8 @@ class ShopInvoice extends DataObject {
 		return $contentfile;
 	}
 	
-	static function generatePublicURL($maxLength = 5) {
-		return substr(md5(rand(0,99999)/time()),0,$maxLength);
+	static function generatePublicURL($maxLength = 10) {
+		return substr(md5(rand(0,999999)/time()),0,$maxLength);
 	}
 	
 }
@@ -102,7 +102,8 @@ class ShopInvoice_Controller extends ContentController {
 		return array();
 	}
 
-	function pdf() {		
+	function pdf() {
+		exit("deactivated for now...");	
 		if ($ID = Director::urlParam("ID")) {
 			if ($invoice=DataObject::get_one("ShopInvoice","PublicURL = '".Convert::Raw2SQL($ID)."'")) {
 				$this->Invoice = $invoice;
@@ -110,7 +111,8 @@ class ShopInvoice_Controller extends ContentController {
 					//generate pdf
 					
 					require(dirname(__FILE__).'/Thirdparty/html2fpdf/html2fpdf.php');
-
+					//to get work HTML2PDF
+					error_reporting(E_ALL ^ (E_NOTICE | E_DEPRECATED));
 					$pdf = new HTML2FPDF();
 					$pdf->AddPage();
 					$pdfPath = $invoice->generatePDF();
