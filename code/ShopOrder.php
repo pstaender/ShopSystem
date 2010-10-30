@@ -28,6 +28,7 @@ class ShopOrder extends DataObject {
 		"InternalNote"=>"Text",
 		"TaxIDNumber"=>"Varchar(250)",
 		"CouponCode"=>"Varchar(60)",
+		"PlacedOrderOn"=>"SS_DateTime",
 		);
 	
 	static $has_one = array(
@@ -43,7 +44,11 @@ class ShopOrder extends DataObject {
 		);
 	
 	static $summary_fields = array(
-		"Status","Tax","VAT","Shipping.Price","Discount","SubTotal","Total","Client.FirstName","Client.Surname"
+		"Status","PlacedOrderOn","Email","Client.Email","Client.ClientKey","Tax","VAT","Shipping.Price","Discount","SubTotal","Total","OrderKey","IP","InvoiceAddress.FirstName","InvoiceAddress.Surname",
+		);
+		
+	static $searchable_fields = array(
+		"Status","InvoiceAddress.FirstName","InvoiceAddress.Surname",
 		);
 		
 	static $hashField = "shoppinghash";
@@ -130,8 +135,7 @@ class ShopOrder extends DataObject {
 		if (parent::isComplete()) {
 			return true;
 		} else {
-			return true;
-			// return false;
+			return false;
 		}
 	}
 				
@@ -254,11 +258,11 @@ class ShopOrder extends DataObject {
 		return parent::generateOrderKey();
 	}
 	
-	function sendOrderConfirmationTo($email) {
-		if ($from = self::$emailOrderConformation) {
-			$email = New Email_Template();
-			$email->from = $form;
-			$email->to = $email;
+	function sendOrderConfirmationTo($emailAddr) {
+		if ($from = ShopOrder::$emailOrderConfirmation) {
+			$email = new Email();
+			$email->from = $from;
+			$email->to = $emailAddr;
 			$email->subject = _t("Shop.Order.EmailSubject","%Thanks for your order%");
 			$email->ss_template = 'EmailOrderConfirmation';
 			$email->populateTemplate($this);
@@ -298,6 +302,7 @@ class ShopOrder_Controller extends Page_Controller {
 	
 	static $allowed_actions = array(
 		"add",
+		"dev"=>"ADMIN",
 		);
 				
 	function add($request = null, $id = null) {
@@ -312,6 +317,17 @@ class ShopOrder_Controller extends Page_Controller {
 				}
 			}
 		}
+	}
+	
+	function dev() {
+		if ($email = Debug::get_send_errors_to()) return array();
+		else {
+			user_error("You haven't set a debug eMail... please do in your '_config.php' so to proceed... <pre>Debug::send_errors_to('your@email.com');</pre>");
+		}
+	}
+	
+	function sendToEmail() {
+		return Debug::get_send_errors_to();
 	}
 	
 }

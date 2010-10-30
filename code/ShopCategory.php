@@ -13,6 +13,8 @@ class ShopCategory extends SiteTree {
 	static $default_children = array(
 		"ShopItem",
 		);
+	static $icon = 'shopsystem/images/icons/commerce';
+	
 }
 
 class ShopCategory_Controller extends ShopController {

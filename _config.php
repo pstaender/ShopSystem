@@ -23,5 +23,6 @@ Object::add_extension("ShopOrder", "MyShopOrder");
 Object::add_extension("ShopPayment", "MyShopPayment");
 Object::add_extension("ShopShipping", "MyShopShipping");
 Object::add_extension("ShopItem", "MyShopItem");
+Object::add_extension("ShopAddress", "MyShopAddress");
 
-?>
+ShopOrder::$emailOrderConfirmation="info@shop.com";

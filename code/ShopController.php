@@ -2,6 +2,10 @@
 
 class ShopController extends Page_Controller {
 	
+	static $allowed_actions = array(
+		"cleanup_orders"=>"shopadmin"
+		);
+	
 	function init() {
 		parent::init();
 		//try to include the jquery library by sapphire, else jquery 1.4.2 in the shopsystem folder
@@ -30,6 +34,23 @@ class ShopController extends Page_Controller {
 	
 	function MostFeaturedItems() {
 		return DataObject::get("ShopItem","Featured = 1");
+	}
+	
+	function cleanup_orders() {
+		$holdbackTimeInSecs=6000;//10 hours
+		$orders = DataObject::get("ShopOrder","Status = 'Unsubmitted' AND Created < '".date("Y-m-d G-m-i",(time()-$holdbackTimeInSecs))."'");
+		if (!$orders) exit("No orders to cleanup...");
+		foreach($orders as $order) {
+			if ($order->InvoiceAddress()) $order->InvoiceAddress()->delete();
+			if ($order->DeliveryAddress()) $order->DeliveryAddress()->delete();
+			if ($order->Payment()) $order->Payment()->delete();
+			if ($order->Shipping()) $order->Shipping()->delete();
+			if ($order->Items()) {
+				foreach($order->Items() as $item) $item->delete();
+			}
+			echo "ShopOrder record '".$order->ID."' with amount of '".$order->Amount."' deleted...<br />";
+			$order->delete();
+		}
 	}
 	
 }

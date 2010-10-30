@@ -1,0 +1,8 @@
+About
+
+These icons were created as the first set of Gallery2 Icon Packs, to be included in the general distribution of the Gallery2 software. Gallery is one of the most robust open source, web based photo organizers.
+License
+
+These icons are licensed under the GNU General Public License (GPL) v3.0. They are free for use. Take them! Use them!
+
+http://paularmstrongdesigns.com/projects/gallery-2-icons/

@@ -17,6 +17,8 @@ class ShopCheckoutPage extends SiteTree {
 	static $has_one = array(
 		);
 		
+	static $icon = 'shopsystem/images/icons/cart';
+		
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab("Root.Content.Shop", array(
@@ -38,7 +40,6 @@ class ShopCheckoutPage extends SiteTree {
 		parent::requireDefaultRecords();
 		// default checkoutpage
 		if($this->class == 'ShopCheckoutPage') {
-			
 			//create usergroup for shop client
 			if (!DataObject::get_one("Group", "Title LIKE 'ShopClients'")) {
 				$group = new Group();
@@ -90,6 +91,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		);
 	
 	static $steps = array(
+		"",
 		"index",
 		"email",
 		"invoiceaddress",
@@ -223,13 +225,23 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$this->redirectToNextStep("email");
 		return array();
 	}
-		
+	
+	//what to do on completing order
 	function complete() {
+		$this->setCheckoutStep(0);
 		$session = ShopOrder::orderSession();
+		$this->OrderIsPlaced = false;
 		if ($session->isComplete()) {
+			if ($session->Status=="Ordered") {
+				//order already placed
+				Director::redirect($this->dataRecord->Link()."already_placed");
+				return array();
+			}
 			//create invoice
 			$session->Status = "Ordered";
 			$session->OrderKey = $session->generateOrderKey();
+			$session->PlacedOrderOn = time();
+			$session->sendOrderConfirmation();
 			$session->write();
 			
 			$invoice = new ShopInvoice();
@@ -240,7 +252,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$invoice->write();
 			$invoice->InvoiceKey = $invoice->ID;
 			$invoice->write();
-			$this->setCheckoutStep(0);
+			$this->OrderIsPlaced = true;
+			$this->Order = $session;
 			//send email with invoice link
 			return array();
 		} else {
@@ -269,7 +282,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$session = ShopOrder::orderSession();
 		if (!($contact = DataObject::get_by_id("ShopAddress",
 		$session->InvoiceAddressID))) $contact = new ShopAddress();
-		if ($data['ThisIsShippingAddress']=="true") {
+		if (isset($data['ThisIsShippingAddress'])) {
 			if (!($shipping = DataObject::get_by_id("ShopAddress",$session->DeliveryAddressID))) $shipping = new ShopAddress();
 			$form->saveInto($shipping);
 			$shipping->OrderID = $session->ID;
@@ -290,7 +303,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			if (!$member->Surname) $member->Surname = Convert::raw2SQL($data['Surname']);
 			$member->write();
 		}
-		if ($data['UseContactForShipping'])  {
+		if (isset($data['UseContactForShipping']))  {
 			if (!($shipping = DataObject::get_by_id("ShopAddress",$session->DeliveryAddressID))) $shipping = new ShopAddress();
 			$form->saveInto($shipping);
 			$shipping->OrderID = $session->ID;
@@ -349,12 +362,30 @@ class ShopCheckoutPage_Controller extends ShopController {
 			//get shipping method fields
 			$payment = singleton("ShopPayment");
 			$labels = array();
+			$button = null;
 			//translate labels
 			foreach (ShopPayment::$db as $field => $type) {
 				$labels = array_merge($labels,array(
 					$field => _t("Shop.Payment.$field","%{$field}%")
 					));
 			}
+			if (!$order->DeliveryAddress()->isComplete()) {
+				$button[] = new LiteralField(
+					"DeliveryAddressIncomplete","<div id=\"DeliveryAddressIncompleteField\">"._t("Shop.Checkout.DeliveryAddressIncomplete","%Delivery Addresse is incomplete%")."</div>");
+			}
+			if (!$order->InvoiceAddress()->isComplete()) {
+				$button[] = new LiteralField(
+					"InvoiceAddressIncomplete","<div id=\"DeliveryAddressIncompleteField\">"._t("Shop.Checkout.InvoiceAddressIncomplete","%Invoice Addresse is incomplete%")."</div>");
+			}
+			if (!$order->Email) {
+				$button[] = new LiteralField(
+					"EmailMissing","<div id=\"EmailMissingField\">"._t("Shop.Checkout.EmailMissing","%Email missing%")."</div>");
+			}
+			if (!$button) $button[] = new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%"));
+			else $button[] = new LiteralField(
+				"CompleteFieldsToProceeed","<div id=\"CompleteFieldsToProceeed\">"._t("Shop.Checkout.CompleteFieldsToProceeed","%Complete fields to proceed%")."</div>");
+
+			
 			$payment->set_stat("field_labels",$labels);
 			$validator = new RequiredFields(ShopPayment::$required_fields);
 			$fields = $payment->getFrontendFields($restrictedFields=array(
@@ -364,9 +395,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 				$this,
 				"PaymentMethodForm",
 				$fields,
-				new FieldSet(
-					new FormAction("doSubmitPaymentMethodForm",_t("Shop.Form.Next","%Next%"))
-					),
+				new FieldSet($button),
 				$validator);
 			//load existing data into form
 			if ($data = ShopOrder::orderSession()->Payment()) $form->loadDataFrom($data);

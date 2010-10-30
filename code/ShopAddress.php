@@ -15,7 +15,7 @@ class ShopAddress extends DataObject {
 		);
 	
 	static $required_fields = array(
-		"Firstname","Surname","Phone","Street","ZipCode","City"
+		"FirstName","Surname","Phone","Street","ZipCode","City"
 		);
 	
 	static $belongs_to = array(
@@ -44,6 +44,18 @@ class ShopAddress extends DataObject {
 			// $fields->replaceField("Country",new DropdownField("Country",$labels["Country"],Geoip::getCountryDropDown(), Geoip::visitor_country()));
 			return $fields;
 		}
+		
+	function isComplete() {
+		//define your own isComplete rules with MyShopAddress.php
+		if (parent::isComplete()) {
+			return true;
+		} else {
+			foreach (self::$required_fields as $field) {
+				if (!(strlen($this->$field)>0)) return false;
+			}
+			return true;
+		}
+	}
 		
 	static function getCountryDropdown($priority = null, $countryName = null) {
 			$countries = array_flip(ShopLocalization::$countries);

@@ -23,6 +23,8 @@ class ShopItem extends SiteTree {
 			
 	static $default_sort =  "Featured, Sort DESC";
 	
+	static $icon = 'shopsystem/images/icons/blocks';
+	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab("Root.Content.Shop", array(

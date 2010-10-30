@@ -87,7 +87,7 @@ class MyShopOrder extends Extension {
 		
 		$disc = 0;
 		//example, education discount of 20%
-		if (trim(strtoupper($this->owner->CouponCode))=="EDUCATION") $disc = $this->owner->Amount()*0.2;
+		if (trim(strtoupper($this->owner->CouponCode))=="EDUCATION") $disc = $this->owner->Amount()*0.8;
 		return $disc;
 	}
 	
@@ -95,12 +95,6 @@ class MyShopOrder extends Extension {
 		//define your own calculation
 		//set your value to these following fields
 		//the values will be written to record in ShopOrder::calculate()
-		// $this->owner->Discount
-		// $this->owner->SubTotal
-		// $this->owner->Total
-		// $this->owner->Discount
-		// $this->owner->VAT [INCL/EXCL]
-		// $this->owner->VATAmount
 		
 		//fw
 		//wenn eu-land + UST angegebn, keine MwSt!
