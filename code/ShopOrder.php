@@ -192,18 +192,19 @@ class ShopOrder extends DataObject {
 		}
 		
 		//create address fields for shipping+invoicing
-		if ($s->InvoiceAddressID==0) {
-			$a = new ShopAddress();
-			$a->write();
-			$a->OrderID = $s->ID;
-			$s->InvoiceAddressID = $a->ID;
-		}
-		if ($s->DeliveryAddressID==0) {
-			$a = new ShopAddress();
-			$a->OrderID = $s->ID;
-			$a->write();
-			$s->DeliveryAddressID = $a->ID;
-		}
+		//is no done in ShopCheckoutPage --> doSubmitEmailForm
+		// if ($s->InvoiceAddressID==0) {
+		// 			$a = new ShopAddress();
+		// 			$a->write();
+		// 			$a->OrderID = $s->ID;
+		// 			$s->InvoiceAddressID = $a->ID;
+		// 		}
+		// 		if ($s->DeliveryAddressID==0) {
+		// 			$a = new ShopAddress();
+		// 			$a->OrderID = $s->ID;
+		// 			$a->write();
+		// 			$s->DeliveryAddressID = $a->ID;
+		// 		}
 		//create payment+shipping methods
 		if ($s->PaymentID==0) {
 			$p = new ShopPayment();

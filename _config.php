@@ -18,6 +18,7 @@ ShopOrder::$tax = array(
 	
 ShopPayment::$priceInMethods = false;
 ShopShipping::$priceInMethods = true;
+ShopCheckoutPage::$termsAndConditionsAgreementRequired = true;
 
 Object::add_extension("ShopOrder", "MyShopOrder");
 Object::add_extension("ShopPayment", "MyShopPayment");

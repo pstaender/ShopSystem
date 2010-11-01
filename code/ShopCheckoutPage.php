@@ -15,11 +15,10 @@ class ShopCheckoutPage extends SiteTree {
 		"ContentError"=>"HTMLText",
 		"ContentMinimalAmount"=>"HTMLText",
 		);
-	
 	static $has_one = array(
 		);
-		
 	static $icon = 'shopsystem/images/icons/cart';
+	static $termsAndConditionsAgreementRequired = true;
 		
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -88,8 +87,23 @@ class ShopCheckoutPage extends SiteTree {
 class ShopCheckoutPage_Controller extends ShopController {
 	
 	static $allowed_actions = array(
-		"email","invoiceaddress","deliveryaddress","shipping","payment","summary","complete","empty", "minamount", "incomplete",
-		"EmailForm","InvoiceAddressForm","ShippingAddressForm","ShippingMethodForm","PaymentMethodForm","SummaryForm"
+		"email",
+		"invoiceaddress",
+		"deliveryaddress",
+		"shipping",
+		"payment",
+		"summary",
+		"complete",
+		"empty",
+		"minamount",
+		"incomplete",
+		"agree_terms_and_conditions",
+		"EmailForm",
+		"InvoiceAddressForm",
+		"ShippingAddressForm",
+		"ShippingMethodForm",
+		"PaymentMethodForm",
+		"SummaryForm"
 		);
 	
 	static $steps = array(
@@ -159,10 +173,10 @@ class ShopCheckoutPage_Controller extends ShopController {
 		if ($client = DataObject::get_one("ShopClient","ClientKey LIKE '".$clientKey."'")) {
 			//existing client
 			$clientID = $client->ID;
-			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID")) {				
+			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID AND Status = 'Ordered'")) {				
 				if ($addr = $lastOrder->InvoiceAddress()) {
 					//use the last invoice adress, if empty
-					if ($order->InvoiceAddress()->ID==0) {									
+					if ($order->InvoiceAddressID==0) {									
 						$newAddr = new ShopAddress();
 						$newAddr->merge($addr,'right');
 						//restore the relations
@@ -175,7 +189,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 				}
 				if ($addr = $lastOrder->DeliveryAddress()) {
 					//use the last shipping adress, if empty
-					if ($order->DeliveryAddress()->ID==0) {
+					if ($order->DeliveryAddressID==0) {
 						$newAddr = new ShopAddress();
 						$newAddr->merge($addr,'right');
 						//restore the relations
@@ -191,7 +205,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			//create new client, if not 
 			$client = new ShopClient();
 			$client->Status = "Customer";
-			if ($clients=DataObject::get("ShopClient","Email LIKE '".$email."'")) {
+			if ($clients=DataObject::get("ShopClient","Email LIKE '".$email."' OR Email LIKE 'shop.renamed.%.".$email."'")) {
 				$client->Email = "shop.renamed.".$clients->count() .".". $email;
 				$client->Status = "Guest";
 			} else $client->Email = $email;
@@ -419,6 +433,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 	
 	function SummaryForm() {
 		self::setCheckoutStep(5);
+		$required = (ShopCheckoutPage::$termsAndConditionsAgreementRequired) ? new RequiredFields(array("TermsAndConditions")) : null;
+		
 		$form = new Form(
 			$this,
 			"SummaryForm",
@@ -429,7 +445,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			new FieldSet(
 				new FormAction("doSubmitSummaryForm",_t("Shop.Checkout.PlaceOrder","%PlaceOrder%"))
 				),
-			new RequiredFields(array("TermsAndConditions"))
+				$required
 			);
 		if (ShopOrder::orderSession()->isComplete()) return $form;
 	}
@@ -438,6 +454,10 @@ class ShopCheckoutPage_Controller extends ShopController {
 	function doSubmitSummaryForm($data, $form) {
 		$session = ShopOrder::orderSession();
 		$session->Note = Convert::Raw2SQL($data['Note']);
+		if ((!(isset($data['TermsAndConditions']))) && (ShopCheckoutPage::$termsAndConditionsAgreementRequired))  {
+			Director::redirect($this->Link()."agree_terms_and_conditions");
+			return array();
+		}
 		$session->write();
 		if ($session->isComplete()) $this->redirectToNextStep("summary");
 		return array();
@@ -534,4 +554,3 @@ class ShopCheckoutPage_Controller extends ShopController {
 	
 }
 
-?>
