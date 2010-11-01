@@ -54,7 +54,11 @@ $lang['de_DE']['Shop.Contact']['Street'] = 'Straße';
 $lang['de_DE']['Shop.Contact']['ZipCode'] = 'PLZ';
 $lang['de_DE']['Shop.Contact']['City'] = 'Stadt';
 $lang['de_DE']['Shop.Contact']['Country'] = 'Land';
+$lang['de_DE']['Shop.Contact']['Gender'] = 'Anrede';
 $lang['de_DE']['Shop.Contact']['UseContactForShipping'] = 'Versand geht an Rechnungsaddresse';
+$lang['de_DE']['Shop.Contact']['GenderMale'] = 'Herr';
+$lang['de_DE']['Shop.Contact']['GenderFemale'] = 'Frau';
+$lang['de_DE']['Shop.Contact']['GenderNotSpecified'] = 'Nicht angegeben';
 
 $lang['de_DE']['Shop.Checkout']['TaxIDNumber'] = 'Umsatzsteuer-Identifikationsnummer';
 $lang['de_DE']['Shop.Checkout']['CouponCode'] = 'Gutscheincode';

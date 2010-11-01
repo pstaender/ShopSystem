@@ -26,6 +26,7 @@ class MyShopOrder extends Extension {
 		return array(
 			'db' => array(
 				'Weight' => 'Float',
+				'OriginalID' => 'Int',
 				)
 			);
 	}

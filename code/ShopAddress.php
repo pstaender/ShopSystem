@@ -4,6 +4,7 @@ class ShopAddress extends DataObject {
 	
 	static $db = array(
 		"Company"=>"Varchar(200)",
+		"Gender"=>"Enum('m,f,-','-')",
 		"FirstName"=>"Varchar(200)",
 		"Surname"=>"Varchar(200)",
 		"Street"=>"Varchar(200)",
@@ -12,7 +13,6 @@ class ShopAddress extends DataObject {
 		"AdditionalAddress"=>"Varchar(200)",
 		"Phone"=>"Varchar(200)",
 		"Country"=>"Varchar(50)",
-		"Gender"=>"Enum('m,f,-','-')",
 		);
 	
 	static $required_fields = array(
@@ -36,18 +36,19 @@ class ShopAddress extends DataObject {
 	
 	function getFrontendFields($restrictedFields = null) {
 			$fields = $this->scaffoldFormFields(array(
-					'fieldClasses' => array(
-						// 'StyleSheet' => 'TextareaField',
-						// 	'Qualification' => 'TextareaField',
-						// 	'URLSegment' => 'UniqueTextField',
-						),
+					'fieldClasses' => array(),
 					'restrictFields' => $restrictedFields
 				)
 			);
 			$fields->push(new HiddenField("ID", null, $this->ID));
 			$labels=singleton($this->ClassName)->stat("field_labels");
 			$fields->replaceField("Country",new DropdownField("Country",$labels["Country"],self::getCountryDropdown("DE","Deutschland")));
-			// $fields->replaceField("Country",new DropdownField("Country",$labels["Country"],Geoip::getCountryDropDown(), Geoip::visitor_country()));
+			$gender = array(
+				"-"=>_t("Shop.Contact.GenderNotSpecified","%empty%"),
+				"m"=>_t("Shop.Contact.GenderMale","%Male%"),
+				"f"=>_t("Shop.Contact.GenderFemale","%Female%"),
+				);
+			$fields->replaceField("Gender",new DropdownField("Gender",$labels["Gender"],$gender));
 			return $fields;
 		}
 		
