@@ -239,10 +239,12 @@ class ShopCheckoutPage_Controller extends ShopController {
 				Director::redirect($this->dataRecord->Link()."already_placed");
 				return array();
 			}
-			//create invoice
+			
 			$session->Status = "Ordered";
 			$session->OrderKey = $session->generateOrderKey();
 			$session->PlacedOrderOn = time();
+			$session->Payment()->Price = $session->Total;
+			$session->Payment()->write();
 			$session->sendOrderConfirmation();
 			if ($session->Items()) foreach($session->Items() as $item) {
 				if ($orgItem=$item->OriginalItem()) {
@@ -252,14 +254,16 @@ class ShopCheckoutPage_Controller extends ShopController {
 				}
 			}
 			$session->write();
-			
+			//create invoice
 			$invoice = new ShopInvoice();
 			$invoice->PublicURL = ShopInvoice::generatePublicURL();
 			$invoice->OrderID = $session->ID;
 			$invoice->DateOfDelivery = time();
 			$invoice->DateOfInvoice = null;
 			$invoice->write();
-			$invoice->InvoiceKey = $invoice->ID;
+			//increment invoicekey if exists, otherwise use the id
+			if ($lastInvoice=DataObject::get_one("ShopInvoice","1","ID","DESC")) $invoice->InvoiceKey = ((int) $lastInvoice->InvoiceKey)+1;
+			else $invoice->InvoiceKey = $invoice->ID;
 			$invoice->write();
 			$session->InvoiceID = $invoice->ID;
 			$session->write();

@@ -73,6 +73,7 @@ class ShopOrder extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$invoice = null;
+		// $fields->replaceField("InvoiceAddress")
 		if ($this->Invoice()) $invoice = new LiteralField("InvoiceLink",'<a href="'.$this->Invoice()->Link().'" target="_invoicewindow">View invoice</a>');
 		$fields->addFieldsToTab('Root.Main',array(
 			new HeaderField("InvoiceHeaderField","Invoice",3),
