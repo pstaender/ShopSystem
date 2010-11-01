@@ -37,8 +37,11 @@ class ShopController extends Page_Controller {
 	}
 	
 	function cleanup_orders() {
-		$holdbackTimeInSecs=6000;//10 hours
-		$orders = DataObject::get("ShopOrder","Status = 'Unsubmitted' AND Created < '".date("Y-m-d G-m-i",(time()-$holdbackTimeInSecs))."'");
+		if (isset($_REQUEST['holdbackTimeInSecs'])) $holdbackTimeInSecs = (int) $_REQUEST['holdbackTimeInSecs'];
+		else $holdbackTimeInSecs=6000;//10 hours
+		if (isset($_REQUEST['allorders'])) $status = "";
+		else $status = " = 'Unsubmitted'";
+		$orders = DataObject::get("ShopOrder","Status $status AND Created < '".date("Y-m-d G-m-i",(time()-$holdbackTimeInSecs))."'");
 		if (!$orders) exit("No orders to cleanup...");
 		foreach($orders as $order) {
 			if ($order->InvoiceAddress()) $order->InvoiceAddress()->delete();

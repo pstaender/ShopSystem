@@ -16,7 +16,12 @@ class ShopAddress extends DataObject {
 		);
 	
 	static $required_fields = array(
-		"FirstName","Surname","Phone","Street","ZipCode","City"
+		"FirstName",
+		"Surname",
+		// "Phone",
+		"Street",
+		"ZipCode",
+		"City"
 		);
 	
 	static $belongs_to = array(

@@ -188,19 +188,21 @@ class ShopCheckoutPage_Controller extends ShopController {
 				}
 			}
 		} else {
-			//create new client, if not exists
-			if (!(DataObject::get_one("ShopClient","Email LIKE '".$email."'"))) {
-				$client = new ShopClient();
-				$client->Email = $email;
-				$client->ClientKey = ShopClient::generateClientKey($email);
-				$client->Password = $client->ClientKey;	
-				$client->write();
-				//add to group
-				$client->Groups()->add(DataObject::get_one("Group","Title LIKE 'ShopClients'"));
-				$client->write();
-				$clientID = $client->ID;
-				//todo, send welcome email to client
-			}
+			//create new client, if not 
+			$client = new ShopClient();
+			$client->Status = "Customer";
+			if ($clients=DataObject::get("ShopClient","Email LIKE '".$email."'")) {
+				$client->Email = "shop.renamed.".$clients->count() .".". $email;
+				$client->Status = "Guest";
+			} else $client->Email = $email;
+			$client->ClientKey = ShopClient::generateClientKey($email);
+			$client->Password = $client->ClientKey;
+			$client->write();
+			//add to group
+			$client->Groups()->add(DataObject::get_one("Group","Title LIKE 'ShopClients'"));
+			$client->write();
+			$clientID = $client->ID;
+			//todo, send welcome email to client
 			//create adress fields for invoice+shipping
 			if ($order->InvoiceAddress()->ID==0) {
 				$a = new ShopAddress();
@@ -262,7 +264,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$invoice->DateOfInvoice = null;
 			$invoice->write();
 			//increment invoicekey if exists, otherwise use the id
-			if ($lastInvoice=DataObject::get_one("ShopInvoice","1","ID","DESC")) $invoice->InvoiceKey = ((int) $lastInvoice->InvoiceKey)+1;
+			if ($lastInvoice=DataObject::get_one("ShopInvoice","1",null,"`ID` DESC")) $invoice->InvoiceKey = ((int) $lastInvoice->InvoiceKey)+1;
 			else $invoice->InvoiceKey = $invoice->ID;
 			$invoice->write();
 			$session->InvoiceID = $invoice->ID;
@@ -318,8 +320,6 @@ class ShopCheckoutPage_Controller extends ShopController {
 			if (!$member->FirstName) $member->FirstName = Convert::raw2SQL($data['FirstName']);
 			if (!$member->Surname) $member->Surname = Convert::raw2SQL($data['Surname']);
 			if (!$member->Country) $member->Country = Convert::raw2SQL($data['Country']);
-			if (!$member->DefaultInvoiceAddress) $member->DefaultInvoiceAddress = $session->InvoiceAddressID;
-			if (!$member->DefaultDeliveryAddress) $member->DefaultDeliveryAddress = $session->DeliveryAddressID;
 			$member->write();
 		}
 		if (isset($data['UseContactForShipping']))  {

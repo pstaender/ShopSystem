@@ -7,10 +7,9 @@ class ShopClient extends Member {
 		"Country"=>"Varchar(50)",
 		"ClientKey"=>"Varchar(200)",
 		"Gender"=>"Enum('m,f,-','-')",
+		"Status"=>"Enum('Customer,Guest,Unknown','Unknown')",
 		);
 	static $has_one = array(
-		"DefaultDeliveryAddress"=>"ShopAddress",
-		"DefaultInvoiceAddress"=>"ShopAddress",
 		);
 	static $has_many = array(
 		"Orders"=>"ShopOrder"
@@ -20,20 +19,6 @@ class ShopClient extends Member {
 		
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		// $tablefield = new ComplexTableField(
-		// 			$this,
-		// 			'DefaultInoviceAddress',
-		// 			'ShopAddress',
-		// 			array(
-		// 				"FirstName"=>"Firstname",
-		// 				"Surname"=>"Surname",
-		// 				),
-		// 			null,
-		// 			$sourceFilter = "ID = $this->DefaultInvoiceAddressID"	
-		// 		);
-		// $fields->insertBefore(new LiteralField('FIELDNAMELINK',"<a href=\"admin/shopsystem/ShopAddress/".$this->InvoiceAddressID."/edit/\" target=\"_blank\">Edit</a>"),'FirstName');
-		// 	
-		// $fields->addFieldToTab( 'Root.Main', $tablefield );
 		return $fields;
 	}
 	
