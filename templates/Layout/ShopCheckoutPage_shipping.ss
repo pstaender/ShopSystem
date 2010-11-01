@@ -1,4 +1,0 @@
-<% include CheckoutNavigation %>
-
-$ContentShipping
-$ShippingMethodForm
