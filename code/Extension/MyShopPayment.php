@@ -31,4 +31,3 @@ class MyShopPayment extends DataObjectDecorator {
 		
 }
 
-?>

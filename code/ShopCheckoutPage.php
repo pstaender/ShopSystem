@@ -1,5 +1,7 @@
 <?php
 
+//todo: company for client, default deliveryaddress form check
+
 class ShopCheckoutPage extends SiteTree {
 	
 	static $db = array(
@@ -191,7 +193,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 				$client = new ShopClient();
 				$client->Email = $email;
 				$client->ClientKey = ShopClient::generateClientKey($email);
-				$client->Password = $client->ClientKey;				
+				$client->Password = $client->ClientKey;	
 				$client->write();
 				//add to group
 				$client->Groups()->add(DataObject::get_one("Group","Title LIKE 'ShopClients'"));
@@ -242,6 +244,13 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$session->OrderKey = $session->generateOrderKey();
 			$session->PlacedOrderOn = time();
 			$session->sendOrderConfirmation();
+			if ($session->Items()) foreach($session->Items() as $item) {
+				if ($orgItem=$item->OriginalItem()) {
+					$orgItem->Quantity = $orgItem->StockQuantity - $item->Quantity;
+					$orgItem->OrderCount++;
+					$orgItem->write();
+				}
+			}
 			$session->write();
 			
 			$invoice = new ShopInvoice();
@@ -304,6 +313,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 			//insert firtsname + surname to member
 			if (!$member->FirstName) $member->FirstName = Convert::raw2SQL($data['FirstName']);
 			if (!$member->Surname) $member->Surname = Convert::raw2SQL($data['Surname']);
+			if (!$member->Country) $member->Country = Convert::raw2SQL($data['Country']);
+			if (!$member->DefaultInvoiceAddress) $member->DefaultInvoiceAddress = $session->InvoiceAddressID;
+			if (!$member->DefaultDeliveryAddress) $member->DefaultDeliveryAddress = $session->DeliveryAddressID;
 			$member->write();
 		}
 		if (isset($data['UseContactForShipping']))  {

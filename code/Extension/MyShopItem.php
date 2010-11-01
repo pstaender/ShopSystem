@@ -7,6 +7,7 @@ class MyShopItem extends DataObjectDecorator {
 			'db' => array(
 				'Summary' => 'Text',
 				'OrderCode' => 'Varchar(100)',
+				'OldID' => 'Int',
 				)
 			);
 	}
@@ -26,4 +27,3 @@ class MyShopItem extends DataObjectDecorator {
 	
 }
 
-?>

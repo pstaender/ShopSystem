@@ -7,6 +7,7 @@ class ShopAdmin extends ModelAdmin {
 		'ShopInvoice',
 		'ShopAddress',
 		'ShopOrderItem',
+		'ShopClient',
 	);
 
 	static $url_segment = 'shopsystem';

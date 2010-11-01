@@ -15,7 +15,12 @@ $(document).ready(function() {
 		$('#ShoppingItemsCountIcon').html($('#ShoppingCartItemsCount').attr('value'));
 		
 	});
-	
+	$("#ProductsQuickViewButton").hover(function(){
+		$("#ProductsQuickView").stop().fadeTo(100,1.0);
+	});
+	$("#ProductsQuickView").click(function(){
+		$("#ProductsQuickView").stop().fadeTo(100,0);
+	});
 	$(".buttonOrder").bind('click', function() {
 		var id = $(this).attr('key');
 		var url = "cart/add/"+$(this).attr('key')+"/";

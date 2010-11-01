@@ -10,15 +10,14 @@ class ShopItem extends SiteTree {
 		"Price"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
 		"Summary"=>"Text",
+		"OrderCount"=>"Int",
+		"ViewCount"=>"Int",
 		// "VAT"=>"Enum('INCL,EXCL,INHERIT','INHERIT')",
 		);
 	
 	static $has_one = array(
 		"Picture"=>"Image",
 		"PictureFolder"=>"Folder",
-		);
-	
-	static $field_names = array(
 		);
 			
 	static $default_sort =  "Featured, Sort DESC";

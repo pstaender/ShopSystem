@@ -39,6 +39,10 @@ class ShopOrder extends DataObject {
 		"Shipping"=>"ShopShipping",
 		"Invoice"=>"ShopInvoice",
 		);
+	
+	static $belongs_to = array(
+		"Client"=>"ShopClient"
+		);
 		
 	static $has_many = array(
 		"Items"=>"ShopOrderItem",
@@ -294,7 +298,7 @@ class ShopOrder extends DataObject {
 
 	function sendInvoiceTo($email) {
 		if ($from = self::$emailInvoice) {
-			$email = New Email_Template();
+			$email = new Email();
 			$email->from = $form;
 			$email->to = $email;
 			$email->subject = _t("Shop.Invoice.EmailSubject","%Your invoice for your order%");

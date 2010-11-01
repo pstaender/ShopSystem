@@ -12,6 +12,7 @@ class ShopAddress extends DataObject {
 		"AdditionalAddress"=>"Varchar(200)",
 		"Phone"=>"Varchar(200)",
 		"Country"=>"Varchar(50)",
+		"Gender"=>"Enum('m,f,-','-')",
 		);
 	
 	static $required_fields = array(
