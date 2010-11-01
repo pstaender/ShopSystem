@@ -21,7 +21,7 @@
 		</div>
 		<% if Shipping.Price %>
 		<div class="cartPosition shippingCosts">
-			<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $Shipping.Price $Currency
+			<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $CalcShippingCosts $Currency
 		</div>
 		<% end_if %>
 		<% if Discount %>

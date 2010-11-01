@@ -18,7 +18,6 @@ class ShopOrder extends DataObject {
 		"Tax"=>"Int",
 		"VAT"=>"Enum('INCL,EXCL','INCL')",
 		"VATAmount"=>"Float",
-		//"ShippingCosts"=>"Float",
 		"Discount"=>"Float",
 		"SubTotal"=>"Float",
 		"Total"=>"Float",
@@ -49,7 +48,21 @@ class ShopOrder extends DataObject {
 		);
 	
 	static $summary_fields = array(
-		"Status","PlacedOrderOn","Email","Client.Email","Client.ClientKey","Tax","VAT","Shipping.Price","Discount","SubTotal","Total","OrderKey","IP","InvoiceAddress.FirstName","InvoiceAddress.Surname",
+		"Status",
+		"PlacedOrderOn",
+		"Email",
+		"Client.Email",
+		"Client.ClientKey",
+		"Tax",
+		"VAT",
+		"Shipping.Price",
+		"Discount",
+		"SubTotal",
+		"Total",
+		"OrderKey",
+		"IP",
+		"InvoiceAddress.FirstName",
+		"InvoiceAddress.Surname",
 		);
 		
 	static $searchable_fields = array(
@@ -73,7 +86,6 @@ class ShopOrder extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$invoice = null;
-		// $fields->replaceField("InvoiceAddress")
 		if ($this->Invoice()) $invoice = new LiteralField("InvoiceLink",'<a href="'.$this->Invoice()->Link().'" target="_invoicewindow">View invoice</a>');
 		$fields->addFieldsToTab('Root.Main',array(
 			new HeaderField("InvoiceHeaderField","Invoice",3),
@@ -190,30 +202,17 @@ class ShopOrder extends DataObject {
 				$s->write();
 			}
 		}
-		
 		//create address fields for shipping+invoicing
-		//is no done in ShopCheckoutPage --> doSubmitEmailForm
-		// if ($s->InvoiceAddressID==0) {
-		// 			$a = new ShopAddress();
-		// 			$a->write();
-		// 			$a->OrderID = $s->ID;
-		// 			$s->InvoiceAddressID = $a->ID;
-		// 		}
-		// 		if ($s->DeliveryAddressID==0) {
-		// 			$a = new ShopAddress();
-		// 			$a->OrderID = $s->ID;
-		// 			$a->write();
-		// 			$s->DeliveryAddressID = $a->ID;
-		// 		}
-		//create payment+shipping methods
-		if ($s->PaymentID==0) {
+		//is now done in ShopCheckoutPage --> doSubmitEmailForm
+
+		if (!($s->PaymentID>0)) {
 			$p = new ShopPayment();
 			$p->Price = 0;
 			$p->OrderID = $s->ID;
 			$p->write();
 			$s->PaymentID = $p->ID;
 		}
-		if ($s->ShippingID==0) {
+		if (!($s->ShippingID>0)) {
 			$d = new ShopShipping();
 			$d->OrderID = $s->ID;
 			$d->Price = 0;
@@ -355,5 +354,3 @@ class ShopOrder_Controller extends Page_Controller {
 	}
 	
 }
-
-?>

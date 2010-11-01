@@ -52,7 +52,7 @@ class MyShopOrder extends Extension {
 		//EU
 		if (in_array($country,self::$euStates)) $shipping = ($amount <= 199) ? 11.1 : 19.5;
 		//DE
-		if ($country=="DE") $shipping = ($amount <= 199) ? 3.6 : 9.5;
+		if (($country=="DE") || ($country=="")) $shipping = ($amount <= 199) ? 3.6 : 9.5;
 		//fw
 		
 		if (!$shippingMethod) $shippingMethod=$this->owner->Shipping()->Method;

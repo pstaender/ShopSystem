@@ -44,6 +44,8 @@ $lang['de_DE']['Shop.Payment']['Method'] = 'Zahlungsweise';
 
 $lang['de_DE']['Shop']['GoCheckout'] = 'Zur Kasse gehen';
 
+$lang['de_DE']['Shop.Order']['EmailSubject'] = 'Bestellbestätigung';
+
 $lang['de_DE']['Shop.Contact']['Email'] = 'eMail';
 $lang['de_DE']['Shop.Contact']['Company'] = 'Firmenname';
 $lang['de_DE']['Shop.Contact']['FirstName'] = 'Vorname';
