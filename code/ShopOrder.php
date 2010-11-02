@@ -325,6 +325,23 @@ class ShopOrder extends DataObject {
 	function sendInvoice() {
 		 $this->sendInvoiceTo($this->emailFromClient());
 	}
+	
+	function onBeforeWrite() {
+		if ($this->ID>0) {
+			if ($changed = $this->getChangedFields()) {
+				if ($changed['Status']['before']!=$changed['Status']['after']) {
+						//Status has changed, so add an history event
+						$event = new ShopOrderEvent();
+						$event->Title = $this->Status;
+						$event->Description = "Changed status from '".$changed['Status']['before']."' to '".$changed['Status']['after'];
+						$event->OrderID = $this->ID;
+						$event->write();
+				}
+			}
+
+		}
+		parent::onBeforeWrite();
+	}
 
 }
 

@@ -6,13 +6,14 @@ class ShopOrderEvent extends DataObject {
 		"Title"=>"Varchar",
 		"Description"=>"Text",
 		"Status"=>"Enum('Open,Closed','Open')",
+		"EventDate"=>"SS_DateTime",
 		);
 		
 	static $has_one = array(
 		"Order"=>"ShopOrder",
 	);
 
-	static $default_sort = 'Created DESC';
+	static $default_sort = 'EventDate DESC';
 	
 	static $singular_name = "Order event";
 	static $plural_name = "Order historyevents";
@@ -23,10 +24,16 @@ class ShopOrderEvent extends DataObject {
 	);
 	
 	static $summary_fields = array(
-		'Title',
+		'EventDate',
 		'Status',
+		'Title',
 		'Description',
 	);
+	
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		if(empty($this->EventDate)) $this->EventDate = time();
+	}
 		
 }
 
