@@ -49,24 +49,27 @@ class ShopOrder extends DataObject {
 		);
 	
 	static $summary_fields = array(
+		"ID",
+		"OrderKey",
 		"Status",
 		"PlacedOrderOn",
 		"Email",
-		"Client.Email",
-		"Client.ClientKey",
 		"Tax",
 		"VAT",
 		"Shipping.Price",
 		"Discount",
 		"SubTotal",
 		"Total",
-		"OrderKey",
+		"Client.Email",
+		"Client.ClientKey",
 		"IP",
 		"InvoiceAddress.FirstName",
 		"InvoiceAddress.Surname",
+		"Note",
 		);
 		
 	static $searchable_fields = array(
+		"ID",
 		"Status",
 		"InvoiceAddress.FirstName",
 		"InvoiceAddress.Surname",
@@ -91,11 +94,32 @@ class ShopOrder extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$invoice = null;
-		if ($this->Invoice()) $invoice = new LiteralField("InvoiceLink",'<a href="'.$this->Invoice()->Link().'" target="_invoicewindow">View invoice</a>');
+		if ($this->Invoice()) $invoice = new LiteralField("InvoiceLink",'<a href="'.$this->Invoice()->Link().'" target="_invoicewindow">'._t("Shop.Invoice.ViewInvoice","%View Invoice%").'</a>');
 		$fields->addFieldsToTab('Root.Main',array(
-			new HeaderField("InvoiceHeaderField","Invoice",3),
+			new HeaderField(_t("Shop.Invoice.Invoice","%Invoice%"),3),
 			$invoice,
 			));
+		if ($this->Shipping()) {
+			$fields->replaceField(
+				"ShippingID",
+				new LiteralField("ShippingTitle","<h2>"._t("Shop.Shipping.".$this->Shipping()->Method,"%ShippingMethod%")." </h2><h5>#".$this->ShippingID."</h5>")
+				);
+			$fields->insertAfter(
+				new LiteralField("ShippingPrice","<h3>".$this->Shipping()->Price." ".$this->Currency."</h3>"),
+				"ShippingTitle"
+				);
+		}
+		if ($this->Payment()) {
+			$fields->replaceField(
+				"PaymentID",
+				new LiteralField("PaymentTitle","<h2>"._t("Shop.Payment.".$this->Payment()->Method,"%PaymentMethod%")." </h2><h5>#".$this->PaymentID."</h5>")
+				);
+			$fields->insertAfter(
+				new LiteralField("PaymentPrice","<h3>".$this->Payment()->Price." ".$this->Currency."</h3>"),
+				"PaymentTitle"
+				);
+		}
+		
 		return $fields;
 	}
 	

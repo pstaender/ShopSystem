@@ -93,6 +93,7 @@ $lang['de_DE']['Shop.Invoice']['Price'] = "Preis";
 $lang['de_DE']['Shop.Invoice']['OrderKey'] = "Bestellnummer";
 $lang['de_DE']['Shop.Invoice']['PDFLink'] = "Link zur PDF Datei";
 $lang['de_DE']['Shop.Invoice']['EmailSubject'] = "Ihr Rechnung für Ihre Bestellung";
+$lang['de_DE']['Shop.Invoice']['ViewInvoice'] = "Rechnung ansehen";
 
 $lang['de_DE']['Shop.Company']['Name'] = "Mein Firmenname";
 $lang['de_DE']['Shop.Company']['Street'] = "Straße";
@@ -117,4 +118,3 @@ $lang['de_DE']['Shop.OrderIncomplete']['AmountBelowMin'] = "Der Warenkorb erfül
 $lang['de_DE']['Shop.OrderIncomplete']['EmailMissing'] = "Es ist keine eMail-Adresse angegeben.";
 $lang['de_DE']['Shop.OrderIncomplete']['InvoiceAddressIncomplete'] = "Sie haben keine gültige Rechnungsanschrift angegeben.";
 $lang['de_DE']['Shop.OrderIncomplete']['DeliveryAddressIncomplete'] = "Sie haben keine gültige Lieferanschrift angegeben.";
-?>

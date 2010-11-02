@@ -10,7 +10,7 @@ class ShopAddress extends DataObject {
 		"Street"=>"Varchar(200)",
 		"ZipCode"=>"Int",
 		"City"=>"Varchar(100)",
-		"AdditionalAddress"=>"Varchar(200)",
+		"AdditionalAddress"=>"Text",
 		"Phone"=>"Varchar(200)",
 		"Country"=>"Varchar(50)",
 		);
@@ -22,6 +22,26 @@ class ShopAddress extends DataObject {
 		"Street",
 		"ZipCode",
 		"City"
+		);
+		
+	static $summary_fields = array(
+		"ID",
+		"Company",
+		"FirstName",
+		"Surname",
+		"Client.FirstName",
+		"Client.Surname",
+		"Order.ID",
+		"Street",
+		"ZipCode",
+		"City",
+		);
+		
+	static $searchable_fields = array(
+		"ID",
+		"FirstName",
+		"Surname",
+		"ZipCode",
 		);
 	
 	static $belongs_to = array(

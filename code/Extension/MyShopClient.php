@@ -6,8 +6,11 @@ class MyShopClient extends DataObjectDecorator {
 		return array(
 			'db' => array(
 				'OldID' => 'Int',
-				)
-			);
+				),
+			'has_one' => array(
+				'OldAddress' => 'ShopAddress'
+			),
+		);
 	}
 	
 }

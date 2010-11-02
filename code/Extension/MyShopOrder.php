@@ -18,7 +18,11 @@ class MyShopOrder extends Extension {
 		);
 		
 	static $required_fields = array(
-		"Total","PaymentID","ShippingID","InvoiceAddressID","DeliveryAddressID"
+		"Total",
+		"PaymentID",
+		"ShippingID",
+		"InvoiceAddressID",
+		"DeliveryAddressID"
 		);
 		
 	function extraStatics() {
@@ -26,7 +30,7 @@ class MyShopOrder extends Extension {
 		return array(
 			'db' => array(
 				'Weight' => 'Float',
-				'OriginalID' => 'Int',
+				'OldID' => 'Int',
 				)
 			);
 	}
