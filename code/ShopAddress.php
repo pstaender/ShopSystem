@@ -63,7 +63,11 @@ class ShopAddress extends DataObject {
 			return true;
 		}
 	}
-		
+	
+	function Salutation() {
+		return ShopClient::salutationNice($this->Gender);
+	}
+	
 	static function getCountryDropdown($priority = null, $countryName = null) {
 			$countries = array_flip(ShopLocalization::$countries);
 			if ($priority) {

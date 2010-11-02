@@ -1,7 +1,7 @@
 <% include CheckoutNavigation %>
 
-<h2>Invoiceaddress</h2>
-<br />
+<h2><% _t("Shop.Checkout.Invoiceaddress","%Invoiceaddress%") %></h2>
 
+$ContentInvoiceAddress
 $InvoiceAddressForm
 

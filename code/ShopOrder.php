@@ -293,8 +293,9 @@ class ShopOrder extends DataObject {
 		}
 	}
 		
-	function sendOrderConfirmation() {
-		 $this->sendOrderConfirmationTo($this->emailFromClient());
+	function sendOrderConfirmation($email=null) {
+		if ($email==null) $email = $this->emailFromClient();
+		 $this->sendOrderConfirmationTo($email);
 	}
 
 	function sendInvoiceTo($email) {

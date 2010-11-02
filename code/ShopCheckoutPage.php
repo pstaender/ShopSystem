@@ -261,7 +261,6 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$session->PlacedOrderOn = time();
 			$session->Payment()->Price = $session->Total;
 			$session->Payment()->write();
-			$session->sendOrderConfirmation();
 			if ($session->Items()) foreach($session->Items() as $item) {
 				if ($orgItem=$item->OriginalItem()) {
 					$orgItem->Quantity = $orgItem->StockQuantity - $item->Quantity;
@@ -286,6 +285,10 @@ class ShopCheckoutPage_Controller extends ShopController {
 			
 			$this->OrderIsPlaced = true;
 			$this->Order = $session;
+			
+			$session->sendOrderConfirmation();//to customer
+			$session->sendOrderConfirmation(ShopOrder::$emailOrderConfirmation);//to shop admin
+			
 			//send email with invoice link?!
 			return array();
 		} else {

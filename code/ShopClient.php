@@ -22,6 +22,10 @@ class ShopClient extends Member {
 		return $fields;
 	}
 	
+	function Salutation() {
+		return self::salutationNice($this->Gender);
+	}
+	
 	static function generateClientKey($email) {
 		if ($email) {
 			$email = preg_replace("/[^A-Za-z0-9@]/","",$email);
@@ -30,6 +34,15 @@ class ShopClient extends Member {
 			$number = (int) date("Y",time()) + (int) date("m",time()) + (int) date("d",time());
 			return $name."-".$number;
 		}
+	}
+	
+	static function salutationNice($gender) {
+		$translation = array(
+			"-" => _t("Shop.Contact.GenderUnknown",""),
+			"m" => _t("Shop.Contact.GenderMale","Mr."),
+			"f" => _t("Shop.Contact.GenderFemale","Mrs."),
+			);
+		return (isset($translation[$gender])) ? $translation[$gender] : null;
 	}
 	
 }
