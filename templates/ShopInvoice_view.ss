@@ -15,11 +15,11 @@
 <div class="invoiceHeader">
 	<div class="dateOfInvoice invoiceData">
 		<div class="title"><% _t('Shop.Invoice.DateOfInvoice','%DateOfInvoice%') %></div>
-		$InvoiceKey
+		$DateOfInvoice.Format(d.m.Y)
 	</div>
 	<div class="dateOfDelivery invoiceData">
 		<div class="title"><% _t('Shop.Invoice.DateOfDelivery','%DateOfDelivery%') %></div>
-		$DateOfDelivery.Nice</div>
+		$DateOfDelivery.Format(d.m.Y)</div>
 	<div class="invoiceKey invoiceData">
 		<div class="title"><% _t('Shop.Invoice.InvoiceKey','%InvoiceKey%') %></div>
 		$InvoiceKey

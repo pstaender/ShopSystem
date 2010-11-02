@@ -268,16 +268,18 @@ class ShopCheckoutPage_Controller extends ShopController {
 					$orgItem->write();
 				}
 			}
+			
 			$session->write();
+			
 			//create invoice
 			$invoice = new ShopInvoice();
 			$invoice->PublicURL = ShopInvoice::generatePublicURL();
 			$invoice->OrderID = $session->ID;
-			$invoice->DateOfDelivery = time();
-			$invoice->DateOfInvoice = null;
-			$invoice->write();
+			$invoice->DateOfDelivery = null;
+			$invoice->DateOfInvoice = time();
+			
 			//increment invoicekey if exists, otherwise use the id
-			if ($lastInvoice=DataObject::get_one("ShopInvoice","1",null,"`ID` DESC")) $invoice->InvoiceKey = ((int) $lastInvoice->InvoiceKey)+1;
+			if ($lastInvoice=DataObject::get_one("ShopInvoice",null,null,"ID DESC")) $invoice->InvoiceKey = ((int) preg_replace('/\D+/', '', $lastInvoice->InvoiceKey))+1;
 			else $invoice->InvoiceKey = $invoice->ID;
 			$invoice->write();
 			$session->InvoiceID = $invoice->ID;

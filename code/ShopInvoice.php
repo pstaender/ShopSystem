@@ -6,7 +6,7 @@ class ShopInvoice extends DataObject {
 		"DateOfDelivery"=>"Date",
 		"DateOfInvoice"=>"Date",
 		"PublicURL"=>"Varchar(64)",
-		"InvoiceKey"=>"Varchar(200)",
+		"InvoiceKey"=>"Varchar(100)",
 		"Note"=>"Text",
 		);
 		

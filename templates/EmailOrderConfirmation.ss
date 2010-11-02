@@ -1,4 +1,4 @@
-<h2>Bestätigungsmail für Ihre Bestellung</h2>
+<h2>Ihre Bestellung bei uns ist eingegangen</h2>
 
 <p>Guten Tag <% if InvoiceAddress.Gender %>$InvoiceAddress.Salutation $InvoiceAddress.Surname<% end_if %>,</p>
 
@@ -30,13 +30,13 @@
 	</table>
 </p>
 
-<p>Sie erhalten umgehend eine Rechnung zu Ihrer Bestellung als PDF-Datei.</p>
+<p>Sie erhalten umgehend eine gültige Rechnung zu Ihrer Bestellung als PDF-Datei.</p>
 
 <p>Ihre vorläufige Rechnung können Sie online einsehen unter:</p>
 <p><strong><a href="{$BaseHref}$Invoice.Link">{$BaseHref}$Invoice.Link</a></strong></p>
-<p>Im die Rechnung zu verbergen, klicken Sie <a href="{$BaseHref}$Invoice.Link">hier</a>.</p>
+<p>Im die Rechnung zu entfernen, klicken Sie <a href="{$BaseHref}$Invoice.Link?remove=1">hier</a>.</p>
 
-<p>Vielen Dank für Ihre Bestellung.</p>
+<p>Wir danken Ihnen für Ihre Bestellung bei uns.</p>
 <p>Bei Fragen erreichen Sie uns auch telefonisch unter:</p>
 
 <p>Todo Adresse</p>
