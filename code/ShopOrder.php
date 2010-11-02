@@ -45,6 +45,7 @@ class ShopOrder extends DataObject {
 		
 	static $has_many = array(
 		"Items"=>"ShopOrderItem",
+		"Events"=>"ShopOrderEvent",
 		);
 	
 	static $summary_fields = array(
@@ -66,8 +67,12 @@ class ShopOrder extends DataObject {
 		);
 		
 	static $searchable_fields = array(
-		"Status","InvoiceAddress.FirstName","InvoiceAddress.Surname",
+		"Status",
+		"InvoiceAddress.FirstName",
+		"InvoiceAddress.Surname",
 		);
+	
+	static $default_sort = 'LastEdited DESC';
 		
 	static $hashField = "shoppinghash";
 	
