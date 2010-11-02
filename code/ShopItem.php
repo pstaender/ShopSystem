@@ -6,14 +6,12 @@ class ShopItem extends SiteTree {
 		"Featured"=>"Boolean",
 		"StockQuantity"=>"Int",
 		"ProductKey"=>"Varchar(100)",
-		// "Status"=>"Enum('InStock,PreOrder,OutOfStock','InStock')",
 		"StockDate"=>"Date",
 		"Price"=>"Float",
 		"Currency"=>"Enum('EUR','EUR')",
 		"Summary"=>"Text",
 		"OrderCount"=>"Int",
 		"ViewCount"=>"Int",
-		// "VAT"=>"Enum('INCL,EXCL,INHERIT','INHERIT')",
 		);
 	
 	static $has_one = array(

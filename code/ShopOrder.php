@@ -328,7 +328,8 @@ class ShopOrder extends DataObject {
 	
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
-		if ($changed = $this->getChangedFields()) {
+		$changed = $this->getChangedFields();
+		if (isset($changed['Status'])) {
 			if ($changed['Status']['before']!=$changed['Status']['after']) {
 					//Status has changed, so add an "history" event
 					$event = new ShopOrderEvent();
