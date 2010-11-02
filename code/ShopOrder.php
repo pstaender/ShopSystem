@@ -254,6 +254,7 @@ class ShopOrder extends DataObject {
 				$orderItem->Version = $item->Version;
 				$orderItem->Price = $item->Price;
 				$orderItem->Title = $item->Title;
+				$orderItem->ProductKey = $item->ProductKey;
 				$orderItem->Currency = $item->Currency;
 				$orderItem->Quantity = $orderItem->Quantity + $quantity;
 				$orderItem->OriginalItemID = $item->ID;

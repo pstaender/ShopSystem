@@ -5,6 +5,7 @@ class ShopItem extends SiteTree {
 	static $db = array(
 		"Featured"=>"Boolean",
 		"StockQuantity"=>"Int",
+		"ProductKey"=>"Varchar(100)",
 		// "Status"=>"Enum('InStock,PreOrder,OutOfStock','InStock')",
 		"StockDate"=>"Date",
 		"Price"=>"Float",
@@ -27,6 +28,7 @@ class ShopItem extends SiteTree {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab("Root.Content.Shop", array(
+			new TextField('ProductKey', _t("Shop.Item.ProductKey","%ProductKey%")),
 			new NumericField('Price', _t("Shop.Item.Price","%Price%")),
 			new CheckboxField('Featured', _t("Shop.Item.Featured","%Featured%")),
 			new TextareaField('Summary', _t("Shop.Item.Summary","%Summary%"),5),

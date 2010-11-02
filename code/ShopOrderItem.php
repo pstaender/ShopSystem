@@ -8,6 +8,7 @@ class ShopOrderItem extends DataObject {
 		"VAT"=>"Enum('INCL,EXCL','INCL')",
 		"Currency"=>"Enum('EUR','EUR')",
 		"Title"=>"Varchar(250)",
+		"ProductKey"=>"Varchar(100)",
 		"Quantity"=>"Int",
 		"SubTotal"=>"Float",
 		"Total"=>"Float",
