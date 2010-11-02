@@ -1,6 +1,6 @@
 <?php
 
-class MyShoplient extends DataObjectDecorator {
+class MyShopClient extends DataObjectDecorator {
 	
 	function extraStatics() {
 		return array(
