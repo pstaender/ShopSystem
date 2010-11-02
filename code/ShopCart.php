@@ -25,4 +25,3 @@ class ShopCart_Controller extends ShopController {
 	}
 } 
 
-?>

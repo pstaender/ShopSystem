@@ -30,4 +30,3 @@ class ShopCategory_Controller extends ShopController {
 		
 }
 
-?>

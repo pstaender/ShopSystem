@@ -44,4 +44,3 @@ class ShopPayment extends DataObject {
 	
 }
 
-?>

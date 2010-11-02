@@ -57,4 +57,3 @@ class ShopLocalization extends Object {
 	
 }
 
-?>

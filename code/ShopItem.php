@@ -32,7 +32,6 @@ class ShopItem extends SiteTree {
 			new TextareaField('Summary', _t("Shop.Item.Summary","%Summary%"),5),
 			new TextField('StockQuantity', _t("Shop.Item.StockQuantity","%StockQuantity%")),
 			new DateField('StockDate', _t("Shop.Item.StockDate","%StockDate%")),
-			// new DropdownField('VAT', _t("SHOP.ITEM.VAT","%Mehrwertsteuer%"), singleton($this->ClassName)->dbObject('VAT')->enumValues()),
 			new DropdownField('Currency', _t("Sshop.Item.Currency","%Currency%"), singleton($this->ClassName)->dbObject('Currency')->enumValues()),
 			));
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Pictures","%Pictures%"), array(
@@ -54,5 +53,3 @@ class ShopItem_Controller extends ShopController {
 	
 	
 }
-
-?>

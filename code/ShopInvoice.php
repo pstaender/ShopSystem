@@ -15,24 +15,12 @@ class ShopInvoice extends DataObject {
 		);
 				
 	static $summary_fields = array(
-				"ID", "InvoiceKey", //"Order.Company","Order.Surname","Order.Total","DateOfInvoice"
-				);
-		// 
-		// 		static $searchable_fields = array(
-		// 			'CompanyName' => array(
-		// 				'field'=>'TextField',
-		// 				'filter'=>'PartialMatchFilter'
-		// 				),
-		// 			'Homepage',
-		// 			'ZipCode',
-		// 			'City',
-		// 			'IsPremium',
-		// 		);
-		// 		
+		"ID",
+		"InvoiceKey",
+		);
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-	// return ShopLocalization::generateTranslationFieldsForBackend("Shop.Admin",self::$db,self::$has_one,$fields);
 		$fields->insertAfter(
 				new LiteralField(_t("Shop.Invoice.PDFLink","PDF Link"),'<h5><a href="'.Director::absoluteURL($this->pdfLink()).'" target="_blank">'._t("Shop.Invoice.PDFLink","PDF Link").'</a></h5>'),
 			"OrderID"
@@ -126,7 +114,7 @@ class ShopInvoice_Controller extends ContentController {
 					header('Content-type: application/pdf');
 					header('Content-Disposition: attachment; filename="invoice.pdf"');
 					echo file_get_contents($outputFile);
-					//echo "PDF file is generated successfully!";
+					//PDF file is generated successfully!
 					exit();
 				}
 					
@@ -146,4 +134,3 @@ class ShopInvoice_Controller extends ContentController {
 	
 }
 
-?>

@@ -58,4 +58,3 @@ class ShopController extends Page_Controller {
 	
 }
 
-?>
