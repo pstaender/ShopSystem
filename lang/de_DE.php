@@ -75,6 +75,15 @@ $lang['de_DE']['Shop.Checkout']['Complete'] = "Bestellung abschließen";
 $lang['de_DE']['Shop.Checkout']['PlaceOrder'] = "Bestellung abschließen";
 $lang['de_DE']['Shop.Checkout']['Note'] = "Anmerkung / Nachricht zur Bestellung";
 $lang['de_DE']['Shop.Checkout'][''] = "Warenkorb";
+$lang['de_DE']['Shop.Checkout']['ContentEmail'] = "Text für eMail-Seite";
+$lang['de_DE']['Shop.Checkout']['ContentInvoiceAddress'] = "Text für Rechnunganschriftseite";
+$lang['de_DE']['Shop.Checkout']['ContentDeliveryAddress'] = "Text für Lieferanschriftseite";
+$lang['de_DE']['Shop.Checkout']['ContentShipping'] = "Text für Versandseite";
+$lang['de_DE']['Shop.Checkout']['ContentPayment'] = "Text für Bezahlungsseite";
+$lang['de_DE']['Shop.Checkout']['ContentSummary'] = "Text für Zusammenfassungsseite";
+$lang['de_DE']['Shop.Checkout']['ContentComplete'] = "Text für 'Erfolgreich Bestellung aufgegeben'-Seite";
+$lang['de_DE']['Shop.Checkout']['ContentError'] = "Text für Fehlernachricht, bei Bestellabschluss";
+$lang['de_DE']['Shop.Checkout']['ContentMinimalAmount'] = "Text, falls der Mindestbestellwert nicht erreicht ist";
 
 $lang['de_DE']['Shop.Form']['Save'] = "Speichern";
 $lang['de_DE']['Shop.Form']['Apply'] = "Übernehmen";
@@ -118,6 +127,27 @@ $lang['de_DE']['Shop.OrderIncomplete']['AmountBelowMin'] = "Der Warenkorb erfül
 $lang['de_DE']['Shop.OrderIncomplete']['EmailMissing'] = "Es ist keine eMail-Adresse angegeben.";
 $lang['de_DE']['Shop.OrderIncomplete']['InvoiceAddressIncomplete'] = "Sie haben keine gültige Rechnungsanschrift angegeben.";
 $lang['de_DE']['Shop.OrderIncomplete']['DeliveryAddressIncomplete'] = "Sie haben keine gültige Lieferanschrift angegeben.";
+
+
+//Items
+
+$lang['de_DE']['Shop.Item']['ProductKey'] = "Artikelnummer";
+$lang['de_DE']['Shop.Item']['Price'] = "Preis";
+$lang['de_DE']['Shop.Item']['Featured'] = "Hervorheben";
+$lang['de_DE']['Shop.Item']['Summary'] = "Kurzbeschreibung";
+$lang['de_DE']['Shop.Item']['StockQuantity'] = "Verfügbare Stückzahl";
+$lang['de_DE']['Shop.Item']['StockDate'] = "Verfügbarkeitsdatum";
+$lang['de_DE']['Shop.Item']['Currency'] = "Währung";
+$lang['de_DE']['Shop.Item']['Pictures'] = "Produktfoto(s)";
+$lang['de_DE']['Shop.Item']['Picture'] = "Produktfoto";
+$lang['de_DE']['Shop.Item']['PictureFolder'] = "Ordner mit Produktfotos";
+$lang['de_DE']['Shop.Item']['Download'] = "Download";
+$lang['de_DE']['Shop.Item']['File'] = "Datei für Download";
+
+
+//Shop.Category.Picture(s)
+//Shop.Item.Picture(s)
+//Shop.Item.PictureFolder
 
 //Shop.User.PasswordRequest
 //hop.User.YourEmail

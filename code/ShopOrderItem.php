@@ -27,7 +27,7 @@ class ShopOrderItem extends DataObject {
 		"Quantity","Price","Title","SubTotal","Total"
 		);
 		
-	function total() {
+	function Total() {
 		return $this->Price*$this->Quantity;
 	}
 	

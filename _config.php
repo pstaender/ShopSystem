@@ -23,6 +23,8 @@ Director::addRules(100, array(
 const SHOPSYSTEM_DIR = "shopsystem";
 const SHOPUSER_PATH = "user";
 
+Object::add_extension("Float", "FloatExtension");
+
 Object::add_extension("ShopOrder", "MyShopOrder");
 Object::add_extension("ShopPayment", "MyShopPayment");
 Object::add_extension("ShopShipping", "MyShopShipping");

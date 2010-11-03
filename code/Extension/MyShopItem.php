@@ -5,8 +5,9 @@ class MyShopItem extends DataObjectDecorator {
 	function extraStatics() {
 		return array(
 			'db' => array(
+				'Subtitle'=>'Varchar(100)',
 				'Summary' => 'Text',
-				'OrderCode' => 'Varchar(100)',
+				// 'OrderCode' => 'Varchar(100)',
 				'OldID' => 'Int',
 				)
 			);
@@ -20,9 +21,13 @@ class MyShopItem extends DataObjectDecorator {
 	
 	function updateCMSFields(Fieldset $fields) {
 		$fields->addFieldsToTab('Root.Content.Shop', array(
-			new TextareaField('Summary', _t('Shop.ShopItem.Summary','%Summary%')),
-			new TextField('OrderCode', 'Bestellnummer'),
+			new TextField('Subtitle', 'Untertitel'),
 			));
+		$fields->addFieldsToTab('Root.Content.Shop', array(
+			new TextareaField('Summary', _t('Shop.ShopItem.Summary','%Summary%')),
+			// new TextField('OrderCode', 'Bestellnummer'),
+			));
+
 	}
 	
 }

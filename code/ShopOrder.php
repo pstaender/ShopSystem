@@ -76,7 +76,12 @@ class ShopOrder extends DataObject {
 		);
 	
 	static $default_sort = 'LastEdited DESC';
-		
+	
+	static $casting = array(
+	  'Amount' => 'Float',
+		'CalcShippingCosts' => 'Float',
+	);
+	
 	static $hashField = "shoppinghash";
 	
 	static $country = null;

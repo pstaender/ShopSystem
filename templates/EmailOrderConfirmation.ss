@@ -8,17 +8,17 @@
 	<table>
 		<tr><td>Menge</td><td>Artikel</td><td align="right">Preis</td></tr>
 	<% control Items %>
-		<tr><td>$Quantity x</td><td>$Title</td><td  align="right">$Total $Currency</td></tr>
+		<tr><td>$Quantity x</td><td>$Title</td><td  align="right">$Total.Decimal $Currency</td></tr>
 	<% end_control %>
 		
 		<tr>
-			<td colspan="2"><% if Discount %>Preisnachlass:</td><td align="right"> - $Discount $Currency<% end_if %></td>
+			<td colspan="2"><% if Discount %>Preisnachlass:</td><td align="right"> - $Discount.Decimal $Currency<% end_if %></td>
 		</tr>
 		<tr>
-			<td colspan="2">Porto und Versand:</td><td align="right">+ $CalcShippingCosts $Currency</td>
+			<td colspan="2">Porto und Versand:</td><td align="right">+ $CalcShippingCosts.Decimal $Currency</td>
 		</tr>
 		<tr>
-			<td colspan="2">Zwischensumme:</td><td align="right">$SubTotal $Currency</td>
+			<td colspan="2">Zwischensumme:</td><td align="right">$SubTotal.Decimal $Currency</td>
 		</tr>
 		<tr>
 			<td colspan="2">zzgl. {$Tax}% MwSt.</td><td align="right">+ $VATAmount $Currency</td>

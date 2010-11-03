@@ -66,7 +66,7 @@
 				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID">
 					<td class="quantity">$Quantity</td>
 					<td class="title"><a href="$OriginalItem.Link">$Title</a></td>
-					<td class="price">$Total $Currency</td>
+					<td class="price">$Total.Decimal $Currency</td>
 				</tr>
 			<% end_if %>
 			<% end_control %>
@@ -76,41 +76,41 @@
 		-->
 		<div class="cartAmount">
 				<div class="cartPosition amount">
-					<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $Amount $Currency
+					<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $AmountDecimal $Currency
 				</div>
 				<% if ShippingCosts %>
 				<div class="cartPosition shippingCosts">
-					<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $ShippingCosts $Currency
+					<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $ShippingCosts.Decimal $Currency
 				</div>
 				<% end_if %>
 				<% if Discount %>
 				<div class="cartPosition discount">
 					<span class="description"><% _t('Shop.Cart.Discount','%Discount%') %></span>
-					- $Discount $Currency
+					- $Discount.Decimal $Currency
 				</div>
 				<% end_if %>
 			<% if Total %>		
 				<div class="cartPosition subTotal">
 					<span class="description"><% _t('Shop.Cart.SubTotal','%SubTotal%') %></span>
-					$SubTotal $Currency
+					$SubTotal.Decimal $Currency
 				</div>
 				<div class="cartPosition vatAmount">
 					<% if VAT==INCL %>
 						<span class="description">
 							<% _t('Shop.Cart.TaxIncl','%TaxIncl%') %> {$Tax}% <% _t('Shop.Cart.TaxVAT','%TaxVAT%') %>
 						</span>
-						$VATAmount $Currency
+						$VATAmount.Decimal $Currency
 					<% end_if %>
 					<% if VAT==EXCL %>
 						<span class="description">
 							<% _t('Shop.Cart.TaxExcl','%TaxExcl%') %> {$Tax}% <% _t('Shop.Cart.TaxVAT','%TaxVAT%') %>
 						</span>
-						+ $VATAmount $Currency
+						+ $VATAmount.Decimal $Currency
 					<% end_if %>
 				</div>
 				<div class="cartPosition total">
 					<span class="description"><% _t('Shop.Cart.Total','%Total%') %></span>
-					$Total $Currency
+					$Total.Decimal $Currency
 				</div>
 			<% else %>
 

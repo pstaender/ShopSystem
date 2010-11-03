@@ -21,6 +21,15 @@ class ShopCategory extends SiteTree {
 		);
 	static $icon = 'shopsystem/images/icons/commerce';
 	
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->addFieldsToTab('Root.Content.'._t("Shop.Category.Pictures","%Pictures%"), array(
+			new FileIFrameField('Picture', _t("Shop.Category.Picture","%Picture%")),
+			new TreeDropdownField('PictureFolder',  _t("Sshop.Category.PictureFolder","%PictureFolder%"), "Folder" ),
+			));
+		return $fields;
+	}
+	
 }
 
 class ShopCategory_Controller extends ShopController {

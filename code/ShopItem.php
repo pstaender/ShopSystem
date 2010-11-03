@@ -33,12 +33,14 @@ class ShopItem extends SiteTree {
 			new TextareaField('Summary', _t("Shop.Item.Summary","%Summary%"),5),
 			new TextField('StockQuantity', _t("Shop.Item.StockQuantity","%StockQuantity%")),
 			new DateField('StockDate', _t("Shop.Item.StockDate","%StockDate%")),
-			new DropdownField('Currency', _t("Sshop.Item.Currency","%Currency%"), singleton($this->ClassName)->dbObject('Currency')->enumValues()),
+			new DropdownField('Currency', _t("Shop.Item.Currency","%Currency%"), singleton($this->ClassName)->dbObject('Currency')->enumValues()),
 			));
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Pictures","%Pictures%"), array(
 			new FileIFrameField('Picture', _t("Shop.Item.Picture","%Picture%")),
-			new TreeDropdownField('Folder',  _t("Sshop.Item.PictureFolder","%PictureFolder%"), "Folder" ),
-			
+			new TreeDropdownField('PictureFolder',  _t("Shop.Item.PictureFolder","%PictureFolder%"), "Folder" ),
+			));
+		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Download","%Download%"), array(
+			new FileIFrameField('Download', _t("Shop.Item.File","%File%")),			
 			));
 		return $fields;
 	}

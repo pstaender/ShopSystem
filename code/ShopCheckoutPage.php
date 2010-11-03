@@ -23,16 +23,15 @@ class ShopCheckoutPage extends SiteTree {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab("Root.Content.Shop", array(
-			new HTMLEditorField('ContentEmail', _t('SHOP.CheckoutPage.ContentEmail','%ContentEmail%')),
-			new HTMLEditorField('ContentEmail', _t('SHOP.CheckoutPage.ContentInvoiceAddress','%ContentInvoiceAddress%')),
-			new HTMLEditorField('ContentDeliveryAddress', _t('Shop.CheckoutPage.ContentDeliveryAddress','%ContentDeliveryAddress%')),
-			new HTMLEditorField('ContentShipping', _t('Shop.CheckoutPage.ContentShipping','%ContentShipping%')),
-			new HTMLEditorField('ContentPayment', _t('Shop.CheckoutPage.ContentPayment','%ContentPayment%')),
-			new HTMLEditorField('ContentSummary', _t('Shop.CheckoutPage.ContentSummary','%ContentSummary%')),
-			new HTMLEditorField('ContentComplete', _t('Shop.CheckoutPage.ContentComplete','%ContentComplete%')),
-			new HTMLEditorField('ContentError', _t('Shop.CheckoutPage.ContactError','%ContentError%')),
-			new HTMLEditorField('ContentMinimalAmount', _t('Shop.CheckoutPage.ContentMinimalAmount','%ContentMinimalAmount%')),
-
+			new HTMLEditorField('ContentEmail', _t('Shop.Checkout.ContentEmail','%ContentEmail%')),
+			new HTMLEditorField('ContentInvoiceAddress', _t('Shop.Checkout.ContentInvoiceAddress','%ContentInvoiceAddress%')),
+			new HTMLEditorField('ContentDeliveryAddress', _t('Shop.Checkout.ContentDeliveryAddress','%ContentDeliveryAddress%')),
+			new HTMLEditorField('ContentShipping', _t('Shop.Checkout.ContentShipping','%ContentShipping%')),
+			new HTMLEditorField('ContentPayment', _t('Shop.Checkout.ContentPayment','%ContentPayment%')),
+			new HTMLEditorField('ContentSummary', _t('Shop.Checkout.ContentSummary','%ContentSummary%')),
+			new HTMLEditorField('ContentComplete', _t('Shop.Checkout.ContentComplete','%ContentComplete%')),
+			new HTMLEditorField('ContentError', _t('Shop.Checkout.ContentError','%ContentError%')),
+			new HTMLEditorField('ContentMinimalAmount', _t('Shop.Checkout.ContentMinimalAmount','%ContentMinimalAmount%')),
 			));
 		return $fields;
 	}
