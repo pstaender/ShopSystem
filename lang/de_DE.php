@@ -118,3 +118,8 @@ $lang['de_DE']['Shop.OrderIncomplete']['AmountBelowMin'] = "Der Warenkorb erfül
 $lang['de_DE']['Shop.OrderIncomplete']['EmailMissing'] = "Es ist keine eMail-Adresse angegeben.";
 $lang['de_DE']['Shop.OrderIncomplete']['InvoiceAddressIncomplete'] = "Sie haben keine gültige Rechnungsanschrift angegeben.";
 $lang['de_DE']['Shop.OrderIncomplete']['DeliveryAddressIncomplete'] = "Sie haben keine gültige Lieferanschrift angegeben.";
+
+//Shop.User.PasswordRequest
+//hop.User.YourEmail
+// Shop.User.EmailSubjectPasswordConfirmHash
+// Shop.User.EmailSubjectPasswordReset

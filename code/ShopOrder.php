@@ -87,9 +87,10 @@ class ShopOrder extends DataObject {
 	static $vatType = "EXCL";
 	static $minAmount = "10";
 	
-	static $emailOrderConfirmation = null;
-	static $emailOrderShipped = null;
-	static $emailInvoice = null;
+	static $emailOrderConfirmation = "order@127.0.0.1";
+	static $emailOrderShipped = "order@127.0.0.1";
+	static $emailInvoice = "invoice@127.0.0.1";
+	static $emailUserAccount = "useraccount@127.0.0.1";
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();

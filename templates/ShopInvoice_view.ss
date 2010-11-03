@@ -1,8 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="$ContentLocale">
   <head>
 		<% base_tag %>
 		<title><% _t('Shop.Invoice.Invoice','%Invoice%') %></title>
+		<% MetaTags(false) %>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="robots" content="NOINDEX,NOFOLLOW" />
 		<meta name="googlebot" content="NOARCHIVE, NOODP, NOSNIPPET" />
 		

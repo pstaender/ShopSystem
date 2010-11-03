@@ -17,6 +17,7 @@ class ShopItem extends SiteTree {
 	static $has_one = array(
 		"Picture"=>"Image",
 		"PictureFolder"=>"Folder",
+		"Download"=>"File",
 		);
 			
 	static $default_sort =  "Featured, Sort DESC";

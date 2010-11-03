@@ -144,7 +144,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$order = ShopOrder::orderSession();
 		if (ShopOrder::orderSession()->Client()->ID>0) {
 			$client = ShopOrder::orderSession()->Client();
-			$email = $client->Email;
+			$email = $order->Email;
 			$clientKey = $client->ClientKey;
 		} else {
 			$email = $order->Email;
@@ -166,11 +166,12 @@ class ShopCheckoutPage_Controller extends ShopController {
 	}
 	
 	function doSubmitEmailForm($data,$form) {
-		$email = trim(Convert::Raw2SQL($data['Email']));
+		$originalEmail = $email = trim(Convert::Raw2SQL($data['Email']));
 		$clientKey = trim(Convert::Raw2SQL($data['ClientKey']));
 		$order = ShopOrder::orderSession();
-		$clientID = 0;
-		if ($client = DataObject::get_one("ShopClient","ClientKey LIKE '".$clientKey."'")) {
+		$clientID = $order->ClientID;
+		
+		if (($client = DataObject::get_one("ShopClient","ClientKey LIKE '".$clientKey."'"))) {
 			//existing client
 			$clientID = $client->ID;
 			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID AND Status = 'Ordered'")) {				
@@ -202,8 +203,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 				}
 			}
 		} else {
-			//create new client, if not 
-			$client = new ShopClient();
+			//create new client, if not
+			$client = ($order->Client()) ? $order->Client() : new ShopClient(); 
 			$client->Status = "Customer";
 			if ($clients=DataObject::get("ShopClient","Email LIKE '".$email."' OR Email LIKE 'shop.renamed.%.".$email."'")) {
 				$client->Email = "shop.renamed.".$clients->count() .".". $email;
@@ -235,10 +236,12 @@ class ShopCheckoutPage_Controller extends ShopController {
 				$order->DeliveryAddressID = $a->ID;
 			}
 		}
-		$order->Email = $email;
+		$order->Email = $originalEmail;
 		$order->ClientID = $clientID;
 		$order->CouponCode = strtoupper(Convert::raw2SQL($data['CouponCode']));
 		$order->TaxIDNumber = Convert::raw2SQL($data['TaxIDNumber']);
+		$client->ClientKey = $clientKey;
+		$client->write();
 		$order->write();
 		$this->redirectToNextStep("email");
 		return array();

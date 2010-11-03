@@ -1,6 +1,6 @@
 <?php
 
-class ShopClient extends Member {
+class ShopClient extends Member implements PermissionProvider {
 	
 	static $db = array(
 		"Company"=>"Varchar(200)",
@@ -8,6 +8,7 @@ class ShopClient extends Member {
 		"ClientKey"=>"Varchar(200)",
 		"Gender"=>"Enum('m,f,-','-')",
 		"Status"=>"Enum('Customer,Guest,Unknown','Unknown')",
+		"ConfirmHash"=>"Varchar(32)",
 		);
 	static $has_one = array(
 		);
@@ -44,6 +45,12 @@ class ShopClient extends Member {
 			);
 		return (isset($translation[$gender])) ? $translation[$gender] : null;
 	}
+	
+	function providePermissions() {
+	    return array(
+	      	"SHOPUSER_ACCOUNT" => _t("Shop.User.Account","%ShopUser has access to his shop account%"),
+	    );
+ 	}
 	
 }
 

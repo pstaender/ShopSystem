@@ -4,6 +4,12 @@ class ShopCategory extends SiteTree {
 	
 	static $db = array(
 		"Featured"=>"Boolean",
+		// "CategoryKey"="Varchar(200)",
+		);
+		
+	static $has_one = array(
+		"Picture"=>"Image",
+		"PictureFolder"=>"Folder",
 		);
 	
 	static $allowed_children = array(
