@@ -283,7 +283,9 @@ class ShopOrder extends DataObject {
 		$id = (int) $id;
 		if ($item = DataObject::get_by_id("ShopItem", $id)) {
 			//select first option, if none option is selected
-			$optionID = ( ($item->Options()) && ($optionID==null) ) ? $item->Options()->First()->ID : (int) $optionID;
+			if ( ($item->Options()->Count()) && ($optionID==null) ) {
+				$optionID = ($item->Options()) ? $item->Options()->First()->ID : (int) $optionID;
+			}
 			// exit($optionID."");
 			$optionSQL = ($optionID>0) ? " AND OptionID = $optionID " : "";
 			
