@@ -6,7 +6,7 @@
 		<tr class="item" id="ShopItem{$ID}" key="$ID">
 			<td class="quantity">$Quantity</td>
 			<td class="action"><div class="inc" quantity="1" key="$OriginalItem.ID" option="$OptionID">+</div><div class="dec" quantity="-1" key="$OriginalItem.ID" option="$OptionID">-</div><div class="remove" quantity="-1000" key="$OriginalItem.ID" option="$OptionID">x</div><a href="$OriginalItem.Link"><div class="info" key="$OriginalItem.ID">i</div></a></td>
-			<td class="title"><a href="$OriginalItem.Link">$Title <% if Option %>($Option.Title $OptionPriceDifferenceText $Currency)<% end_if %></a></td>
+			<td class="title"><a href="$OriginalItem.Link">$Title <% if Option %>($Option.Title $Option.PriceDifferenceText $Currency)<% end_if %></a></td>
 			<td class="price">$Total.Decimal $Currency</td>
 		</tr>
 	<% end_if %>
