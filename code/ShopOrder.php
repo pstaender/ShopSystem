@@ -132,7 +132,7 @@ class ShopOrder extends DataObject {
 	function amount($round = 2) {
 		$sum = 0;
 		foreach($this->Items() as $item) {
-			$sum = $sum + ($item->Price*$item->Quantity);
+			$sum = $sum + ($item->Price()*$item->Quantity);
 		}
 		return $round ? round($sum, $round) : $sum;
 	}
@@ -151,7 +151,7 @@ class ShopOrder extends DataObject {
 		$this->Payment()->write();
 		
 		$this->Discount = $this->calcDiscount();
-		$this->SubTotal = $this->Total = $amount - $this->Discount + $this->Shipping()->Price + $this->Payment()->Price;
+		$this->SubTotal = $this->Total = $amount - $this->Discount + $this->Shipping()->Price() + $this->Payment()->Price();
 		if ($this->VAT=="INCL") {
 			$this->VATAmount = round($amount - ($this->Total / $tax),$round);
 		}

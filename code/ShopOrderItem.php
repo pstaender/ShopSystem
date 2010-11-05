@@ -43,7 +43,12 @@ class ShopOrderItem extends DataObject {
 	}
 	
 	function OptionPriceDifference() {
-		return ($option = $this->Option()) ? $this->Price - $option->Price() : 0;
+		return ($option = $this->Option()) ? $option->Price() - $this->Price : 0;
+	}
+	
+	function OptionPriceDifferenceText() {
+		$diff = $this->OptionPriceDifference();
+		return ($diff>0) ? "+".$diff." ".$this->Currency : $diff." ".$this->Currency;
 	}
 	
 	function OptionTitle() {
