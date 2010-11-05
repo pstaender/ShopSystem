@@ -29,7 +29,5 @@ class MyShopItem extends DataObjectDecorator {
 			));
 	}
 	
-
-	
 }
 
