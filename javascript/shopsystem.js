@@ -18,13 +18,22 @@ $(document).ready(function() {
 	
 	$(".buttonOrder").bind('click', function() {
 		var id = $(this).attr('key');
-		var url = "cart/add/"+$(this).attr('key')+"/";
+		var optionID = 0;
+		if ($(".productOptions .productOption.selected").length>0) optionID = $(".productOptions .productOption.selected").attr('option');
+		var url = "cart/add/"+$(this).attr('key')+"/?optionid="+optionID;
+		
 		$(".shoppingCartHolder").load(url, function() {
 				//after loading url, do
 				//fw
 				$('#ShoppingItemsCountIcon').html($('#ShoppingCartItemsCount').attr('value'));
 		});
 	});
+	
+	//select option
+	$(".productOptions .productOption").bind('click',function() {
+		$(".productOptions .productOption").removeClass('selected');
+		$(this).addClass('selected');
+	})
 	
 	//on cart buttons
 	$(".shoppingCart .action div").live("click", function() {
