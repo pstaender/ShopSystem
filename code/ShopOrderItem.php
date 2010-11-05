@@ -29,6 +29,12 @@ class ShopOrderItem extends DataObject {
 		"Quantity","Price","Title","SubTotal","Total"
 		);
 		
+	static $casting = array(
+	  'Price' => 'Float',
+		'Total' => 'Float',
+		'OptionPriceDifference' => 'Float',
+	);
+		
 	function Total() {
 		return $this->Price()*$this->Quantity;
 	}

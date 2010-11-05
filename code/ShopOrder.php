@@ -385,6 +385,7 @@ class ShopOrder extends DataObject {
 					$event->Title = $this->Status;
 					$event->Description = "Changed status from '".$changed['Status']['before']."' to '".$changed['Status']['after'];
 					$event->OrderID = $this->ID;
+					$event->Status = "Closed";
 					$event->write();
 			}
 		}

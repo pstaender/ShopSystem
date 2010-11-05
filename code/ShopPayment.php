@@ -23,6 +23,10 @@ class ShopPayment extends DataObject {
 		);
 		
 	static $priceInMethods = true;
+	
+	static $casting = array(
+	  'Price' => 'Float',
+	);
 		
 	function getFrontendFields($param = null) {
 		$fields = parent::getFrontendFields($param);

@@ -265,7 +265,8 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$session->Payment()->write();
 			if ($session->Items()) foreach($session->Items() as $item) {
 				if ($orgItem=$item->OriginalItem()) {
-					$orgItem->Quantity = $orgItem->StockQuantity - $item->Quantity;
+					//if quantity in stock is 0 -> leave 0 and don't decrement 
+					$orgItem->StockQuantity = ($orgItem->StockQuantity==0) ? 0 : $orgItem->StockQuantity - $item->Quantity;
 					$orgItem->OrderCount++;
 					$orgItem->write();
 				}

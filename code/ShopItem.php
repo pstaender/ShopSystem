@@ -79,6 +79,10 @@ class ShopItem extends SiteTree {
 		//if items is set to INHERIT returns the (global) default value set in ShopOrder
 		return ($this->VAT=="INHERIT") ? ShopOrder::getVATType() : $this->VAT;
 	}
+	
+	function OutOfStock() {
+		return ($this->StockQuantity==0) ? true : false;
+	}
 		
 }
 

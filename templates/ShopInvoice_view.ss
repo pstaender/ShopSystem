@@ -65,7 +65,7 @@
 			<% if Quantity==0 %><% else %>
 				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID">
 					<td class="quantity">$Quantity</td>
-					<td class="title"><a href="$OriginalItem.Link">$Title</a></td>
+					<td class="title"><a href="$OriginalItem.Link">$Title <% if Option %><% control Option %>( $Title <% if PriceDifference=0 %><% else %>mit $PriceDifferenceText $Item.Currency<% end_if %> )<% end_control %><% end_if %></a></td>
 					<td class="price">$Total.Decimal $Currency</td>
 				</tr>
 			<% end_if %>

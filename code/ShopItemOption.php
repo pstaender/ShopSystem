@@ -7,7 +7,7 @@ class ShopItemOption extends DataObject {
 		"Description"=>"Text",
 		"OptionKey"=>"Varchar(50)",
 		"PriceValue"=>"Float",
-		"Modus"=>"Enum('*,+','+')",
+		"Modus"=>"Enum('+,*','+')",
 		);
 
 	static $has_one = array(
@@ -15,7 +15,12 @@ class ShopItemOption extends DataObject {
 		);
 		
 	static $default_sort = "LastEdited DESC";
-		
+	
+	static $casting = array(
+	  'Price' => 'Float',
+		'PriceDifference' => 'Float',
+	);
+	
 	function Price() {
 		$price = null;
 		if ($item=$this->Item()) {
@@ -34,7 +39,7 @@ class ShopItemOption extends DataObject {
 	function PriceDifferenceText($currency=null) {
 		$currency = ($currency) ? $this->Item()->Currency : "" ;
 		$diff = $this->PriceDifference();
-		return ($diff>=0) ? "+".$diff." ".$currency : $diff." ".$currency;
+		return ($diff>=0) ? "+".FloatExtension::generateDecimal($diff)." ".$currency : FloatExtension::generateDecimal($diff)." ".$currency;
 	}
 	
 }
