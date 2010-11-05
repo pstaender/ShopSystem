@@ -8,7 +8,9 @@
 
 	<img src="$Picture.URL" class="productPicture" />
 	<div class="productSummary">$Summary
-	<p><a href="$Link">Lesen Sie mehr...</a></p></div>
+		<p><a href="$Link">Lesen Sie mehr...</a></p>
+		<% include ShopItemOptions %>
+	</div>
 	<span class="buttonOrder" key="$ID"><span><% _t('Shop.AddToCart','%Add to cart%') %></span></span>
 
-	<% include ShopItemOptions %>
+	

@@ -28,7 +28,7 @@ class ShopItemOption extends DataObject {
 	}
 	
 	function OptionPriceDifference() {
-		return ($item = $this->Item()) ? (-1)*($this->Price() - $item->Price) : 0;
+		return ($item = $this->Item()) ? ($this->Price() - $item->Price) : 0;
 	}
 	
 	function OptionPriceDifferenceText($currency=null) {
