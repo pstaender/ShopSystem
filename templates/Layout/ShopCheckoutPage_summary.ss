@@ -2,8 +2,6 @@
 
 <% include CheckoutNavigation %>
 
-
-
 <% control Cart %>
 	<% if IsComplete %>
 	$Top.ContentSummary
