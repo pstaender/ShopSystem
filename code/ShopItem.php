@@ -12,6 +12,7 @@ class ShopItem extends SiteTree {
 		"Summary"=>"Text",
 		"OrderCount"=>"Int",
 		"ViewCount"=>"Int",
+		// "OptionRequired"=>"Boolean",
 		);
 	
 	static $has_one = array(
@@ -19,7 +20,15 @@ class ShopItem extends SiteTree {
 		"PictureFolder"=>"Folder",
 		"Download"=>"File",
 		);
-			
+	
+	static $has_many = array(
+		"Options"=>"ShopItemOption",
+		);
+		
+	static $defaults = array(
+		// "OptionRequired"=>false,
+		);
+	
 	static $default_sort =  "Featured, Sort DESC";
 	
 	static $icon = 'shopsystem/images/icons/blocks';
@@ -31,6 +40,7 @@ class ShopItem extends SiteTree {
 			new NumericField('Price', _t("Shop.Item.Price","%Price%")),
 			new CheckboxField('Featured', _t("Shop.Item.Featured","%Featured%")),
 			new TextareaField('Summary', _t("Shop.Item.Summary","%Summary%"),5),
+			// new CheckboxField('OptionRequired', _t("Shop.Item.OptionRequired","%Option is required?%")),
 			new TextField('StockQuantity', _t("Shop.Item.StockQuantity","%StockQuantity%")),
 			new DateField('StockDate', _t("Shop.Item.StockDate","%StockDate%")),
 			new DropdownField('Currency', _t("Shop.Item.Currency","%Currency%"), singleton($this->ClassName)->dbObject('Currency')->enumValues()),
@@ -42,6 +52,26 @@ class ShopItem extends SiteTree {
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Download","%Download%"), array(
 			new FileIFrameField('Download', _t("Shop.Item.File","%File%")),			
 			));
+		
+		$tablefield = new ComplexTableField(
+				$controller = $this,
+				'Options',
+				'ShopItemOption',
+				$fieldList = array(
+					"Title"=>_t("Shop.ItemOption.Title","%Title%"),
+					"OptionKey"=>_t("Shop.ItemOption.OptionKey","%Optionkey%"),
+					"Modus"=>_t("Shop.ItemOption.Modus","%Modus of PriceCalculating%"),
+					"PriceValue"=>_t("Shop.ItemOption.Price","%Price%"),
+				)
+			);
+			$tablefield->setPermissions(
+				array(
+					"show",
+					"edit",
+					"add",
+				)
+			);
+		$fields->findOrMakeTab("Root.Content."._t("Shop.Item.Options","%Option%"),$tablefield);
 		return $fields;
 	}
 	

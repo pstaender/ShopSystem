@@ -44,5 +44,9 @@ class ShopShipping extends DataObject {
 		return _t("Shop.Shipping.{$title}","%{$title}%");
 	}
 	
+	function Price() {
+		return $this->Price;
+	}
+	
 }
 

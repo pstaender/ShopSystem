@@ -135,6 +135,7 @@ $lang['de_DE']['Shop.Item']['ProductKey'] = "Artikelnummer";
 $lang['de_DE']['Shop.Item']['Price'] = "Preis";
 $lang['de_DE']['Shop.Item']['Featured'] = "Hervorheben";
 $lang['de_DE']['Shop.Item']['Summary'] = "Kurzbeschreibung";
+$lang['de_DE']['Shop.Item']['OptionRequired'] = "Eine Option muss gewählt sein";
 $lang['de_DE']['Shop.Item']['StockQuantity'] = "Verfügbare Stückzahl";
 $lang['de_DE']['Shop.Item']['StockDate'] = "Verfügbarkeitsdatum";
 $lang['de_DE']['Shop.Item']['Currency'] = "Währung";
@@ -144,6 +145,12 @@ $lang['de_DE']['Shop.Item']['PictureFolder'] = "Ordner mit Produktfotos";
 $lang['de_DE']['Shop.Item']['Download'] = "Download";
 $lang['de_DE']['Shop.Item']['File'] = "Datei für Download";
 
+
+//Shop.ItemOption.Title
+// "OptionKey"=>_t("Shop.ItemOption.OptionKey","%Optionkey%"),
+// "Modus"=>_t("Shop.ItemOption.Modus","%Modus of PriceCalculating%"),
+// "Price"=>_t("Shop.ItemOption.Price","%Price%"),
+// $fields->findOrMakeTab("Root.Content."._t("Shop.Item.Options","%Option%"),$tablefield);
 
 //Shop.Category.Picture(s)
 //Shop.Item.Picture(s)

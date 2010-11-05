@@ -179,14 +179,14 @@ class ShopOrder extends DataObject {
 		//use selected shipping method of order, if not argumented
 		if (!$shippingMethod) $shippingMethod=$this->Shipping()->Method;		
 		//define your own shipping rules with MyShopOrder.php
-		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->Shipping()->Price;
+		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->Shipping()->Price();
 	}
 
 	function calcPaymentCosts($paymentMethod = null) {
 		//use selected payment method of order, if not argumented
 		if (!$paymentMethod) $paymentMethod=$this->Payment()->Method;
 		//define your own payment rules with MyShopOrder.php
-		return parent::calcPaymentCosts($paymentMethod) ? parent::calcPaymentCosts($paymentMethod) : $this->Payment()->Price;
+		return parent::calcPaymentCosts($paymentMethod) ? parent::calcPaymentCosts($paymentMethod) : $this->Payment()->Price();
 	}
 	
 	function calcDiscount() {
@@ -279,12 +279,18 @@ class ShopOrder extends DataObject {
 		return self::$vatType;
 	}
 
-	static function addItem($id, $quantity = 1) {
+	static function addItem($id, $quantity = 1, $optionID = null) {
 		$id = (int) $id;
 		if ($item = DataObject::get_by_id("ShopItem", $id)) {
+			//select first option, if none option is selected
+			$optionID = ( ($item->Options()) && ($optionID==null) ) ? $item->Options()->First()->ID : (int) $optionID;
+			// exit($optionID."");
+			$optionSQL = ($optionID>0) ? " AND OptionID = $optionID " : "";
+			
+			
 			//map item to orderitem, similar to a quick snapshot of the soled item for later
 			$orderSession = self::orderSession();
-			if (!($orderItem = DataObject::get_one("ShopOrderItem","OrderID = ".$orderSession->ID." AND OriginalItemID = ".$item->ID))) $orderItem = new ShopOrderItem();
+			if (!($orderItem = DataObject::get_one("ShopOrderItem","OrderID = ".$orderSession->ID." AND OriginalItemID = ".$item->ID." ".$optionSQL))) $orderItem = new ShopOrderItem();
 			if ($orderSession->Status=="Unsubmitted") {
 				$orderItem->Version = $item->Version;
 				$orderItem->Price = $item->Price;
@@ -296,6 +302,17 @@ class ShopOrder extends DataObject {
 				$orderItem->OriginalItem = $item;
 				$orderItem->OrderID = ShopOrder::orderSession()->ID;
 				$orderItem->VAT = $item->VATType();
+				//if option is selected
+				if ($optionID) {
+					foreach($item->Options() as $option) {
+						$optionFound=true;
+						if ($option->ID==$optionID) {
+							//if option belongs to item, add option
+							$orderItem->OptionID = $option->ID;
+						}
+					}
+					if (!$optionFound) $orderItem->OptionID = $item->Options()->First()->ID;
+				}
 				if ($orderItem->Quantity<1) $orderItem->Quantity = 0;
 				$orderItem->write();
 				return $orderItem;

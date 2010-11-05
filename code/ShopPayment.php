@@ -42,5 +42,9 @@ class ShopPayment extends DataObject {
 		return _t("Shop.Payment.{$title}","%{$title}%");
 	}
 	
+	function Price() {
+		return $this->Price;
+	}
+	
 }
 

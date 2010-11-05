@@ -29,7 +29,7 @@ $(document).ready(function() {
 	//on cart buttons
 	$(".shoppingCart .action div").live("click", function() {
 		var id = $(this).parent().parent().attr('key');
-		var url = "cart/add/"+$(this).attr('key')+"/"+$(this).attr('quantity');
+		var url = "cart/add/"+$(this).attr('key')+"/"+$(this).attr('quantity')+"?optionid="+$(this).attr('option');
 		//$(this).parent().parent().parent().parent().parent().load(url);
 		cartHolder.load(url, function() {
 			//after loading url, do

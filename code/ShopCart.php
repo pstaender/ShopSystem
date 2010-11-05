@@ -13,7 +13,8 @@ class ShopCart_Controller extends ShopController {
 	function add() {
 		if ($id = Director::urlParam("ID")) {
 			$quantity = (Director::urlParam("OtherID")) ? (int) Director::urlParam("OtherID") : 1;
-			if (ShopOrder::addItem((int) $id, $quantity)) {
+			$optionID = (isset($_REQUEST['optionid'])) ? (int) $_REQUEST['optionid'] : null;
+			if (ShopOrder::addItem((int) $id, $quantity, $optionID)) {
 				$this->Message = "OK";
 				return array();
 			}
