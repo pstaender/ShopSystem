@@ -48,6 +48,11 @@ class MyShopOrder extends Extension {
 		//shipping methods are defined in the model [enumValues]
 		$amount = $this->owner->amount();
 		$shipping = 0;
+		if (!($amount>0)) {
+			$this->owner->Shipping()->Price = 0;
+			$this->owner->Shipping()->write();
+			// return 0;
+		}
 		$country = strtoupper($this->owner->DeliveryAddress()->Country);
 		
 		//fw

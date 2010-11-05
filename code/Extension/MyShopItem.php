@@ -27,8 +27,9 @@ class MyShopItem extends DataObjectDecorator {
 			new TextareaField('Summary', _t('Shop.ShopItem.Summary','%Summary%')),
 			// new TextField('OrderCode', 'Bestellnummer'),
 			));
-
 	}
+	
+
 	
 }
 

@@ -56,5 +56,9 @@ class ShopController extends Page_Controller {
 		}
 	}
 	
+	function Categories() {
+		return SiteTree::get("ShopCategory","ShowInMenus");
+	}
+	
 }
 
