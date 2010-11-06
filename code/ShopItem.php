@@ -44,6 +44,7 @@ class ShopItem extends SiteTree {
 			new TextField('StockQuantity', _t("Shop.Item.StockQuantity","%StockQuantity%")),
 			new DateField('StockDate', _t("Shop.Item.StockDate","%StockDate%")),
 			new DropdownField('Currency', _t("Shop.Item.Currency","%Currency%"), singleton($this->ClassName)->dbObject('Currency')->enumValues()),
+			new ReadonlyField('OrderCount',_t("Shop.Item.OrderCount","%Orders count%", $this->OrderCount)),
 			));
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Pictures","%Pictures%"), array(
 			new FileIFrameField('Picture', _t("Shop.Item.Picture","%Picture%")),

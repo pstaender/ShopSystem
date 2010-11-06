@@ -1,5 +1,6 @@
 <% require ThemedCSS(shopuser) %>
 <h1>Bestellungen</h1>
+<% if Orders %>
 <ul id="OrderTable">
 <% control Orders %>
 	<li class="orderSegment"><h2>Bestellung vom $PlacedOrderOn.Format(d.m.Y)</h2>
@@ -9,14 +10,14 @@
 	<% control Items %>
 		<tr class="item" id="ShopItem{$ID}" key="$ID">
 			<td class="quantity">{$Quantity}x</td>
-			<td class="title"><a href="$OriginalItem.Link">$Title</a>
+			<td class="title"><a href="$OriginalItem.Link" target="_blank">$Title</a>
 				<% if Option %>
 					<% control Option %>
 					( $Title [$PriceDifference.Decimal $Item.Currency] )
 					
 					<% end_control %>
 					<% if HasDownload %>
-					<h4>Laden Sie die Datei <a href="$DownloadFile.DownloadURL">'$DownloadFile.Name' hier</a> runter <br />(ca. $DownloadFile.Size)</h4>
+					<h4>Laden Sie hier die Datei <br /><a href="$DownloadFile.DownloadURL" target="_blank">'$DownloadFile.Name'</a><br />(Dateigröße ca. $DownloadFile.Size)</h4>
 					<% end_if %>
 				<% end_if %>
 				</td>
@@ -53,7 +54,7 @@
 		</tr>
 		<% end_if %>
 	</table>
-	<p><h4>Letzter Stand:</h4>$StatusTranslated <!--am $LastEdited.Format(Y.m.d h:m) Uhr--></p>
+	<p><strong>Letzter Stand:</strong> $StatusTranslated <!--am $LastEdited.Format(Y.m.d h:m) Uhr--></p>
 	</li>
 	<table class="adresses">
 	<tr>
@@ -79,3 +80,5 @@
 	</table>
 <% end_control %>
 </ul>
+<% end_if %>
+<h3>Keine vorhanden</h3>
