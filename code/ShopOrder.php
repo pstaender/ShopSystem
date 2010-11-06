@@ -72,6 +72,7 @@ class ShopOrder extends DataObject {
 		"ID",
 		"Status",
 		"Email",
+		"OrderKey",
 		"InvoiceAddress.FirstName",
 		"InvoiceAddress.Surname",
 		);

@@ -3,6 +3,7 @@
 <ul id="OrderTable">
 <% control Orders %>
 	<li class="orderSegment"><h2>Bestellung vom $PlacedOrderOn.Format(d.m.Y)</h2>
+	<h6>Bestellnummer '$OrderKey'</h6>
 	<br />
 	<table id="ShopOrders" class="shoppingItems">
 	<% control Items %>
@@ -12,10 +13,11 @@
 				<% if Option %>
 					<% control Option %>
 					( $Title [$PriceDifference.Decimal $Item.Currency] )
-					<% if OptionKey==DOWNLOAD %>
-					<h4>Laden Sie die Datei <% control Item %>$OriginalItem.ID<% end_control %> runter</h4>
-					<% end_if %>
+					
 					<% end_control %>
+					<% if HasDownload %>
+					<h4>Laden Sie die Datei <a href="$DownloadFile.DownloadURL">'$DownloadFile.Name' hier</a> runter <br />(ca. $DownloadFile.Size)</h4>
+					<% end_if %>
 				<% end_if %>
 				</td>
 			<td class="price">$Total.Decimal $Currency</td>
