@@ -47,7 +47,8 @@ class ShopItem extends SiteTree {
 			));
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Pictures","%Pictures%"), array(
 			new FileIFrameField('Picture', _t("Shop.Item.Picture","%Picture%")),
-			new TreeDropdownField('PictureFolder',  _t("Shop.Item.PictureFolder","%PictureFolder%"), "Folder" ),
+			new TreeDropdownField('PictureFolderID',  _t("Shop.Item.PictureFolder","%PictureFolder%"), "Folder" ),
+			// new DropdownField('','Choose a folder', DataObject::get("Folder")->toDropdownMap()));
 			));
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Download","%Download%"), array(
 			new FileIFrameField('Download', _t("Shop.Item.File","%File%")),			

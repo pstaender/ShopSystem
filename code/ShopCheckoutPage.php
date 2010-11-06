@@ -169,11 +169,10 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$clientKey = trim(Convert::Raw2SQL($data['ClientKey']));
 		$order = ShopOrder::orderSession();
 		$clientID = $order->ClientID;
-		
 		if (($client = DataObject::get_one("ShopClient","ClientKey LIKE '".$clientKey."'"))) {
 			//existing client
 			$clientID = $client->ID;
-			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID AND Status = 'Ordered'")) {				
+			if ($lastOrder = DataObject::get_one("ShopOrder","ClientID = $clientID AND Status != 'Unsubmitted'",null,"Created DESC")) {
 				if ($addr = $lastOrder->InvoiceAddress()) {
 					//use the last invoice adress, if empty
 					if ($order->InvoiceAddressID==0) {									
@@ -261,6 +260,10 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$session->Status = "Ordered";
 			$session->OrderKey = $session->generateOrderKey();
 			$session->PlacedOrderOn = time();
+			//remove all items from order, where quantity not > 0
+			if ($items = $session->Items()) foreach($items as $item) {
+				if (!($item->Quantity>0)) $item->delete();
+			}
 			$session->Payment()->Price = $session->Total;
 			$session->Payment()->write();
 			if ($session->Items()) foreach($session->Items() as $item) {
@@ -292,7 +295,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$this->Order = $session;
 			
 			$session->sendOrderConfirmation();//to customer
-			$session->sendOrderConfirmation(ShopOrder::$emailOrderConfirmation);//to shop admin
+			$session->sendOrderConfirmation(ShopOrder::getEmailFor("OrderConfirmation"));//to shop admin
 			
 			//send email with invoice link?!
 			return array();

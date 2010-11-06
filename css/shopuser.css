@@ -1,0 +1,42 @@
+#ShopOrders {
+	width: 600px;
+}
+#ShopOrders .price {
+	text-align: right;
+}
+#OrderTable, #OrderTable li, #OrderTable ul{
+	margin-left:0px;
+	list-style: none;
+}
+table.addresses {
+	padding-top: 1em;
+}
+#OrderTable h3 {
+/*	margin-top: 1em;*/
+}
+li.orderSegment {
+	border-top:2px solid #ddd;
+	margin-top: 2em;
+	padding-bottom: 1em;
+	padding-top: 1em;
+}
+table tr td {
+	vertical-align: top;
+}
+#ShopOrders tr.amount {
+	border-top: 2px solid #aaa;
+	margin-top: 1em;
+/*	background:#000;*/
+	height: 2.5em;
+	
+}
+#ShopOrders tr.amount td {
+	vertical-align: bottom;
+/*	border-top: 2px solid #bbb;*/
+}
+table.adresses td.deliveryAddress {
+	padding-left: 2em;
+}
+.adresses h4 {
+	margin-bottom: 0.5em;
+}

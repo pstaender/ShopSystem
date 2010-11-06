@@ -3,7 +3,7 @@
   <head>
 		<% base_tag %>
 		<title><% _t('Shop.Invoice.Invoice','%Invoice%') %></title>
-		<% MetaTags(false) %>
+		$MetaTags(false)
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="robots" content="NOINDEX,NOFOLLOW" />
 		<meta name="googlebot" content="NOARCHIVE, NOODP, NOSNIPPET" />
@@ -44,11 +44,7 @@
 	</div>
 	
 	<div class="companyAddress">
-		<div><strong><% _t("Shop.Company.Name","%Name%") %></strong></div>
-		<div><% _t("Shop.Company.Street","%Street%") %></div>
-		<div><% _t("Shop.Company.ZipCode","%ZipCode%") %> <% _t("Shop.Company.City","%City%") %><br/><br/></div>
-		<div><% _t("Shop.Company.Phone","%Phone%") %></div>
-		<div><% _t("Shop.Company.Email","%Email%") %></div>
+		<% include ShopCompanyAddress %>
 	</div>
 
 
@@ -65,7 +61,7 @@
 			<% if Quantity==0 %><% else %>
 				<tr class="item $EvenOdd" id="ShopItem{$ID}" key="$ID">
 					<td class="quantity">$Quantity</td>
-					<td class="title"><a href="$OriginalItem.Link">$Title <% if Option %><% control Option %>( $Title <% if PriceDifference=0 %><% else %>mit $PriceDifferenceText $Item.Currency<% end_if %> )<% end_control %><% end_if %></a></td>
+					<td class="title"><a href="$OriginalItem.Link">$Title <% if Option %><% control Option %>( $Title <% if PriceDifference=0 %><% else %>: $PriceDifferenceText $Item.Currency<% end_if %> )<% end_control %><% end_if %></a></td>
 					<td class="price">$Total.Decimal $Currency</td>
 				</tr>
 			<% end_if %>
@@ -76,7 +72,7 @@
 		-->
 		<div class="cartAmount">
 				<div class="cartPosition amount">
-					<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $AmountDecimal $Currency
+					<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $Amount.Decimal $Currency
 				</div>
 				<% if ShippingCosts %>
 				<div class="cartPosition shippingCosts">
@@ -118,7 +114,7 @@
 		</div>
 		<% end_control %>
 
-		<div>Bitte überweisen Sie den fälligen Betrag von <strong>$Order.Total $Order.Currency</strong> mit den Betreff <strong>{$Order.OrderKey}</strong></div>
+		<div style="text-align: left; margin-top:2em;">Bitte überweisen Sie den fälligen Betrag von <strong><% control Order %>$Total.Decimal $Currency</strong> mit den Betreff <strong>{$OrderKey}<% end_control %></strong></div>
 
 
 <% end_control %>

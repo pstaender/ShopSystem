@@ -1,57 +1,79 @@
-<h2>Bestellungen</h2>
-<ul>
+<% require ThemedCSS(shopuser) %>
+<h1>Bestellungen</h1>
+<ul id="OrderTable">
 <% control Orders %>
-	<li><h3>Bestellung vom $PlacedOrderOn.Format(d.m.Y)</h3>
-	
-	<table class="shoppingItems">
+	<li class="orderSegment"><h2>Bestellung vom $PlacedOrderOn.Format(d.m.Y)</h2>
+	<br />
+	<table id="ShopOrders" class="shoppingItems">
 	<% control Items %>
 		<tr class="item" id="ShopItem{$ID}" key="$ID">
 			<td class="quantity">{$Quantity}x</td>
-			<td class="title"><a href="$OriginalItem.Link">$Title</a></td>
-			<td class="price">$Total $Currency</td>
+			<td class="title"><a href="$OriginalItem.Link">$Title</a>
+				<% if Option %>
+					<% control Option %>
+					( $Title [$PriceDifference.Decimal $Item.Currency] )
+					<% if OptionKey==DOWNLOAD %>
+					<h4>Laden Sie die Datei <% control Item %>$OriginalItem.ID<% end_control %> runter</h4>
+					<% end_if %>
+					<% end_control %>
+				<% end_if %>
+				</td>
+			<td class="price">$Total.Decimal $Currency</td>
 		</tr>
 	<% end_control %>
-		<!--
-			$Calculate
-		-->
+
 		<tr class="amount">
-			<td></td><td class="description"><% _t('Shop.Cart.Amount','%Amount%') %>:</td><td class="price">$Amount $Currency</td>
+			<td></td><td class="description"><% _t('Shop.Cart.Amount','%Amount%') %>:</td><td class="price">$Amount.Decimal $Currency</td>
 		</tr>
 		<% if Shipping.Price %>
 		<tr class="shippingCosts">
-			<td></td><td class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %>:</td><td class="price"> + $CalcShippingCosts $Currency</td>
+			<td></td><td class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %>:</td><td class="price"> + $CalcShippingCosts.Decimal $Currency</td>
 		</tr>
 		<% end_if %>
 		<% if Discount %>
 		<tr class="discount">
-			<td></td><td class="description"><% _t('Shop.Cart.Discount','%Discount%') %>:</td><td class="price">- $Discount $Currency</td>
+			<td></td><td class="description"><% _t('Shop.Cart.Discount','%Discount%') %>:</td><td class="price">- $Discount.Decimal $Currency</td>
 		</tr>
 		<% end_if %>
 		<% if Total %>		
 		<tr class="subTotal">
-			<td></td><td class="description"><% _t('Shop.Cart.SubTotal','%SubTotal%') %>:</td><td class="price">$SubTotal $Currency</td>
+			<td></td><td class="description"><% _t('Shop.Cart.SubTotal','%SubTotal%') %>:</td><td class="price">$SubTotal.Decimal $Currency</td>
 		</tr>
 		<tr class="vatAmount">
 			<td></td>
-			<% if VAT==INCL %><td class="description"><% _t('Shop.Cart.TaxIncl','%TaxIncl%') %> {$Tax}% <% _t('Shop.Cart.TaxVAT','%TaxVAT%') %>:</td><td class="price">$VATAmount $Currency</td>
+			<% if VAT==INCL %><td class="description"><% _t('Shop.Cart.TaxIncl','%TaxIncl%') %> {$Tax}% <% _t('Shop.Cart.TaxVAT','%TaxVAT%') %>:</td><td class="price">$VATAmount.Decimal $Currency</td>
 			<% end_if %>
-			<% if VAT==EXCL %><td class="description"><% _t('Shop.Cart.TaxExcl','%TaxExcl%') %> {$Tax}% <% _t('Shop.Cart.TaxVAT','%TaxVAT%') %>:</td><td class="price">+ $VATAmount $Currency</td>
+			<% if VAT==EXCL %><td class="description"><% _t('Shop.Cart.TaxExcl','%TaxExcl%') %> {$Tax}% <% _t('Shop.Cart.TaxVAT','%TaxVAT%') %>:</td><td class="price">+ $VATAmount.Decimal $Currency</td>
 			<% end_if %>
 		</tr>
 		<tr class="total">
-			<td></td><td><% _t('Shop.Cart.Total','%Total%') %></td><td>$Total $Currency</td>
+			<td></td><td class="description"><% _t('Shop.Cart.Total','%Total%') %></td><td class="price"><strong>$Total.Decimal $Currency</strong></td>
 		</tr>
 		<% end_if %>
 	</table>
-	Status: $Status
+	<p><h4>Letzter Stand:</h4>$StatusTranslated <!--am $LastEdited.Format(Y.m.d h:m) Uhr--></p>
 	</li>
-	<ul><h3>Rechnungadresse:</h3>
+	<table class="adresses">
+	<tr>
+	<td class="invoiceAddress">
+	<h4>Rechnungadresse</h4>
 		<% control InvoiceAddress %>
 		<strong>$Company</strong><br/>
 		$FirstName $Surname<br/>
 		$Street<br/>
-		$Country - $ZipCode $City<br/>
+		<p>$Phone</p>
+		<% if Country %>$Country - <% end_if %>$ZipCode.ZipCode $City<br/>
 		<% end_control %>
-	</ul>
+	</td>
+	<td class="deliveryAddress">
+	<h4>Versandadresse</h4>
+		<% control DeliveryAddress %>
+		<strong>$Company</strong><br/>
+		$FirstName $Surname<br/>
+		$Street<br/>
+		<% if Country %>$Country - <% end_if %>$ZipCode.ZipCode $City<br/>
+		<% end_control %>
+	</td></tr>
+	</table>
 <% end_control %>
 </ul>

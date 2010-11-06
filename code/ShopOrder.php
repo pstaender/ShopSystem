@@ -80,6 +80,9 @@ class ShopOrder extends DataObject {
 	static $casting = array(
 	  'Amount' => 'Float',
 		'CalcShippingCosts' => 'Float',
+		'VATAmount' => 'Float',
+		'Discount' => 'Float',
+		'CalcShippingCosts' => 'Float'
 	);
 	
 	static $hashField = "shoppinghash";
@@ -92,10 +95,10 @@ class ShopOrder extends DataObject {
 	static $vatType = "EXCL";
 	static $minAmount = "10";
 	
-	static $emailOrderConfirmation = "order@127.0.0.1";
-	static $emailOrderShipped = "order@127.0.0.1";
-	static $emailInvoice = "invoice@127.0.0.1";
-	static $emailUserAccount = "useraccount@127.0.0.1";
+	static $emailOrderConfirmation = null;
+	static $emailOrderShipped = null;
+	static $emailInvoice = null;
+	static $emailUserAccount = null;
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -336,8 +339,12 @@ class ShopOrder extends DataObject {
 		return parent::generateOrderKey();
 	}
 	
+	function statusTranslated() {
+		return _t("Shop.Order.Status.".$this->Status,"%".$this->Status."%");
+	}
+	
 	function sendOrderConfirmationTo($emailAddr) {
-		if ($from = ShopOrder::$emailOrderConfirmation) {
+		if ($from = ShopOrder::getEmailFor("OrderConfirmation")) {
 			$email = new Email();
 			$email->from = $from;
 			$email->to = $emailAddr;
@@ -353,17 +360,17 @@ class ShopOrder extends DataObject {
 		 $this->sendOrderConfirmationTo($email);
 	}
 
-	function sendInvoiceTo($email) {
-		if ($from = self::$emailInvoice) {
-			$email = new Email();
-			$email->from = $form;
-			$email->to = $email;
-			$email->subject = _t("Shop.Invoice.EmailSubject","%Your invoice for your order%");
-			$email->ss_template = 'EmailInvoice';
-			$email->populateTemplate($this);
-			$email->send();
-		}
-	}
+	// function sendInvoiceTo($email) {
+	// 	if ($from = self::$emailInvoice) {
+	// 		$email = new Email();
+	// 		$email->from = $form;
+	// 		$email->to = $email;
+	// 		$email->subject = _t("Shop.Invoice.EmailSubject","%Your invoice for your order%");
+	// 		$email->ss_template = 'EmailInvoice';
+	// 		$email->populateTemplate($this);
+	// 		$email->send();
+	// 	}
+	// }
 	
 	function emailFromClient() {
 		if ($client = $this->Client()) return $client->Email;
@@ -371,8 +378,25 @@ class ShopOrder extends DataObject {
 		if ($addr = $this->DeliveryAddress()) return $addr->Email;
 	}
 	
-	function sendInvoice() {
-		 $this->sendInvoiceTo($this->emailFromClient());
+	// function sendInvoice() {
+	// 		 $this->sendInvoiceTo($this->emailFromClient());
+	// 	}
+
+	static function getEmailFor($section) {
+		switch (strtolower($section)) {
+			case "orderconfirmation" :
+				return (self::$emailOrderConfirmation==null) ? Email::getAdminEmail() : self::$emailOrderConfirmation;
+				break;
+			case "ordershipped" :
+				return (self::$emailOrderShipped==null) ? Email::getAdminEmail() : self::$emailOrderShipped;
+				break;
+			case "invoice" :
+				return (self::$emailInvoice==null) ? Email::getAdminEmail() : self::$emailInvoice;
+				break;
+			case "useraccount" :
+				return (self::$emailUserAccount==null) ? Email::getAdminEmail() : self::$emailUserAccount;
+				break;
+		}
 	}
 	
 	function onBeforeWrite() {

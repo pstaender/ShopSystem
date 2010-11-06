@@ -12,8 +12,7 @@ class FloatExtension extends Extension {
 	
 	function generateDecimal($float) {
 		return number_format($float, self::$decimalRound , self::$decimalPoint, self::$thousandsSeperator);
-	} 
-
+	}
 	
 }
 

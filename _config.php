@@ -24,6 +24,7 @@ const SHOPSYSTEM_DIR = "shopsystem";
 const SHOPUSER_PATH = "user";
 
 Object::add_extension("Float", "FloatExtension");
+Object::add_extension("Int", "IntExtension");//optional
 
 Object::add_extension("ShopOrder", "MyShopOrder");
 Object::add_extension("ShopPayment", "MyShopPayment");

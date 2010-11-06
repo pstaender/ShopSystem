@@ -45,6 +45,11 @@ $lang['de_DE']['Shop.Payment']['Method'] = 'Zahlungsweise';
 $lang['de_DE']['Shop']['GoCheckout'] = 'Zur Kasse gehen';
 
 $lang['de_DE']['Shop.Order']['EmailSubject'] = 'Bestellbestätigung';
+$lang['de_DE']['Shop.Order.Status']['Ordered'] = 'Bestellung aufgegeben';
+$lang['de_DE']['Shop.Order.Status']['Unsubmitted'] = 'Bestellung nicht abgeschickt';
+$lang['de_DE']['Shop.Order.Status']['Payed'] = 'Bezahlt';
+$lang['de_DE']['Shop.Order.Status']['Shipped'] = 'Versendet';
+$lang['de_DE']['Shop.Order.Status']['Declared'] = 'Reklamiert';
 
 $lang['de_DE']['Shop.Contact']['Email'] = 'eMail';
 $lang['de_DE']['Shop.Contact']['Company'] = 'Firmenname';
