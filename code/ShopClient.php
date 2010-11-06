@@ -15,7 +15,7 @@ class ShopClient extends Member implements PermissionProvider {
 	static $has_many = array(
 		"Orders"=>"ShopOrder"
 		);
-		
+	
 	static $page_length = 100;
 		
 	function getCMSFields() {

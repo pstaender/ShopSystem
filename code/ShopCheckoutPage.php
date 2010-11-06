@@ -345,6 +345,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			if (!$member->FirstName) $member->FirstName = Convert::raw2SQL($data['FirstName']);
 			if (!$member->Surname) $member->Surname = Convert::raw2SQL($data['Surname']);
 			if (!$member->Country) $member->Country = Convert::raw2SQL($data['Country']);
+			if ($member->Gender=="-") $member->Gender = Convert::raw2SQL($data['Gender']);
 			$member->write();
 		}
 		if (isset($data['UseContactForShipping']))  {

@@ -33,7 +33,7 @@
 <% control Order %>
 
 	<div class="invoiceAddress">
-		<div class="title"><% _t('Shop.Invoice.InvoiceAddress','%InvoiceAddress%') %></div>
+		<div class="title" style="display:none;"><% _t('Shop.Invoice.InvoiceAddress','%InvoiceAddress%') %></div>
 	<% control InvoiceAddress %>
 		<div><strong>$Company</strong></div>
 		<div>$FirstName $Surname</div>
@@ -43,7 +43,7 @@
 	<% end_control %>
 	</div>
 	
-	<div class="companyAddress">
+	<div class="companyAddress" style="font-size:0.8em">
 		<% include ShopCompanyAddress %>
 	</div>
 
@@ -114,7 +114,9 @@
 		</div>
 		<% end_control %>
 
-		<div style="text-align: left; margin-top:2em;">Bitte überweisen Sie den fälligen Betrag von <strong><% control Order %>$Total.Decimal $Currency</strong> mit den Betreff <strong>{$OrderKey}<% end_control %></strong></div>
+		<div style="text-align: left; margin-top:2em;">Bitte überweisen Sie den fälligen Betrag von <strong><% control Order %>$Total.Decimal $Currency</strong> mit den Betreff <br /><strong>{$OrderKey}<% end_control %></strong> auf folgende Konto:
+			
+			</div>
 
 
 <% end_control %>

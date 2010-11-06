@@ -5,7 +5,7 @@
 <p>Sie haben bei uns eine Bestellung für folgende Artikel aufgegeben:</p>
 
 <p>
-	<table styl="min-width:800px;">
+	<table style="min-width:800px;">
 		<tr><td><strong>Menge</strong></td><td><strong>Artikel</strong></td><td align="right"><strong>Preis</strong></td></tr>
 	<% control Items %>
 		<tr><td>$Quantity x</td><td>$Title <% if Option %>( $Option.Title )<% end_if %></td><td  align="right">$Total.Decimal $Currency</td></tr>
@@ -32,7 +32,7 @@
 
 <p>Sie erhalten umgehend eine gültige Rechnung zu Ihrer Bestellung als PDF-Datei.</p>
 
-<p>Ihre vorläufige Rechnung können Sie hier online einsehen:</p>
+<p>Ihre vorläufige Bestellung können Sie hier online einsehen:</p>
 <p><strong><a href="{$BaseHref}$Invoice.Link">{$BaseHref}$Invoice.Link</a></strong></p>
 <p>Im die Rechnung zu entfernen, klicken Sie <a href="{$BaseHref}$Invoice.Link?remove=1">hier</a>.</p>
 

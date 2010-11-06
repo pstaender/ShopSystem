@@ -71,6 +71,7 @@ class ShopOrder extends DataObject {
 	static $searchable_fields = array(
 		"ID",
 		"Status",
+		"Email",
 		"InvoiceAddress.FirstName",
 		"InvoiceAddress.Surname",
 		);
@@ -357,7 +358,7 @@ class ShopOrder extends DataObject {
 		
 	function sendOrderConfirmation($email=null) {
 		if ($email==null) $email = $this->emailFromClient();
-		 $this->sendOrderConfirmationTo($email);
+		$this->sendOrderConfirmationTo($email);
 	}
 
 	// function sendInvoiceTo($email) {
@@ -373,9 +374,8 @@ class ShopOrder extends DataObject {
 	// }
 	
 	function emailFromClient() {
-		if ($client = $this->Client()) return $client->Email;
-		if ($addr = $this->InvoiceAddress()) return $addr->Email;
-		if ($addr = $this->DeliveryAddress()) return $addr->Email;
+		if ($client = $this->Client()) if ($client->Status=="Customer") return $client->Email;
+		else return $this->Email;
 	}
 	
 	// function sendInvoice() {
