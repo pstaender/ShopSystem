@@ -71,6 +71,7 @@ class ShopItem extends SiteTree {
 					"show",
 					"edit",
 					"add",
+					"delete",
 				)
 			);
 		$fields->findOrMakeTab("Root.Content."._t("Shop.Item.Options","%Option%"),$tablefield);
