@@ -62,14 +62,14 @@ class ShopOrderItem extends DataObject {
 	
 	function hasDownload() {
 		//has downoad, if option DOWNLOAD is selected and if order is set to "ordered" or "shipped"
-		if ($option=$this->Option()) if (strtolower($option->OptionKey)=="download") if ($order=$this->Order()) if (($order->Status=="Payed") || (($order->Status=="Shipped"))) return true;
+		if ($option=$this->Option()) if (strtolower($option->OptionKey)=="download") if ($order=$this->Order()) if (($order->Status=="Payed") || (($order->Status=="Sended"))) return true;
 		return false;
 	}
 	
 	function DownloadFile() {
 		if ($this->hasDownload()) if ($orgItem = $this->OriginalItem()) if ($download=$orgItem->Download()) {
 			$file = $download;
-			$file->DownloadURL = "user/download/".$orgItem->ID."/".$download->Name;
+			if ($order = $this->Order()) $file->DownloadURL = "user/download/".$order->ID."/".$orgItem->ID."/".$download->Name;
 			return $file;
 		}
 	}

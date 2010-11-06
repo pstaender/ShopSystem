@@ -17,7 +17,7 @@ Director::addRules(100, array(
 	'order/$Action/$ID/$OtherID' => 'ShopOrder_Controller',
 	'cart/$Action/$ID/$OtherID' => 'ShopCart_Controller',
 	'invoice/$Action/$ID/$OtherID' => 'ShopInvoice_Controller',
-	'user/$Action/$ID/$OtherID' => 'ShopUser_Controller',
+	'user/$Action/$ID/$OtherID/$Filename' => 'ShopUser_Controller',
 ));
 
 const SHOPSYSTEM_DIR = "shopsystem";

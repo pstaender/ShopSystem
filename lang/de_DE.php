@@ -149,7 +149,7 @@ $lang['de_DE']['Shop.Item']['Picture'] = "Produktfoto";
 $lang['de_DE']['Shop.Item']['PictureFolder'] = "Ordner mit Produktfotos";
 $lang['de_DE']['Shop.Item']['Download'] = "Download";
 $lang['de_DE']['Shop.Item']['File'] = "Datei für Download";
-
+$lang['de_DE']['Shop.Download']['NotValid'] = "Die angeforderter Downloadlink ist ungültig";
 
 //Shop.ItemOption.Title
 // "OptionKey"=>_t("Shop.ItemOption.OptionKey","%Optionkey%"),
