@@ -20,7 +20,7 @@ class ShopUser_Controller extends ShopController {
 	}
 
 	function download() {
-		if ($orderID = (int) Director::urlParam("ID")) if ($itemID = (int) Director::urlParam("OtherID")) if ($items = DataObject::get("ShopOrderItem","OriginalItemID=".$itemID." AND OptionID > 0")) foreach($items as $item) if ($item->hasDownload()) {
+		if ($orderID = (int) Director::urlParam("ID")) if ($optionID = (int) Director::urlParam("OtherID")) if ($item = DataObject::get_one("ShopOrderItem","OrderID = $orderID AND OptionID = $optionID")) if ($item->hasDownload()) {
 			//item is found and belongs to order/is ordered and has a download attached
 			$file = $item->DownloadFile();
 			$filename = $file->Filename;

@@ -11,7 +11,8 @@ class ShopItemOption extends DataObject {
 		);
 
 	static $has_one = array(
-		"Item"=>"ShopItem"
+		"Item"=>"ShopItem",
+		"Download"=>"File",
 		);
 		
 	static $default_sort = "LastEdited DESC";
