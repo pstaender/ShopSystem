@@ -275,7 +275,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 					$orgItem->publish('Stage', 'Live');
 				}
 			}
-			
+			$session->calculateAndWrite();
 			$session->write();
 			
 			//create invoice
@@ -396,7 +396,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$session = ShopOrder::orderSession();
 		$session->Shipping()->Method = Convert::Raw2SQL($data['Method']);
 		$session->Shipping()->write();
-		$session->calculate();
+		$session->calculateAndWrite();
 		$session->write();
 		$this->redirectToNextStep("shipping");
 	}
@@ -439,7 +439,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$session = ShopOrder::orderSession();
 		$session->Payment()->Method = Convert::Raw2SQL($data['Method']);
 		$session->Payment()->write();
-		$session->calculate();
+		$session->calculateAndWrite();
 		$session->write();
 		$this->redirectToNextStep("payment");
 	}

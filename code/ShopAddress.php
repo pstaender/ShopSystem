@@ -88,6 +88,17 @@ class ShopAddress extends DataObject {
 		return ShopClient::salutationNice($this->Gender);
 	}
 	
+	function Nice() {
+		return "<div class=\"shopAdressField\">
+		<strong><p>{$this->Company}<br />
+		".$this->Salutation()." {$this->FirstName} {$this->Surname}</p></strong>
+		{$this->Street}<br />
+		$this->ZipCode $this->City<br />{$this->Country}</p>
+		<p>$this->Phone</p>
+		<p>$this->AdditionalAddress</p></div>
+		";
+	}
+	
 	static function getCountryDropdown($priority = null, $countryName = null) {
 			$countries = array_flip(ShopLocalization::$countries);
 			if ($priority) {
@@ -98,7 +109,8 @@ class ShopAddress extends DataObject {
 				else $countries = array_merge(array($priority => $countries[$priority]), $countries);
 			}
 			return $countries;
-		}
+	}
+
 		
 }
 

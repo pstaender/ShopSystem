@@ -110,23 +110,31 @@ class ShopOrder extends DataObject {
 			new HeaderField(_t("Shop.Invoice.Invoice","%Invoice%"),3),
 			$invoice,
 			));
+		$fields->replaceField(
+			"InvoiceAddressID",
+			new LiteralField("InvoiceAddress","<h4>"._t("Shop.Checkout.Invoiceaddress","%InvoiceAddress%")." </h4><h5>#".$this->InvoiceAddressID."</h5>".$this->InvoiceAddress()->Nice())
+			);
+		$fields->replaceField(
+			"DeliveryAddressID",
+			new LiteralField("DeliveryAddress","<h4>"._t("Shop.Checkout.Deliveryaddress","%DeliveryAddress%")." </h4><h5>#".$this->DeliveryAddressID."</h5>".$this->DeliveryAddress()->Nice())
+			);
 		if ($this->Shipping()) {
 			$fields->replaceField(
 				"ShippingID",
-				new LiteralField("ShippingTitle","<h2>"._t("Shop.Shipping.".$this->Shipping()->Method,"%ShippingMethod%")." </h2><h5>#".$this->ShippingID."</h5>")
+				new LiteralField("ShippingTitle","<h4>"._t("Shop.Shipping.".$this->Shipping()->Method,"%ShippingMethod%")." </h4><h5>#".$this->ShippingID."</h5>")
 				);
 			$fields->insertAfter(
-				new LiteralField("ShippingPrice","<h3>".$this->Shipping()->Price." ".$this->Currency."</h3>"),
+				new LiteralField("ShippingPrice","<h5>".$this->Shipping()->Price." ".$this->Currency."</h5>"),
 				"ShippingTitle"
 				);
 		}
 		if ($this->Payment()) {
 			$fields->replaceField(
 				"PaymentID",
-				new LiteralField("PaymentTitle","<h2>"._t("Shop.Payment.".$this->Payment()->Method,"%PaymentMethod%")." </h2><h5>#".$this->PaymentID."</h5>")
+				new LiteralField("PaymentTitle","<h4>"._t("Shop.Payment.".$this->Payment()->Method,"%PaymentMethod%")." </h4><h5>#".$this->PaymentID."</h5>")
 				);
 			$fields->insertAfter(
-				new LiteralField("PaymentPrice","<h3>".$this->Payment()->Price." ".$this->Currency."</h3>"),
+				new LiteralField("PaymentPrice","<h45>".$this->Payment()->Price." ".$this->Currency."</h5>"),
 				"PaymentTitle"
 				);
 		}
@@ -167,9 +175,12 @@ class ShopOrder extends DataObject {
 			$this->VATAmount = round(($amount/100) * $this->Tax,$round);
 			$this->Total = $this->Total + $this->VATAmount;
 		}
-		
 		parent::calculate($round);
-		return $this->write();
+	}
+	
+	function calculateAndWrite() {
+		$this->calculate();
+		$this->write();
 	}
 	
 	function minAmount() {
