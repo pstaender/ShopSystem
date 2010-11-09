@@ -16,6 +16,12 @@ class ShopController extends Page_Controller {
 		Requirements::ThemedCSS('shop');
 	}
 	
+	function Items() {
+		$items = array();
+		if ($children = $this->Children()) foreach ($children as $child) if ($child->ClassName=="ShopItem") $items[]=$child;
+		return new DataObjectSet($items);
+	}
+	
 	function CheckoutPage() {
 		return DataObject::get_one("ShopCheckoutPage");
 	}

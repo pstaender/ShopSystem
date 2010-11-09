@@ -18,20 +18,19 @@ class ShopItem extends SiteTree {
 	static $has_one = array(
 		"Picture"=>"Image",
 		"PictureFolder"=>"Folder",
-		"Download"=>"File",
+		);
+			
+	static $defaults = array(
 		);
 	
-	static $has_many = array(
-		"Options"=>"ShopItemOption",
-		);
-		
-	static $defaults = array(
-		// "OptionRequired"=>false,
+	static $allowed_children = array(
+		"ShopItemOption"
 		);
 	
 	static $default_sort =  "Featured, Sort DESC";
 	
-	static $icon = 'shopsystem/images/icons/blocks';
+	// static $icon = 'shopsystem/images/icons/blocks';
+	static $icon = 'shopsystem/images/icons/add_cart';
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -49,33 +48,7 @@ class ShopItem extends SiteTree {
 		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Pictures","%Pictures%"), array(
 			new FileIFrameField('Picture', _t("Shop.Item.Picture","%Picture%")),
 			new TreeDropdownField('PictureFolderID',  _t("Shop.Item.PictureFolder","%PictureFolder%"), "Folder" ),
-			// new DropdownField('','Choose a folder', DataObject::get("Folder")->toDropdownMap()));
 			));
-		$fields->addFieldsToTab('Root.Content.'._t("Shop.Item.Download","%Download%"), array(
-			new FileIFrameField('Download', _t("Shop.Item.File","%File%")),			
-			));
-		
-		$tablefield = new ComplexTableField(
-				$controller = $this,
-				'Options',
-				'ShopItemOption',
-				$fieldList = array(
-					"Title"=>_t("Shop.ItemOption.Title","%Title%"),
-					"OptionKey"=>_t("Shop.ItemOption.OptionKey","%Optionkey%"),
-					"Download.Name"=>_t("Shop.ItemOption.Download","%Download%"),
-					"Modus"=>_t("Shop.ItemOption.Modus","%Modus of PriceCalculating%"),
-					"PriceValue"=>_t("Shop.ItemOption.Price","%Price%"),
-				)
-			);
-			$tablefield->setPermissions(
-				array(
-					"show",
-					"edit",
-					"add",
-					"delete",
-				)
-			);
-		$fields->findOrMakeTab("Root.Content."._t("Shop.Item.Options","%Option%"),$tablefield);
 		return $fields;
 	}
 	
@@ -86,6 +59,12 @@ class ShopItem extends SiteTree {
 	
 	function OutOfStock() {
 		return ($this->StockQuantity==0) ? true : false;
+	}
+	
+	function options() {
+		$options = array();
+		if ($children = $this->Children()) foreach($children as $subpage) if ($subpage->ClassName=="ShopItemOption") $options[]=$subpage;
+		return new DataObjectSet($options);
 	}
 		
 }

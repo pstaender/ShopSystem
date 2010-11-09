@@ -155,7 +155,7 @@ $lang['de_DE']['Shop.ItemOption']['Title'] = "Titel";
 $lang['de_DE']['Shop.ItemOption']['OptionKey'] = "Kürzel";
 $lang['de_DE']['Shop.ItemOption']['Download'] = "Datei";
 $lang['de_DE']['Shop.ItemOption']['Modus'] = "Addieren oder Multiplizieren";
-$lang['de_DE']['Shop.ItemOption']['Price'] = "Wertänderung";
+$lang['de_DE']['Shop.ItemOption']['PriceValue'] = "Wertänderung";
 //Shop.ItemOption.Title
 // "OptionKey"=>_t("Shop.ItemOption.OptionKey","%Optionkey%"),
 // "Modus"=>_t("Shop.ItemOption.Modus","%Modus of PriceCalculating%"),
