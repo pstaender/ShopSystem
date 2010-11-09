@@ -43,7 +43,7 @@ class MyShopOrder extends Extension {
 		return $fields;
 	}
 			
-	function calcShippingCosts($shippingMethod = null) {
+	function calcShippingCosts() {
 		//write your own method for calculating the shipping costs
 		//shipping methods are defined in the model [enumValues]
 		$amount = $this->owner->amount();
@@ -70,9 +70,10 @@ class MyShopOrder extends Extension {
 		return ($amount==0) ? 0 : $shipping;
 	}
 
-	function calcPaymentCosts($paymentMethod = null) {
+	function calcPaymentCosts() {
 		//write your own method for calculating the payment costs
 		//payment methods are defined in the model [enumValues]
+		return 0;
 		$amount = $this->owner->amount();
 		if (!$paymentMethod) $paymentMethod=strtolower($this->owner->Payment()->Method);
 		$paymentMethod = strtolower($paymentMethod);

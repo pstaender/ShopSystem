@@ -156,7 +156,9 @@ class ShopOrder extends DataObject {
 		$this->Payment()->write();
 		
 		$this->Discount = $this->calcDiscount();
-		$this->SubTotal = $this->Total = $amount - $this->Discount + $this->Shipping()->Price() + $this->Payment()->Price();
+		$this->SubTotal = $amount - $this->Discount +$this->Shipping()->Price();
+		$this->Total = $this->SubTotal + $this->Payment()->Price();
+		// exit($amount - $this->Discount + $this->Shipping()->Price() + $this->Payment()->Price());
 		if ($this->VAT=="INCL") {
 			$this->VATAmount = round($amount - ($this->Total / $tax),$round);
 		}
@@ -180,18 +182,12 @@ class ShopOrder extends DataObject {
 		return $this->calculate();
 	}
 		
-	function calcShippingCosts($shippingMethod = null) {
-		//use selected shipping method of order, if not argumented
-		if (!$shippingMethod) $shippingMethod=$this->Shipping()->Method;		
-		//define your own shipping rules with MyShopOrder.php
-		return parent::calcShippingCosts($shippingMethod) ? parent::calcShippingCosts($shippingMethod) : $this->Shipping()->Price();
+	function calcShippingCosts() {
+		return parent::calcShippingCosts();
 	}
 
-	function calcPaymentCosts($paymentMethod = null) {
-		//use selected payment method of order, if not argumented
-		if (!$paymentMethod) $paymentMethod=$this->Payment()->Method;
-		//define your own payment rules with MyShopOrder.php
-		return parent::calcPaymentCosts($paymentMethod) ? parent::calcPaymentCosts($paymentMethod) : $this->Payment()->Price();
+	function calcPaymentCosts() {
+		return parent::calcPaymentCosts();
 	}
 	
 	function calcDiscount() {

@@ -74,9 +74,9 @@
 				<div class="cartPosition amount">
 					<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $Amount.Decimal $Currency
 				</div>
-				<% if ShippingCosts %>
+				<% if Shipping.Price %>
 				<div class="cartPosition shippingCosts">
-					<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $ShippingCosts.Decimal $Currency
+					<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + <% control Shipping %>$Price.Decimal<% end_control %> $Currency
 				</div>
 				<% end_if %>
 				<% if Discount %>
