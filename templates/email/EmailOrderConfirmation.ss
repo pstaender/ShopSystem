@@ -1,6 +1,6 @@
 <h2>Ihre Bestellung ist bei uns eingegangen</h2>
 
-<p>Guten Tag <% if InvoiceAddress.Salutation %>$InvoiceAddress.Salutation $InvoiceAddress.Surname<% end_if %>,</p>
+<p>Guten Tag<% if InvoiceAddress.Salutation %> $InvoiceAddress.Salutation $InvoiceAddress.Surname<% end_if %>,</p>
 
 <p>Sie haben bei uns eine Bestellung für folgende Artikel aufgegeben:</p>
 
@@ -31,6 +31,8 @@
 </p>
 
 <p>Sie erhalten umgehend eine gültige Rechnung zu Ihrer Bestellung als PDF-Datei.</p>
+
+<p>Ihre Bestellnummer lautet <strong>'$OrderKey'</strong>, bitte geben Sie diese immer bei Fragen zu Ihrer Bestellung mit an.</p>
 
 <p>Ihre vorläufige Bestellung können Sie hier online einsehen:</p>
 <p><strong><a href="{$BaseHref}$Invoice.Link">{$BaseHref}$Invoice.Link</a></strong></p>
