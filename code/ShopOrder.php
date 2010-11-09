@@ -148,7 +148,6 @@ class ShopOrder extends DataObject {
 	
 	function calculate($round = 2) {
 		$amount = $this->amount();
-		$tax = 1+($this->Tax/100);
 		
 		$this->Shipping()->Price = $this->calcShippingCosts($this->Shipping());
 		$this->Shipping()->write();
@@ -158,7 +157,9 @@ class ShopOrder extends DataObject {
 		$this->Discount = $this->calcDiscount();
 		$this->SubTotal = $amount - $this->Discount +$this->Shipping()->Price();
 		$this->Total = $this->SubTotal + $this->Payment()->Price();
-		// exit($amount - $this->Discount + $this->Shipping()->Price() + $this->Payment()->Price());
+		$this->calcTax();
+		$tax = 1+($this->Tax/100);
+		
 		if ($this->VAT=="INCL") {
 			$this->VATAmount = round($amount - ($this->Total / $tax),$round);
 		}
@@ -166,6 +167,7 @@ class ShopOrder extends DataObject {
 			$this->VATAmount = round(($amount/100) * $this->Tax,$round);
 			$this->Total = $this->Total + $this->VATAmount;
 		}
+		
 		parent::calculate($round);
 		return $this->write();
 	}
@@ -188,6 +190,10 @@ class ShopOrder extends DataObject {
 
 	function calcPaymentCosts() {
 		return parent::calcPaymentCosts();
+	}
+	
+	function calcTax() {
+		return parent::calcTax();
 	}
 	
 	function calcDiscount() {

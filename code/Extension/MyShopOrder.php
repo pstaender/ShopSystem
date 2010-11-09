@@ -63,7 +63,7 @@ class MyShopOrder extends Extension {
 		//DE
 		if (($country=="DE") || ($country=="")) $shipping = ($amount <= 199) ? 3.6 : 9.5;
 		//fw
-		
+		$shippingMethod = null;
 		if (!$shippingMethod) $shippingMethod=$this->owner->Shipping()->Method;
 		$shippingMethod = strtolower($shippingMethod);
 		if ($shippingMethod=="express") $shipping = $shipping*1.25;
@@ -82,6 +82,13 @@ class MyShopOrder extends Extension {
 			$payment = $amount * 0.01;
 		}
 		return $payment;
+	}
+	
+	function calcTax() {
+		$country = strtoupper($this->owner->InvoiceAddress()->Country);
+		if ((in_array($country,self::$euStates)) && ($country!="DE")) $this->owner->Tax = 0.0;
+		else $this->owner->Tax = 19.0;
+		// exit($this->owner->TAX);
 	}
 	
 	function calcDiscount() {

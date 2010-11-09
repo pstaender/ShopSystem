@@ -29,12 +29,7 @@ class ShopCategory extends SiteTree {
 			));
 		return $fields;
 	}
-	
-	function Items() {
-		$items = array();
-		if ($children = $this->Children()) foreach ($children as $child) if ($child->ClassName=="ShopItem") $items[]=$child;
-		return new DataObjectSet($items);
-	}
+
 	
 }
 
@@ -42,7 +37,6 @@ class ShopCategory_Controller extends ShopController {
 	
 	function init() {
 		parent::init();
-		// ShopOrder::checkForSessionOrCreate();
 	}
 		
 }

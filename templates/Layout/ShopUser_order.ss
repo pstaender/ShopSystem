@@ -16,7 +16,7 @@
 					( $Title [$PriceDifference.Decimal $Item.Currency] )
 					
 					<% end_control %>
-					<% if HasDownload %>
+					<% if HasDownload %>ok
 					<h4>Laden Sie hier die Datei <br /><a href="$DownloadFile.DownloadURL" target="_blank">'$DownloadFile.Name'</a><br />(Dateigröße ca. $DownloadFile.Size)</h4>
 					<% end_if %>
 				<% end_if %>
