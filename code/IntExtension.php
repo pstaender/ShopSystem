@@ -1,5 +1,7 @@
 <?php
 
+//These Class is optional
+
 class IntExtension extends Extension {
 	
 	static $zipCodeMinDigits = 5;

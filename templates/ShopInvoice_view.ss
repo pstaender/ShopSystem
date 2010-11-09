@@ -67,9 +67,7 @@
 			<% end_if %>
 			<% end_control %>
 			</table>
-		<!--
-			$Calculate
-		-->
+			$DoCalculate
 		<div class="cartAmount">
 				<div class="cartPosition amount">
 					<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $Amount.Decimal $Currency

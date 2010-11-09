@@ -11,7 +11,7 @@ class MyShopShipping extends DataObjectDecorator {
 		
 		//fw
 		$ship = array(
-			"Standard" => "Standardversand (".$order->calcShippingCosts("Standard")." ".ShopOrder::getLocalCurrency().")",
+			"Standard" => "Standardversand (".$order->shippingCosts("Standard")." ".ShopOrder::getLocalCurrency().")",
 			);
 		return $ship;
 		//fw

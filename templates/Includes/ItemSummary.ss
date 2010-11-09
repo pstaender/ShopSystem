@@ -12,16 +12,14 @@
 	<% end_if %>
 	<% end_control %>
 	</table>
-<!--
-	$Calculate
--->
+	$DoCalculate
 <div class="cartAmount">
 		<div class="cartPosition amount">
 			<span class="description"><% _t('Shop.Cart.Amount','%Amount%') %></span> $Amount.Decimal $Currency
 		</div>
 		<% if Shipping.Price %>
 		<div class="cartPosition shippingCosts">
-			<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $CalcShippingCosts.Decimal $Currency
+			<span class="description"><% _t('Shop.Cart.ShippingCosts','%ShippingCosts%') %></span> + $ShippingCosts.Decimal $Currency
 		</div>
 		<% end_if %>
 		<% if Discount %>

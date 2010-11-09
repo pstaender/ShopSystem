@@ -43,15 +43,13 @@ class MyShopOrder extends Extension {
 		return $fields;
 	}
 			
-	function calcShippingCosts() {
+	function calcShippingCosts($shippingMethod = null) {
 		//write your own method for calculating the shipping costs
 		//shipping methods are defined in the model [enumValues]
 		$amount = $this->owner->amount();
 		$shipping = 0;
 		if (!($amount>0)) {
 			$this->owner->Shipping()->Price = 0;
-			$this->owner->Shipping()->write();
-			// return 0;
 		}
 		$country = strtoupper($this->owner->DeliveryAddress()->Country);
 		
@@ -63,14 +61,13 @@ class MyShopOrder extends Extension {
 		//DE
 		if (($country=="DE") || ($country=="")) $shipping = ($amount <= 199) ? 3.6 : 9.5;
 		//fw
-		$shippingMethod = null;
 		if (!$shippingMethod) $shippingMethod=$this->owner->Shipping()->Method;
 		$shippingMethod = strtolower($shippingMethod);
 		if ($shippingMethod=="express") $shipping = $shipping*1.25;
-		return ($amount==0) ? 0 : $shipping;
+		$this->owner->Shipping()->Price = ($amount==0) ? 0 : $shipping;		
 	}
 
-	function calcPaymentCosts() {
+	function calcPaymentCosts($paymentMethod=null) {
 		//write your own method for calculating the payment costs
 		//payment methods are defined in the model [enumValues]
 		return 0;
@@ -81,7 +78,7 @@ class MyShopOrder extends Extension {
 		if ($paymentMethod=="creditcard") {
 			$payment = $amount * 0.01;
 		}
-		return $payment;
+		$this->owner->Payment()->Price = $payment;
 	}
 	
 	function calcTax() {
@@ -93,24 +90,21 @@ class MyShopOrder extends Extension {
 	
 	function calcDiscount() {
 		//write your own method for calculating a discount, if needed
-		
+		$discount = 0;
 		//fw
 		//Preislachlass für bpp+ringfoto mitglieder
 		if (strtolower($this->owner->CouponCode)=="bpp") {
-			return $this->owner->amount()*0.15;
+			$discount = $this->owner->amount()*0.15;
 		}
 		if (strtolower($this->owner->CouponCode)=="ringfoto") {
-			return $this->owner->amount()*0.1;
+			$discount = $this->owner->amount()*0.1;
 		}
-		return 0;
+		$discount = 0;
 		//fw
 		
-		
-		
-		$disc = 0;
 		//example, education discount of 20%
-		if (trim(strtoupper($this->owner->CouponCode))=="EDUCATION") $disc = $this->owner->Amount()*0.8;
-		return $disc;
+		if (trim(strtoupper($this->owner->CouponCode))=="EDUCATION") $discount = $this->owner->Amount()*0.8;
+		$this->owner->Discount = $discount;
 	}
 	
 	function calculate() {
@@ -126,7 +120,6 @@ class MyShopOrder extends Extension {
 		}
 		//fw
 		
-		return true;
 	}
 				
 	function generateOrderKey() {
@@ -146,7 +139,7 @@ class MyShopOrder extends Extension {
 	}
 	
 	function isComplete() {
-		return (sizeof($this->isIncompleteCause())>0) ? false : true;
+		$this->owner->isIncomplete = (sizeof($this->isIncompleteCause())>0) ? false : true;
 	}
 	
 	function isIncompleteCause() {
@@ -161,15 +154,7 @@ class MyShopOrder extends Extension {
 		if (!$this->owner->hasValue("Email")) $reasons["Email"] = _t("Shop.OrderIncomplete.EmailMissing","%You have not given an Email-address%");
 		if (!$this->owner->InvoiceAddress()->isComplete()) $reasons["InvoiceAddress"] = _t("Shop.OrderIncomplete.InvoiceAddressIncomplete","%Invoiceaddress is incomplete%");
 		if (!$this->owner->DeliveryAddress()->isComplete()) $reasons["DeliveryAddress"] = _t("Shop.OrderIncomplete.DeliveryAddressIncomplete","%Deliveryaddress is incomplete%"); 
-		return $reasons;
-	}
-	
-	function incompleteReasonsForTemplate() {
-		$string = "";
-		foreach($this->owner->isIncompleteCause() as $field => $reason) {
-			$string .= "<li class=\"incompleteReason\" id=\"{$field}Reason\">".$reason."</li>";
-		}
-		return "<ul class=\"missingFieldReasons\">".$string."</ul>";
+		$this->owner->isIncompleteReasons = $reasons;
 	}
 			
 }

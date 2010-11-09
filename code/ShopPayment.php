@@ -32,22 +32,22 @@ class ShopPayment extends DataObject {
 		$fields = parent::getFrontendFields($param);
 		$fields->replaceField(
 			"Method",
-			new DropdownField("Method",_t("Shop.Payment.Method","%ShippingMethod%"), self::methodFields(), $this->Method
+			new DropdownField("Method",_t("Shop.Payment.Method","%PaymentMethod%"), $this->methodFields(), $this->Method
 			));
 		return $fields;
 	}
 	
-	static function methodFields() {
-		return MyShopPayment::methodFields();
+	function methodFields() {
+		try {
+			return parent::methodFields();
+		} catch (Exception $e) {
+			return array();
+		}
 	}
 	
 	function methodTitle() {
 		$title = $this->Method;
 		return _t("Shop.Payment.{$title}","%{$title}%");
-	}
-	
-	function Price() {
-		return $this->Price;
 	}
 	
 }

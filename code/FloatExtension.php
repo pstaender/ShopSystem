@@ -1,5 +1,7 @@
 <?php
 
+//These Class is optional
+
 class FloatExtension extends Extension {
 	
 	static $decimalPoint = ",";

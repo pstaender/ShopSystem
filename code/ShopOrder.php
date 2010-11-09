@@ -81,10 +81,10 @@ class ShopOrder extends DataObject {
 	
 	static $casting = array(
 	  'Amount' => 'Float',
-		'CalcShippingCosts' => 'Float',
 		'VATAmount' => 'Float',
 		'Discount' => 'Float',
-		'CalcShippingCosts' => 'Float'
+		'ShippingCosts' => 'Float',
+		'PaymentCosts' => 'Float',
 	);
 	
 	static $hashField = "shoppinghash";
@@ -101,6 +101,8 @@ class ShopOrder extends DataObject {
 	static $emailOrderShipped = null;
 	static $emailInvoice = null;
 	static $emailUserAccount = null;
+	
+	static $round = 2;
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -154,20 +156,18 @@ class ShopOrder extends DataObject {
 		return ($this->amount()<=self::$minAmount) ? true : false;
 	}
 	
-	function calculate($round = 2) {
+	function calculate() {
+		$round = self::$round;
 		$amount = $this->amount();
+		$this->calcShippingCosts();
+		$this->calcPaymentCosts();
+		$this->calcDiscount();
 		
-		$this->Shipping()->Price = $this->calcShippingCosts($this->Shipping());
-		$this->Shipping()->write();
-		$this->Payment()->Price = $this->calcPaymentCosts($this->Payment());
-		$this->Payment()->write();
-		
-		$this->Discount = $this->calcDiscount();
 		$this->SubTotal = $amount - $this->Discount +$this->Shipping()->Price();
 		$this->Total = $this->SubTotal + $this->Payment()->Price();
+		
 		$this->calcTax();
 		$tax = 1+($this->Tax/100);
-		
 		if ($this->VAT=="INCL") {
 			$this->VATAmount = round($amount - ($this->Total / $tax),$round);
 		}
@@ -175,11 +175,18 @@ class ShopOrder extends DataObject {
 			$this->VATAmount = round(($amount/100) * $this->Tax,$round);
 			$this->Total = $this->Total + $this->VATAmount;
 		}
-		parent::calculate($round);
+		parent::calculate();
 	}
 	
-	function calculateAndWrite() {
+	function DoCalculate() {
 		$this->calculate();
+		return null;
+	}
+	
+	function calculateAndWrite($round=null) {
+		$this->calculate($round);
+		$this->Shipping()->write();
+		$this->Payment()->write();
 		$this->write();
 	}
 	
@@ -194,37 +201,59 @@ class ShopOrder extends DataObject {
 		}
 		return $this->calculate();
 	}
+	
+	function shippingCosts($shippingMethod = null) {
+		$this->calcShippingCosts($shippingMethod);
+		return $this->Shipping()->Price;
+	}
 		
-	function calcShippingCosts() {
-		return parent::calcShippingCosts();
+	function calcShippingCosts($shippingMethod = null) {
+		parent::calcShippingCosts($shippingMethod);
 	}
 
-	function calcPaymentCosts() {
-		return parent::calcPaymentCosts();
+	function calcPaymentCosts($paymentMethod=null) {
+		parent::calcPaymentCosts($paymentMethod);
 	}
 	
 	function calcTax() {
-		return parent::calcTax();
+		parent::calcTax();
 	}
 	
 	function calcDiscount() {
-		//define your own discount rules with MyShopOrder.php
-		return parent::calcDiscount();// : abs($this->Discount);
+		//define your own discount rules in MyShopOrder.php
+		parent::calcDiscount();
 	}
 	
 	function isComplete() {
-		//define your own isComplete rules with MyShopOrder.php
-		return parent::isComplete();
+		$this->isComplete = false;
+		$this->isIncompleteReasons = null;
+		//define your own isComplete rules in MyShopOrder.php
+		try {
+			parent::isComplete();
+		} catch(Exception $e) {
+			echo "<p>You should add an extension class for ShopOrder to extend ShopOrder::isComplete() with your own rules...</p>";
+		}
+		$this->isIncompleteCause();
+		return $this->isComplete;
 	}
 	
 	function isIncompleteCause() {
 		//define your own isIncompleteCause rules with MyShopOrder.php
-		return parent::isIncompleteCause();
+		$this->isIncompleteReasons = null;
+		try {
+			parent::isIncompleteCause();
+		} catch(Exception $e) {
+			echo "<p>You should add an extension class for ShopOrder to extend ShopOrder::isIncompleteCause() with your own rules...</p>";
+		}
+		return $this->isIncompleteReasons;
 	}
 	
 	function incompleteReasonsForTemplate() {
-		//define your own incompleteReasonsForTemplate rules with MyShopOrder.php
-		return parent::incompleteReasonsForTemplate();
+		$string = "";
+		if ($this->isIncompleteReasons) foreach($this->isIncompleteReasons as $field => $reason) {
+			$string .= "<li class=\"incompleteReason\" id=\"{$field}Reason\">".$reason."</li>";
+		}
+		return "<ul class=\"missingFieldReasons\">".$string."</ul>";
 	}
 				
 	static function checkForSessionOrCreate() {

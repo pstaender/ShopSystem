@@ -34,22 +34,22 @@ class ShopShipping extends DataObject {
 		$fields = parent::getFrontendFields($param);
 		$fields->replaceField(
 			"Method",
-			new DropdownField("Method",_t("Shop.Shipping.Method","%ShippingMethod%"), self::methodFields(), $this->Method
+			new DropdownField("Method",_t("Shop.Shipping.Method","%ShippingMethod%"), $this->methodFields(), $this->Method
 			));
 		return $fields;
 	}
 	
-	static function methodFields() {
-		return MyShopShipping::methodFields();
+	function methodFields() {
+		try {
+			return parent::methodFields();
+		} catch (Exception $e) {
+			return array();
+		}
 	}
 	
 	function methodTitle() {
 		$title = $this->Method;
 		return _t("Shop.Shipping.{$title}","%{$title}%");
-	}
-	
-	function Price() {
-		return $this->Price;
 	}
 	
 }
