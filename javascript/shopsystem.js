@@ -19,13 +19,15 @@ $(document).ready(function() {
 	$(".buttonOrder").bind('click', function() {
 		var id = $(this).attr('key');
 		var optionID = 0;
-		
+		var button = $(this);
+		button.addClass('loading');
 		if ($(".productOptions .productOption.selected").length>0) optionID = $(".productOptions .productOption.selected").attr('option');
 		var url = "cart/add/"+$(this).attr('key')+"/?optionid="+optionID;
 		
 		$(".shoppingCartHolder").load(url, function() {
 				//after loading url, do
 				//fw
+				button.removeClass('loading');
 				$('#ShoppingItemsCountIcon').html($('#ShoppingCartItemsCount').attr('value'));
 		});
 	});

@@ -62,6 +62,7 @@ class ShopItem extends SiteTree {
 				$fieldList = array(
 					"Title"=>_t("Shop.ItemOption.Title","%Title%"),
 					"OptionKey"=>_t("Shop.ItemOption.OptionKey","%Optionkey%"),
+					"Download.Name"=>_t("Shop.ItemOption.Download","%Download%"),
 					"Modus"=>_t("Shop.ItemOption.Modus","%Modus of PriceCalculating%"),
 					"PriceValue"=>_t("Shop.ItemOption.Price","%Price%"),
 				)

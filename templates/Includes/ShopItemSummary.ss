@@ -8,9 +8,9 @@
 
 	<img src="$Picture.URL" class="productPicture" />
 	<div class="productSummary <% if OutOfStock %>outOfStock<% end_if %>">$Summary
-		<p><a href="$Link">Lesen Sie mehr...</a></p>
-		<% include ShopItemOptions %>
+		<p><a href="$Link"></a></p>
 	</div>
+	<% include ShopItemOptions %>
 	<span class="buttonOrder <% if OutOfStock %>outOfStock<% end_if %>" key="$ID"><span><% _t('Shop.AddToCart','%Add to cart%') %></span></span>
 
 	
