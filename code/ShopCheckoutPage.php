@@ -15,9 +15,12 @@ class ShopCheckoutPage extends SiteTree {
 		"ContentError"=>"HTMLText",
 		"ContentMinimalAmount"=>"HTMLText",
 		);
+		
 	static $has_one = array(
 		);
+		
 	static $icon = 'shopsystem/images/icons/cart';
+	
 	static $termsAndConditionsAgreementRequired = true;
 		
 	function getCMSFields() {
@@ -57,26 +60,26 @@ class ShopCheckoutPage extends SiteTree {
 				<p>Please feel free to replace this text with your own shopinformations...</p>
 				');
 				$p->URLSegment = 'checkout';
-				$p->Status = 'Published';
-				$p->write();
+				$p->writeToStage('Stage');
+				$p->publish('Stage', 'Live');
+				$p->ContentInvoiceAddress = "<h2>Billing Address</h2>
+				<p>Please fill out the billing address.</p>";
+				$p->ContentDeliveryAddress = "<h2>Shipping Address</h2>
+				<p>Please fill out the shipping address.</p>";
+				$p->ContentShipping = "<h2>Shipping Method</h2>
+				<p>Please select your preferred shipping method.</p>";
+				$p->ContentPayment = "<h2>Payment Method</h2>
+				<p>Please choose your preffered payment methos.</p>";
+				$p->ContentSummary = "<h2>Order summary</h2>
+				<p>Take a look of your order and click on „Place order” to finish your shopping session.</p>";
+				$p->ContentComplete = "<h2>Thanks for your order!</h2>
+				<p>Your order has been submitted.</p>
+				<p>You'll recieve an eMail with your order details soon.</p>";
+				$p->ContentError = "<h2>Order could not be placed</h2>
+				<p>Sorry, but your order couldn't proceed complety. Please contact us for further information. Thanks!</p>";
+				$p->writeToStage('Stage');
 				$p->publish('Stage', 'Live');
 				$p->flushCache();
-				// $p->ContentInvoiceAddress = "<h2>Billing Address</h2>
-				// <p>Please fill out the billing address.</p>";
-				// $p->ContentDeliveryAddress = "<h2>Shipping Address</h2>
-				// <p>Please fill out the shipping address.</p>";
-				// $p->ContentShipping = "<h2>Shipping Method</h2>
-				// <p>Please select your preferred shipping method.</p>";
-				// $p->ContentPayment = "<h2>Payment Method</h2>
-				// <p>Please choose your preffered payment methos.</p>";
-				// $p->ContentSummary = "<h2>Order summary</h2>
-				// <p>Take a look of your order and click on „Place order” to finish your shopping session.</p>";
-				// $p->ContentComplete = "<h2>Thanks for your order!</h2>
-				// <p>Your order has been submitted.</p>
-				// <p>You'll recieve an eMail with your order details soon.</p>";
-				// $p->ContentError = "<h2>Order could not be placed</h2>
-				// <p>Sorry, but your order couldn't proceed complety. Please contact us for further information. Thanks!</p>";
-				// $p->write();
 				DB::alteration_message('ShopCheckoutPage created', 'created');
 			}
 		}
@@ -116,7 +119,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 		"summary",
 		"complete",
 		);
-		
+	
+	static $firstStep = "index";
+	
 	function init() {
 		parent::init();		
 		//optional, remove if you don't like a minimal amount check
@@ -127,12 +132,13 @@ class ShopCheckoutPage_Controller extends ShopController {
 	}
 		
 	function index() {
-		// todo, make it usabilitysafe for "all" users
 		if (ShopOrder::orderSession()->isComplete()) {
-			if ($step = self::getCheckoutStep()) $this->redirectToNextStep(self::$steps[$step]);	
+			if ($step = self::getCheckoutStep()) $this->redirectToNextStepFrom(self::$steps[$step]);	
 		} else {
-			//optional, deactive if you don't wanna skip the 1st step 'index'
-			$this->redirectToNextStep("index");
+			//todo get key
+			exit(key(self::$steps));
+			if (in_array(self::$firstStep,self::$steps)) if($number=key(self::$steps)) if(isset(self::$steps[$number-1])) exit(self::$steps[$number-1]);
+			$this->redirectToNextStepFrom(self::$steps[$number-1]);
 		}
 		return array();
 	}
@@ -241,7 +247,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$client->ClientKey = $clientKey;
 		$client->write();
 		$order->write();
-		$this->redirectToNextStep("email");
+		$this->redirectToNextStepFrom("email");
 		return array();
 	}
 	
@@ -333,7 +339,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$shipping->write();
 			$session->DeliveryAddressID = $shipping->ID;
 			$session->write();
-			return $this->redirectToNextStep("deliveryaddress");
+			return $this->redirectToNextStepFrom("deliveryaddress");
 		} else {
 			$form->saveInto($contact);
 			$contact->OrderID = $session->ID;
@@ -356,9 +362,9 @@ class ShopCheckoutPage_Controller extends ShopController {
 			$shipping->write();
 			$session->DeliveryAddressID = $shipping->ID;
 			$session->write();
-			return $this->redirectToNextStep("deliveryaddress");			
+			return $this->redirectToNextStepFrom("deliveryaddress");			
 		} else {
-			return $this->redirectToNextStep("invoiceaddress");
+			return $this->redirectToNextStepFrom("invoiceaddress");
 		}
 	}
 	
@@ -398,7 +404,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$session->Shipping()->write();
 		$session->calculateAndWrite();
 		$session->write();
-		$this->redirectToNextStep("shipping");
+		$this->redirectToNextStepFrom("shipping");
 	}
 	
 	function PaymentMethodForm() {
@@ -441,7 +447,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		$session->Payment()->write();
 		$session->calculateAndWrite();
 		$session->write();
-		$this->redirectToNextStep("payment");
+		$this->redirectToNextStepFrom("payment");
 	}
 	
 	function SummaryForm() {
@@ -472,7 +478,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 			return array();
 		}
 		$session->write();
-		if ($session->isComplete()) $this->redirectToNextStep("summary");
+		if ($session->isComplete()) $this->redirectToNextStepFrom("summary");
 		return array();
 	}
 	
@@ -490,7 +496,7 @@ class ShopCheckoutPage_Controller extends ShopController {
 		return new DataObjectSet($data);
 	}
 	
-	private function redirectToNextStep($nameOfCurrentStep) {
+	private function redirectToNextStepFrom($nameOfCurrentStep) {
 		$found = false;
 		$i=0;
 		foreach (self::$steps as $step) {

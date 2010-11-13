@@ -91,9 +91,13 @@ class ShopOrder extends DataObject {
 	
 	static $country = null;
 	static $tax = array(
-		"de_DE"=>"19"
+		"de_DE"=>"19",
 		);
-	static $currency = "EUR";
+	static $taxDefault = 0;
+	static $currency = array(
+		"de_DE"=>"EUR",
+		);
+	static $currencyDefault = "EUR";
 	static $vatType = "EXCL";
 	static $minAmount = "10";
 	
@@ -101,6 +105,14 @@ class ShopOrder extends DataObject {
 	static $emailOrderShipped = null;
 	static $emailInvoice = null;
 	static $emailUserAccount = null;
+	
+	static $euStates = array(
+		"BE","BG","DK","DE","EE","FI","FR","GR","IE","IT","LV","LT","LU","MT","NL","AT",
+		"PL","PT","RO","SE","SK","SI","ES","CZ","HU","GB","CY"
+		);
+	
+	static $displayExtensionNotice = true;
+	private static $extensionNoticesDisplayed = array();
 	
 	static $round = 2;
 	
@@ -175,7 +187,11 @@ class ShopOrder extends DataObject {
 			$this->VATAmount = round(($amount/100) * $this->Tax,$round);
 			$this->Total = $this->Total + $this->VATAmount;
 		}
-		parent::calculate();
+		try {
+			parent::calculate();
+		} catch (Exception $e) {
+			//don't display a message, because it's not necessary/bestpractice to override the calculate method
+		}
 	}
 	
 	function DoCalculate() {
@@ -183,8 +199,8 @@ class ShopOrder extends DataObject {
 		return null;
 	}
 	
-	function calculateAndWrite($round=null) {
-		$this->calculate($round);
+	function calculateAndWrite() {
+		$this->calculate();
 		$this->Shipping()->write();
 		$this->Payment()->write();
 		$this->write();
@@ -204,48 +220,58 @@ class ShopOrder extends DataObject {
 	
 	function shippingCosts($shippingMethod = null) {
 		$this->calcShippingCosts($shippingMethod);
-		return $this->Shipping()->Price;
+		return $this->Shipping()->Price();
 	}
 		
 	function calcShippingCosts($shippingMethod = null) {
-		parent::calcShippingCosts($shippingMethod);
+		if ($shipping=$this->Shipping()) return $shipping->calculate($shippingMethod);
 	}
 
 	function calcPaymentCosts($paymentMethod=null) {
-		parent::calcPaymentCosts($paymentMethod);
+		if ($payment=$this->Payment()) return $payment->calculate($paymentMethod);
 	}
 	
 	function calcTax() {
-		parent::calcTax();
+		try {
+			parent::calcTax();
+			return true;
+		} catch (Exception $e) {
+			ShopOrder::displayExtensionNoticeFor("ShopOrder::calcTax");
+		}
 	}
 	
 	function calcDiscount() {
-		//define your own discount rules in MyShopOrder.php
-		parent::calcDiscount();
+		try {
+			parent::calcDiscount();
+			return true;
+		} catch (Exception $e) {
+			ShopOrder::displayExtensionNoticeFor("ShopOrder::calcDiscount");
+		}
 	}
 	
-	function isComplete() {
-		$this->isComplete = false;
-		$this->isIncompleteReasons = null;
-		//define your own isComplete rules in MyShopOrder.php
+	function isIncomplete() {
+		return ($this->isComplete()) ? false : true;
+	}
+	
+	function isComplete($default=true) {
 		try {
-			parent::isComplete();
+			return parent::isComplete();
 		} catch(Exception $e) {
-			echo "<p>You should add an extension class for ShopOrder to extend ShopOrder::isComplete() with your own rules...</p>";
+			ShopOrder::displayExtensionNoticeFor("ShopOrder::isComplete");
+			return (boolean) $default;
 		}
-		$this->isIncompleteCause();
-		return $this->isComplete;
 	}
 	
 	function isIncompleteCause() {
 		//define your own isIncompleteCause rules with MyShopOrder.php
 		$this->isIncompleteReasons = null;
 		try {
-			parent::isIncompleteCause();
+			$this->isIncompleteReasons = parent::isIncompleteCause();
+			return $this->isIncompleteReasons;
 		} catch(Exception $e) {
-			echo "<p>You should add an extension class for ShopOrder to extend ShopOrder::isIncompleteCause() with your own rules...</p>";
+			ShopOrder::displayExtensionNoticeFor("ShopOrder::isIncompleteCause");
+			return null;
 		}
-		return $this->isIncompleteReasons;
 	}
 	
 	function incompleteReasonsForTemplate() {
@@ -311,7 +337,7 @@ class ShopOrder extends DataObject {
 	}
 	
 	static function getLocalTax() {
-		return self::$tax[self::getLocalCountry()];
+		return isset(self::$tax[self::getLocalCountry()]) ? self::$tax[self::getLocalCountry()] : self::$taxDefault;
 	}
 	
 	static function getLocalCountry() {
@@ -319,7 +345,7 @@ class ShopOrder extends DataObject {
 	}
 	
 	static function getLocalCurrency() {
-		return self::$currency;
+		return isset(self::$currency[self::getLocalCountry()]) ? self::$currency[self::getLocalCountry()] : self::$currencyDefault;
 	}
 	
 	static function getVATType() {
@@ -333,10 +359,7 @@ class ShopOrder extends DataObject {
 			if ( ($item->Options()->Count()) && ($optionID==null) ) {
 				$optionID = ($item->Options()) ? $item->Options()->First()->ID : (int) $optionID;
 			}
-			// exit($optionID."");
 			$optionSQL = ($optionID>0) ? " AND OptionID = $optionID " : "";
-			
-			
 			//map item to orderitem, similar to a quick snapshot of the soled item for later
 			$orderSession = self::orderSession();
 			if (!($orderItem = DataObject::get_one("ShopOrderItem","OrderID = ".$orderSession->ID." AND OriginalItemID = ".$item->ID." ".$optionSQL))) $orderItem = new ShopOrderItem();
@@ -404,26 +427,10 @@ class ShopOrder extends DataObject {
 		$this->sendOrderConfirmationTo($email);
 	}
 
-	// function sendInvoiceTo($email) {
-	// 	if ($from = self::$emailInvoice) {
-	// 		$email = new Email();
-	// 		$email->from = $form;
-	// 		$email->to = $email;
-	// 		$email->subject = _t("Shop.Invoice.EmailSubject","%Your invoice for your order%");
-	// 		$email->ss_template = 'EmailInvoice';
-	// 		$email->populateTemplate($this);
-	// 		$email->send();
-	// 	}
-	// }
-	
 	function emailFromClient() {
 		if ($client = $this->Client()) if ($client->Status=="Customer") return $client->Email;
 		else return $this->Email;
 	}
-	
-	// function sendInvoice() {
-	// 		 $this->sendInvoiceTo($this->emailFromClient());
-	// 	}
 
 	static function getEmailFor($section) {
 		switch (strtolower($section)) {
@@ -457,7 +464,20 @@ class ShopOrder extends DataObject {
 			}
 		}
 	}
-
+	
+	static function displayExtensionNoticeFor($function) {
+		//$function = MyClass::myFunction
+		if (self::$displayExtensionNotice) if (!isset(self::$extensionNoticesDisplayed[$function])) echo self::$extensionNoticesDisplayed[$function]="<p><strong>Notice:</strong> You should add an extension class for <strong>'".substr($function,0,strpos($function,":"))."'</strong> to extend <strong>$function()</strong> with your own method...</p>";
+	}
+	
+	static function doDisplayExtensionNotice() {
+		self::$displayExtensionNotice=true;
+	}
+	
+	static function dontDisplayExtensionNotice() {
+		self::$displayExtensionNotice=false;
+	}
+	
 }
 
 class ShopOrder_Controller extends Page_Controller {

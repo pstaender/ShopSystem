@@ -50,5 +50,22 @@ class ShopPayment extends DataObject {
 		return _t("Shop.Payment.{$title}","%{$title}%");
 	}
 	
+	function calculate($paymentMethod) {
+		try {
+			$this->Price = parent::calculate($paymentMethod);
+		} catch (Exception $e) {
+			ShopOrder::displayExtensionNoticeFor("ShopPayment::calculate");
+		}
+	}
+	
+	function Price() {
+		try {
+			//if you wish, override with your own extension
+			return parent::Price();
+		} catch (Exception $e) {
+			return $this->Price;
+		}
+	}
+	
 }
 

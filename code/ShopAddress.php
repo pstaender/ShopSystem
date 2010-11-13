@@ -74,9 +74,11 @@ class ShopAddress extends DataObject {
 		
 	function isComplete() {
 		//define your own isComplete rules with MyShopAddress.php
-		if (parent::isComplete()) {
-			return true;
-		} else {
+		try {
+			return parent::isComplete();
+		} catch (Exception $e) {
+			//no extension found
+			ShopOrder::displayExtensionNoticeFor("ShopAddress::isComplete");
 			foreach (self::$required_fields as $field) {
 				if (!(strlen($this->$field)>0)) return false;
 			}

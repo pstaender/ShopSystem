@@ -68,7 +68,7 @@ $lang['de_DE']['Shop.Contact']['GenderFemale'] = 'Frau';
 $lang['de_DE']['Shop.Contact']['GenderNotSpecified'] = 'Nicht angegeben';
 
 $lang['de_DE']['Shop.Checkout']['TaxIDNumber'] = 'Umsatzsteuer-Identifikationsnummer';
-$lang['de_DE']['Shop.Checkout']['CouponCode'] = 'Gutscheincode';
+$lang['de_DE']['Shop.Checkout']['CouponCode'] = 'Preisnachlass für';//'Gutscheincode';
 $lang['de_DE']['Shop.Checkout']['ShippingMethod'] = "Versandart";
 $lang['de_DE']['Shop.Checkout']['Contact'] = "Rechnungsanschrift";
 $lang['de_DE']['Shop.Checkout']['Shippingaddress'] = "Versandanschrift";

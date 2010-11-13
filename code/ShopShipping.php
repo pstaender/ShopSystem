@@ -52,5 +52,22 @@ class ShopShipping extends DataObject {
 		return _t("Shop.Shipping.{$title}","%{$title}%");
 	}
 	
+	function calculate($shippingMethod) {
+		try {
+			$this->Price = parent::calculate($shippingMethod);
+		} catch (Exception $e) {
+			ShopOrder::displayExtensionNoticeFor("ShopShipping::calculate");
+		}
+	}
+	
+	function Price() {
+		try {
+			//if you wish, override with your own extension
+			return parent::Price();
+		} catch (Exception $e) {
+			return $this->Price;
+		}
+	}
+	
 }
 
